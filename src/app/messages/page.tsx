@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Search, Send, ShieldCheck } from "lucide-react";
 import { MOCK_THREADS, CURRENT_USER, MessageThread } from "@/lib/mockData";
 import { PageHeader } from "@/components/layout/PageHeader";
+import { HouseBadge } from "@/components/ui/Badge";
 
 export default function MessagesPage() {
   const [threads, setThreads] = useState<MessageThread[]>(MOCK_THREADS);
@@ -102,8 +103,13 @@ export default function MessagesPage() {
                       </span>
                     </div>
 
-                    <div className="text-[11px] text-zinc-400 font-mono">
-                      {thread.participant.batch}
+                    <div className="flex items-center gap-1.5 mt-0.5">
+                      {thread.participant.house && (
+                        <HouseBadge house={thread.participant.house} size="sm" />
+                      )}
+                      <span className="text-[11px] text-zinc-400 font-mono">
+                        {thread.participant.batch}
+                      </span>
                     </div>
 
                     <p className="text-xs text-zinc-500 truncate mt-1">
@@ -130,8 +136,13 @@ export default function MessagesPage() {
                 <h2 className="text-sm font-semibold text-zinc-900">
                   {activeThread.participant.name}
                 </h2>
-                <div className="text-[11px] text-zinc-400 font-mono">
-                  {activeThread.participant.batch} • {activeThread.participant.role}
+                <div className="flex items-center gap-1.5 mt-0.5">
+                  {activeThread.participant.house && (
+                    <HouseBadge house={activeThread.participant.house} size="sm" />
+                  )}
+                  <span className="text-[11px] text-zinc-400 font-mono">
+                    {activeThread.participant.batch} • {activeThread.participant.role}
+                  </span>
                 </div>
               </div>
             </div>
@@ -179,7 +190,7 @@ export default function MessagesPage() {
             />
             <button
               type="submit"
-              className="px-4 py-2 text-xs font-medium text-white bg-orange-600 hover:bg-orange-700 rounded-lg inline-flex items-center gap-1.5 transition-colors shadow-xs shrink-0"
+              className="btn-press px-4 py-2 text-xs font-medium text-white bg-orange-600 hover:bg-orange-700 rounded-lg inline-flex items-center gap-1.5 transition-colors shadow-xs shrink-0"
             >
               <Send size={13} />
               Send

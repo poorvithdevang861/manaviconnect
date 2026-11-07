@@ -105,6 +105,7 @@ export interface MessageThread {
     id: string;
     name: string;
     batch: string;
+    house?: "Aravali" | "Nilgiri" | "Shivalik" | "Udaygiri";
     role: string;
     city: string;
     avatar: string;
@@ -431,6 +432,7 @@ export const MOCK_THREADS: MessageThread[] = [
       id: "mem_2",
       name: "Rohit Kulkarni",
       batch: "Class of 2008",
+      house: "Shivalik",
       role: "Assistant Commissioner",
       city: "Shivamogga",
       avatar: "",
@@ -468,6 +470,7 @@ export const MOCK_THREADS: MessageThread[] = [
       id: "mem_3",
       name: "Sneha Bharadwaj",
       batch: "Class of 2012",
+      house: "Udaygiri",
       role: "Founder & CEO, AgriNext Labs",
       city: "Bengaluru",
       avatar: "",

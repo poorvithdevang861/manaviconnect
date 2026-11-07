@@ -6,7 +6,9 @@ import { useRouter } from "next/navigation";
 import { 
   ArrowLeft, 
   CheckCircle2, 
-  Send
+  Send,
+  Briefcase,
+  ShieldCheck
 } from "lucide-react";
 import { Card } from "@/components/ui/Card";
 import { PageHeader } from "@/components/layout/PageHeader";
@@ -96,7 +98,7 @@ export default function PostJobPage() {
         action={
           <Link
             href="/jobs"
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-zinc-700 bg-white hover:bg-zinc-50 rounded-lg transition-colors border border-zinc-200"
+            className="btn-press inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-zinc-700 bg-white hover:bg-zinc-50 rounded-lg transition-colors border border-zinc-200 shadow-xs"
           >
             <ArrowLeft size={14} className="text-zinc-500" />
             Back to Jobs
@@ -220,13 +222,13 @@ export default function PostJobPage() {
               <div className="pt-4 border-t border-zinc-100 flex items-center justify-end gap-3">
                 <Link
                   href="/jobs"
-                  className="px-4 py-2 text-xs font-medium text-zinc-600 hover:text-zinc-900 transition-colors"
+                  className="btn-press px-4 py-2 text-xs font-medium text-zinc-600 hover:text-zinc-900 transition-colors"
                 >
                   Cancel
                 </Link>
                 <button
                   type="submit"
-                  className="px-5 py-2 text-xs font-medium text-white bg-orange-600 hover:bg-orange-700 rounded-lg transition-colors shadow-xs flex items-center gap-1.5"
+                  className="btn-press px-5 py-2 text-xs font-medium text-white bg-orange-600 hover:bg-orange-700 rounded-lg transition-colors shadow-xs flex items-center gap-1.5"
                 >
                   <Send size={13} />
                   Submit for Admin Review
@@ -240,14 +242,20 @@ export default function PostJobPage() {
         {/* Right Info (4 cols) */}
         <div className="lg:col-span-4 space-y-4">
           <div className="p-4 bg-orange-50/60 border border-orange-200/70 rounded-xl text-xs text-orange-950 space-y-1">
-            <span className="font-semibold text-orange-900 block">Moderated Board</span>
+            <span className="font-semibold text-orange-900 flex items-center gap-1.5">
+              <ShieldCheck size={14} className="text-orange-600" />
+              Moderated Board
+            </span>
             <p className="text-orange-800/90 leading-relaxed text-[11px]">
               To maintain high community standards and prevent recruitment spam, all job listings are verified by your batch administrator before publishing.
             </p>
           </div>
 
           <Card className="p-5 space-y-3 text-xs text-zinc-600 bg-white">
-            <h3 className="font-semibold text-zinc-900 text-sm">Alumni Referral Tips</h3>
+            <h3 className="font-semibold text-zinc-900 text-sm flex items-center gap-1.5">
+              <Briefcase size={14} className="text-orange-600" />
+              Alumni Referral Tips
+            </h3>
             <ul className="space-y-1.5 list-disc pl-4 text-[11px] leading-relaxed">
               <li>Mention if your company offers interview fast-tracking for Navodayans</li>
               <li>Provide a direct internal referral email where possible</li>

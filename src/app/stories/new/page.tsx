@@ -5,7 +5,9 @@ import { useState } from "react";
 import { 
   ArrowLeft, 
   CheckCircle2, 
-  Send 
+  Send,
+  BookOpen,
+  Sparkles
 } from "lucide-react";
 import { Card } from "@/components/ui/Card";
 import { PageHeader } from "@/components/layout/PageHeader";
@@ -90,7 +92,7 @@ export default function WriteStoryPage() {
         action={
           <Link
             href="/stories"
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-zinc-700 bg-white hover:bg-zinc-50 rounded-lg transition-colors border border-zinc-200"
+            className="btn-press inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-zinc-700 bg-white hover:bg-zinc-50 rounded-lg transition-colors border border-zinc-200 shadow-xs"
           >
             <ArrowLeft size={14} className="text-zinc-500" />
             Back to Stories
@@ -169,13 +171,13 @@ export default function WriteStoryPage() {
               <div className="pt-4 border-t border-zinc-100 flex items-center justify-end gap-3">
                 <Link
                   href="/stories"
-                  className="px-4 py-2 text-xs font-medium text-zinc-600 hover:text-zinc-900 transition-colors"
+                  className="btn-press px-4 py-2 text-xs font-medium text-zinc-600 hover:text-zinc-900 transition-colors"
                 >
                   Cancel
                 </Link>
                 <button
                   type="submit"
-                  className="px-5 py-2 text-xs font-medium text-white bg-orange-600 hover:bg-orange-700 rounded-lg transition-colors shadow-xs flex items-center gap-1.5"
+                  className="btn-press px-5 py-2 text-xs font-medium text-white bg-orange-600 hover:bg-orange-700 rounded-lg transition-colors shadow-xs flex items-center gap-1.5"
                 >
                   <Send size={13} />
                   Submit for Verification
@@ -189,17 +191,20 @@ export default function WriteStoryPage() {
         {/* Right Guidelines (4 cols) */}
         <div className="lg:col-span-4 space-y-4">
           <Card className="p-5 space-y-3 text-xs text-zinc-600 bg-white">
-            <h3 className="font-semibold text-zinc-900 text-sm">Editorial Guidelines</h3>
+            <h3 className="font-semibold text-zinc-900 text-sm flex items-center gap-1.5">
+              <BookOpen size={14} className="text-orange-600" />
+              Editorial Guidelines
+            </h3>
             <p className="leading-relaxed">
               MANAVI preserves authentic records of alumni milestones. Write in your natural voice and celebrate the real people involved.
             </p>
-            <div className="pt-2 border-t border-zinc-100 space-y-2">
+            <div className="pt-2 border-t border-zinc-100 space-y-2.5">
               <div>
-                <strong className="text-zinc-900 block">Batch Mentions</strong>
-                <span>Include batch year (e.g. '12) so batchmates can be tagged.</span>
+                <strong className="text-zinc-900 block font-mono text-[11px] uppercase">Batch Mentions</strong>
+                <span>Include batch year (e.g. '12) so batchmates can be tagged in the directory.</span>
               </div>
               <div>
-                <strong className="text-zinc-900 block">Audience Privacy</strong>
+                <strong className="text-zinc-900 block font-mono text-[11px] uppercase">Audience Privacy</strong>
                 <span>Stories marked "My Batch Only" are invisible to other batches.</span>
               </div>
             </div>

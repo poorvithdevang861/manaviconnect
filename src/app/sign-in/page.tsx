@@ -100,7 +100,7 @@ export default function SignInPage() {
 
                 <button
                   type="submit"
-                  className="w-full py-2.5 text-xs font-medium text-white bg-orange-600 hover:bg-orange-700 rounded-lg transition-colors shadow-xs flex items-center justify-center gap-1.5"
+                  className="btn-press w-full py-2.5 text-xs font-medium text-white bg-orange-600 hover:bg-orange-700 rounded-lg transition-colors shadow-xs flex items-center justify-center gap-1.5"
                 >
                   Send One-Time Code
                   <ArrowRight size={13} />
@@ -150,7 +150,7 @@ export default function SignInPage() {
 
                 <button
                   type="submit"
-                  className="w-full py-2.5 text-xs font-medium text-white bg-orange-600 hover:bg-orange-700 rounded-lg transition-colors shadow-xs"
+                  className="btn-press w-full py-2.5 text-xs font-medium text-white bg-orange-600 hover:bg-orange-700 rounded-lg transition-colors shadow-xs"
                 >
                   Sign In with Password
                 </button>
@@ -198,7 +198,7 @@ export default function SignInPage() {
 
               <button
                 type="submit"
-                className="w-full py-2.5 text-xs font-medium text-white bg-orange-600 hover:bg-orange-700 rounded-lg transition-colors shadow-xs flex items-center justify-center gap-1.5"
+                className="btn-press w-full py-2.5 text-xs font-medium text-white bg-orange-600 hover:bg-orange-700 rounded-lg transition-colors shadow-xs flex items-center justify-center gap-1.5"
               >
                 Verify & Enter
                 <ArrowRight size={13} />

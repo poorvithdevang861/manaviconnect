@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { Search, ArrowRight, Plus, MapPin } from "lucide-react";
+import { Search, ArrowRight, Plus, MapPin, ShieldCheck, Compass, Calendar, Briefcase, Clock } from "lucide-react";
 import { 
   CURRENT_USER, 
   MOCK_STORIES, 
@@ -11,7 +11,7 @@ import {
   MOCK_MEMBERS 
 } from "@/lib/mockData";
 import { Card } from "@/components/ui/Card";
-import { Badge, StoryCategoryBadge, JobTypeBadge } from "@/components/ui/Badge";
+import { Badge, StoryCategoryBadge, JobTypeBadge, HouseBadge } from "@/components/ui/Badge";
 import { PageHeader } from "@/components/layout/PageHeader";
 
 export default function HomePage() {
@@ -52,6 +52,54 @@ export default function HomePage() {
         }
       />
 
+      {/* Collegiate Campus Metric Strip */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        <Link
+          href="/people"
+          className="group p-4 bg-white border border-zinc-200/80 rounded-xl hover:border-zinc-300 transition-all hover:shadow-xs"
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-medium text-zinc-500">Verified Alumni</span>
+            <ShieldCheck size={16} className="text-emerald-600 transition-transform duration-200 group-hover:scale-110" />
+          </div>
+          <div className="mt-2 text-2xl font-bold tracking-tight text-zinc-900 font-mono">84</div>
+          <div className="mt-0.5 text-[11px] text-zinc-400 font-mono">Across 12 passing batches</div>
+        </Link>
+        <Link
+          href="/people"
+          className="group p-4 bg-white border border-zinc-200/80 rounded-xl hover:border-zinc-300 transition-all hover:shadow-xs"
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-medium text-zinc-500">Campus Houses</span>
+            <Compass size={16} className="text-orange-600 transition-transform duration-200 group-hover:scale-110" />
+          </div>
+          <div className="mt-2 text-2xl font-bold tracking-tight text-zinc-900 font-mono">4</div>
+          <div className="mt-0.5 text-[11px] text-zinc-400 font-mono">Aravali • Nilgiri • Shivalik • Udaygiri</div>
+        </Link>
+        <Link
+          href="/events"
+          className="group p-4 bg-white border border-zinc-200/80 rounded-xl hover:border-zinc-300 transition-all hover:shadow-xs"
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-medium text-zinc-500">Upcoming Meets</span>
+            <Calendar size={16} className="text-blue-600 transition-transform duration-200 group-hover:scale-110" />
+          </div>
+          <div className="mt-2 text-2xl font-bold tracking-tight text-zinc-900 font-mono">{MOCK_EVENTS.length}</div>
+          <div className="mt-0.5 text-[11px] text-zinc-400 font-mono">Winter reunions & city meetups</div>
+        </Link>
+        <Link
+          href="/jobs"
+          className="group p-4 bg-white border border-zinc-200/80 rounded-xl hover:border-zinc-300 transition-all hover:shadow-xs"
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-medium text-zinc-500">Open Opportunities</span>
+            <Briefcase size={16} className="text-amber-600 transition-transform duration-200 group-hover:scale-110" />
+          </div>
+          <div className="mt-2 text-2xl font-bold tracking-tight text-zinc-900 font-mono">{MOCK_JOBS.length}</div>
+          <div className="mt-0.5 text-[11px] text-zinc-400 font-mono">Internal referrals & active roles</div>
+        </Link>
+      </div>
+
       {/* Global Search Bar */}
       <div className="bg-white border border-zinc-200/80 rounded-xl p-3 shadow-xs relative transition-shadow duration-150 focus-within:shadow-sm focus-within:border-zinc-300">
         <div className="relative">
@@ -88,7 +136,10 @@ export default function HomePage() {
                         <div className="text-xs text-zinc-500">{m.role} • {m.organisation}</div>
                       </div>
                     </div>
-                    <Badge variant="brand" size="sm">{m.batch}</Badge>
+                    <div className="flex items-center gap-1.5 shrink-0">
+                      {m.house && <HouseBadge house={m.house} size="sm" />}
+                      <Badge variant="brand" size="sm">{m.batch}</Badge>
+                    </div>
                   </Link>
                 ))}
               </div>
@@ -120,7 +171,10 @@ export default function HomePage() {
                   <StoryCategoryBadge type={story.type} size="sm" />
                   <span className="text-zinc-400 font-mono">{story.publishedAt}</span>
                   <span className="text-zinc-300">•</span>
-                  <span className="text-zinc-400">{story.readTime}</span>
+                  <span className="text-zinc-400 flex items-center gap-1 font-mono text-[11px]">
+                    <Clock size={11} className="text-zinc-400" />
+                    {story.readTime}
+                  </span>
                 </div>
 
                 <Link href="/stories" className="block">
@@ -153,7 +207,10 @@ export default function HomePage() {
           {/* Upcoming Events */}
           <Card className="p-5 space-y-4 bg-white">
             <div className="flex items-center justify-between">
-              <h3 className="text-sm font-semibold text-zinc-900">Reunions</h3>
+              <h3 className="text-sm font-semibold text-zinc-900 flex items-center gap-1.5">
+                <Calendar size={14} className="text-orange-600" />
+                Reunions & Meets
+              </h3>
               <Link href="/events" className="text-xs text-orange-600 hover:underline font-medium transition-colors">
                 View all
               </Link>
@@ -174,11 +231,11 @@ export default function HomePage() {
                     <MapPin size={12} className="text-zinc-400 shrink-0" />
                     <span>{event.venue}</span>
                   </div>
-                  <div className="mt-2 flex items-center justify-between text-xs text-zinc-500">
-                    <span>{event.goingCount} attending</span>
+                  <div className="mt-2.5 flex items-center justify-between text-xs text-zinc-500">
+                    <span className="font-mono text-[11px]">{event.goingCount} attending</span>
                     <Link
                       href={`/events/${event.id}`}
-                      className="btn-press px-2.5 py-1 rounded-lg text-xs font-medium bg-zinc-100 hover:bg-zinc-200 text-zinc-800"
+                      className="btn-press px-2.5 py-1 rounded-lg text-xs font-medium bg-zinc-100 hover:bg-zinc-200 text-zinc-800 transition-colors"
                     >
                       RSVP
                     </Link>
@@ -191,7 +248,10 @@ export default function HomePage() {
           {/* Jobs Board */}
           <Card className="p-5 space-y-4 bg-white">
             <div className="flex items-center justify-between">
-              <h3 className="text-sm font-semibold text-zinc-900">Job Board</h3>
+              <h3 className="text-sm font-semibold text-zinc-900 flex items-center gap-1.5">
+                <Briefcase size={14} className="text-orange-600" />
+                Alumni Job Board
+              </h3>
               <Link href="/jobs" className="text-xs text-orange-600 hover:underline font-medium transition-colors">
                 View all
               </Link>

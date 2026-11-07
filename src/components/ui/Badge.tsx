@@ -9,7 +9,9 @@ import {
   Globe, 
   FileCheck,
   ShieldCheck,
-  Award
+  Award,
+  Compass,
+  Users
 } from "lucide-react";
 
 interface BadgeProps {
@@ -98,5 +100,34 @@ export function JobTypeBadge({
       <Icon size={size === "sm" ? 11 : 13} className="shrink-0" />
       <span>{type}</span>
     </Badge>
+  );
+}
+
+export function HouseBadge({
+  house,
+  size = "sm",
+  className = "",
+}: {
+  house: "Aravali" | "Nilgiri" | "Shivalik" | "Udaygiri" | string;
+  size?: "sm" | "md";
+  className?: string;
+}) {
+  const houseStyles: Record<string, string> = {
+    aravali: "bg-emerald-50 text-emerald-800 border-emerald-200/80",
+    nilgiri: "bg-blue-50 text-blue-800 border-blue-200/80",
+    shivalik: "bg-rose-50 text-rose-800 border-rose-200/80",
+    udaygiri: "bg-amber-50 text-amber-800 border-amber-200/80",
+  };
+
+  const style = houseStyles[house.toLowerCase()] || "bg-zinc-100 text-zinc-700 border-zinc-200";
+  const sizeClass = size === "sm" ? "px-2 py-0.5 text-[11px]" : "px-2.5 py-0.5 text-xs";
+
+  return (
+    <span
+      className={`inline-flex items-center gap-1 rounded-md font-mono border font-medium ${sizeClass} ${style} ${className}`}
+    >
+      <Compass size={size === "sm" ? 10 : 12} className="shrink-0" />
+      <span>{house}</span>
+    </span>
   );
 }

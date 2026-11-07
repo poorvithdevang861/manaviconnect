@@ -9,8 +9,8 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["var(--font-public-sans)", "system-ui", "-apple-system", "sans-serif"],
-        mono: ["var(--font-jetbrains-mono)", "monospace"],
+        sans: ["var(--font-public-sans)", "system-ui", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "sans-serif"],
+        mono: ["var(--font-jetbrains-mono)", "ui-monospace", "SFMono-Regular", "monospace"],
       },
       colors: {
         canvas: "#fafafa",
@@ -31,9 +31,33 @@ const config: Config = {
           900: "#09090b",
           800: "#18181b",
           700: "#27272a",
+          600: "#52525b",
           500: "#71717a",
           400: "#a1a1aa",
           300: "#d4d4d8",
+        },
+        // Navodaya Campus House Metaphor Palette
+        house: {
+          aravali: {
+            bg: "#f0fdf4",
+            text: "#15803d",
+            border: "#bbf7d0",
+          },
+          nilgiri: {
+            bg: "#eff6ff",
+            text: "#1d4ed8",
+            border: "#bfdbfe",
+          },
+          shivalik: {
+            bg: "#fff1f2",
+            text: "#be123c",
+            border: "#fecdd3",
+          },
+          udaygiri: {
+            bg: "#fffbeb",
+            text: "#b45309",
+            border: "#fde68a",
+          },
         },
       },
       borderRadius: {
@@ -42,6 +66,7 @@ const config: Config = {
         panel: "12px",
       },
       boxShadow: {
+        xs: "0 1px 2px 0 rgba(0, 0, 0, 0.04)",
         subtle: "0 1px 2px 0 rgba(0, 0, 0, 0.03)",
         card: "0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.02)",
         dropdown: "0 4px 16px -2px rgba(0, 0, 0, 0.06)",

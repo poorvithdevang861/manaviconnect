@@ -14,6 +14,7 @@ export default function JoinPage() {
     schoolName: "MANAVI",
     yearJoined: 2007,
     yearLeft: 2014,
+    house: "Aravali" as "Aravali" | "Nilgiri" | "Shivalik" | "Udaygiri",
     admissionNumber: "",
     name: "",
     email: "",
@@ -58,7 +59,7 @@ export default function JoinPage() {
           <div className="pt-4">
             <Link
               href="/sign-in"
-              className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-medium bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors shadow-xs"
+              className="btn-press inline-flex items-center gap-1.5 px-4 py-2 text-xs font-medium bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors shadow-xs"
             >
               Return to Sign In
               <ArrowRight size={13} />
@@ -139,17 +140,35 @@ export default function JoinPage() {
               </div>
             </div>
 
-            <div>
-              <label className="block text-[11px] font-mono text-zinc-500 uppercase mb-1">
-                Admission / Roll Number (Optional)
-              </label>
-              <input
-                type="text"
-                value={formData.admissionNumber}
-                onChange={(e) => setFormData({ ...formData, admissionNumber: e.target.value })}
-                placeholder="e.g. 1420"
-                className="w-full px-3 py-1.5 text-xs bg-white border border-zinc-200 rounded-lg outline-none font-mono text-zinc-900 focus:border-orange-500"
-              />
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="block text-[11px] font-mono text-zinc-500 uppercase mb-1">
+                  Campus House *
+                </label>
+                <select
+                  value={formData.house}
+                  onChange={(e) => setFormData({ ...formData, house: e.target.value as any })}
+                  className="w-full px-3 py-1.5 text-xs bg-white border border-zinc-200 rounded-lg outline-none font-mono text-zinc-900 focus:border-orange-500"
+                >
+                  <option value="Aravali">Aravali House</option>
+                  <option value="Nilgiri">Nilgiri House</option>
+                  <option value="Shivalik">Shivalik House</option>
+                  <option value="Udaygiri">Udaygiri House</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-mono text-zinc-500 uppercase mb-1">
+                  Admission / Roll No. (Optional)
+                </label>
+                <input
+                  type="text"
+                  value={formData.admissionNumber}
+                  onChange={(e) => setFormData({ ...formData, admissionNumber: e.target.value })}
+                  placeholder="e.g. 1420"
+                  className="w-full px-3 py-1.5 text-xs bg-white border border-zinc-200 rounded-lg outline-none font-mono text-zinc-900 focus:border-orange-500"
+                />
+              </div>
             </div>
           </div>
 
@@ -244,7 +263,7 @@ export default function JoinPage() {
           <div className="pt-2">
             <button
               type="submit"
-              className="w-full py-2.5 text-xs font-medium text-white bg-orange-600 hover:bg-orange-700 rounded-lg transition-colors shadow-xs"
+              className="btn-press w-full py-2.5 text-xs font-medium text-white bg-orange-600 hover:bg-orange-700 rounded-lg transition-colors shadow-xs"
             >
               Submit Membership Request
             </button>

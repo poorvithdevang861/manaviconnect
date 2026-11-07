@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import { CURRENT_USER } from "@/lib/mockData";
 import { Card } from "@/components/ui/Card";
-import { Badge } from "@/components/ui/Badge";
+import { Badge, HouseBadge } from "@/components/ui/Badge";
 import { PageHeader } from "@/components/layout/PageHeader";
 
 export default function ProfileAndPrivacyPage() {
@@ -47,7 +47,7 @@ export default function ProfileAndPrivacyPage() {
         action={
           <Link
             href="/sign-in"
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-red-600 bg-red-50 hover:bg-red-100 rounded-lg border border-red-200 transition-colors shrink-0"
+            className="btn-press inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-red-600 bg-red-50 hover:bg-red-100 rounded-lg border border-red-200 transition-colors shrink-0 shadow-xs"
           >
             <LogOut size={13} />
             Sign out
@@ -203,7 +203,7 @@ export default function ProfileAndPrivacyPage() {
             <div className="flex items-center justify-end gap-3">
               <button
                 type="submit"
-                className="px-5 py-2 text-xs font-medium text-white bg-orange-600 hover:bg-orange-700 rounded-lg inline-flex items-center gap-1.5 transition-colors shadow-xs"
+                className="btn-press px-5 py-2 text-xs font-medium text-white bg-orange-600 hover:bg-orange-700 rounded-lg inline-flex items-center gap-1.5 transition-colors shadow-xs"
               >
                 <Save size={13} />
                 Save Profile & Privacy
@@ -227,8 +227,11 @@ export default function ProfileAndPrivacyPage() {
                   <h3 className="font-semibold text-zinc-900 text-sm">{CURRENT_USER.name}</h3>
                   <Badge variant="verified" size="sm">Verified</Badge>
                 </div>
-                <div className="text-xs text-zinc-500 font-mono mt-0.5">
-                  {CURRENT_USER.batch}
+                <div className="flex items-center gap-1.5 mt-1">
+                  {CURRENT_USER.house && <HouseBadge house={CURRENT_USER.house} size="sm" />}
+                  <span className="text-xs text-zinc-500 font-mono">
+                    {CURRENT_USER.batch}
+                  </span>
                 </div>
               </div>
             </div>
@@ -239,7 +242,7 @@ export default function ProfileAndPrivacyPage() {
                 <span className="font-medium text-zinc-800">{CURRENT_USER.school}</span>
               </div>
               <div>
-                <span className="text-zinc-400 font-mono uppercase text-[11px] block">House</span>
+                <span className="text-zinc-400 font-mono uppercase text-[11px] block">Campus House</span>
                 <span className="font-medium text-zinc-800">{CURRENT_USER.house} House</span>
               </div>
               <div>

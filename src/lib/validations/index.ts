@@ -33,6 +33,7 @@ export const joinRequestSchema = z.object({
   email: z.string().email("Valid email required"),
   phone: z.string().optional(),
   city: z.string().min(2, "Current city is required"),
+  house: z.string().optional(),
   role: z.string().optional(),
   organisation: z.string().optional(),
 }).refine((data) => data.yearLeft >= data.yearJoined, {

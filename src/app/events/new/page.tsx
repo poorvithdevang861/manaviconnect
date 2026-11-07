@@ -5,7 +5,9 @@ import { useState } from "react";
 import { 
   ArrowLeft, 
   CheckCircle2, 
-  Send
+  Send,
+  Calendar,
+  ClipboardList
 } from "lucide-react";
 import { Card } from "@/components/ui/Card";
 import { PageHeader } from "@/components/layout/PageHeader";
@@ -76,7 +78,7 @@ export default function HostEventPage() {
         action={
           <Link
             href="/events"
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-zinc-700 bg-white hover:bg-zinc-50 rounded-lg transition-colors border border-zinc-200"
+            className="btn-press inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-zinc-700 bg-white hover:bg-zinc-50 rounded-lg transition-colors border border-zinc-200 shadow-xs"
           >
             <ArrowLeft size={14} className="text-zinc-500" />
             Back to Events
@@ -182,13 +184,13 @@ export default function HostEventPage() {
               <div className="pt-4 border-t border-zinc-100 flex items-center justify-end gap-3">
                 <Link
                   href="/events"
-                  className="px-4 py-2 text-xs font-medium text-zinc-600 hover:text-zinc-900 transition-colors"
+                  className="btn-press px-4 py-2 text-xs font-medium text-zinc-600 hover:text-zinc-900 transition-colors"
                 >
                   Cancel
                 </Link>
                 <button
                   type="submit"
-                  className="px-5 py-2 text-xs font-medium text-white bg-orange-600 hover:bg-orange-700 rounded-lg transition-colors shadow-xs flex items-center gap-1.5"
+                  className="btn-press px-5 py-2 text-xs font-medium text-white bg-orange-600 hover:bg-orange-700 rounded-lg transition-colors shadow-xs flex items-center gap-1.5"
                 >
                   <Send size={13} />
                   Schedule Event
@@ -202,10 +204,13 @@ export default function HostEventPage() {
         {/* Right Info (4 cols) */}
         <div className="lg:col-span-4 space-y-4">
           <Card className="p-5 space-y-3 text-xs text-zinc-600 bg-white">
-            <h3 className="font-semibold text-zinc-900 text-sm">Host Checklist</h3>
+            <h3 className="font-semibold text-zinc-900 text-sm flex items-center gap-1.5">
+              <ClipboardList size={14} className="text-orange-600" />
+              Host Checklist
+            </h3>
             <ul className="space-y-2 list-disc pl-4 text-[11px] leading-relaxed">
-              <li>Confirm capacity and catering estimate</li>
-              <li>Provide local contact for outstation batchmates</li>
+              <li>Confirm capacity and catering estimate with venue staff</li>
+              <li>Provide local contact number for outstation batchmates</li>
               <li>Notify batch admin for campus guest room reservations</li>
             </ul>
           </Card>
