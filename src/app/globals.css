@@ -1,0 +1,99 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+@layer base {
+  :root {
+    --font-public-sans: 'Public Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+
+  html {
+    overflow-y: scroll;
+  }
+
+  body {
+    background-color: #fafafa;
+    color: #09090b;
+    font-family: var(--font-public-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    letter-spacing: -0.01em;
+    min-height: 100vh;
+  }
+
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@layer utilities {
+  .border-hairline {
+    border-color: #e4e4e7;
+  }
+
+  .border-hairline-active {
+    border-color: #d4d4d8;
+  }
+
+  .bg-warm-canvas {
+    background-color: #fafafa;
+  }
+
+  .bg-warm-surface {
+    background-color: #ffffff;
+  }
+
+  .bg-warm-raised {
+    background-color: #f4f4f5;
+  }
+
+  /* Micro-animations and tactile interactions */
+  .btn-press {
+    transition: transform 0.12s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+  .btn-press:hover {
+    transform: translateY(-1px);
+  }
+  .btn-press:active {
+    transform: translateY(0) scale(0.97);
+  }
+
+  .chip-press {
+    transition: transform 0.12s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  }
+  .chip-press:hover {
+    transform: translateY(-1px);
+  }
+  .chip-press:active {
+    transform: translateY(0) scale(0.96);
+  }
+}
+
+@keyframes enter {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: enter 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Hide Next.js development indicator "N" icon overlay in bottom corner */
+nextjs-portal,
+[data-nextjs-toast],
+[data-nextjs-dev-tools-button],
+#nextjs-dev-tools,
+div[data-next-badge],
+div[data-nextjs-indicator],
+[data-nextjs-dev-tools] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
