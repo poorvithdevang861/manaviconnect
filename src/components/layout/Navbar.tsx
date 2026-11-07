@@ -19,10 +19,10 @@ import { CURRENT_USER } from "@/lib/mockData";
 const NAV_ITEMS = [
   { label: "Home", href: "/", icon: Home },
   { label: "Directory", href: "/people", icon: Users },
-  { label: "Dispatches", href: "/stories", icon: BookOpen },
-  { label: "Reunions", href: "/events", icon: Calendar },
-  { label: "Careers", href: "/jobs", icon: Briefcase },
-  { label: "Connect", href: "/messages", icon: MessageSquare },
+  { label: "Stories", href: "/stories", icon: BookOpen },
+  { label: "Events", href: "/events", icon: Calendar },
+  { label: "Jobs", href: "/jobs", icon: Briefcase },
+  { label: "Messages", href: "/messages", icon: MessageSquare },
 ];
 
 export function Navbar() {

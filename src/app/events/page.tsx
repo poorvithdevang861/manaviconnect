@@ -40,9 +40,9 @@ export default function EventsPage() {
       
       {/* Standardized Page Header */}
       <PageHeader
-        tag="Reunions"
+        tag="Events"
         meta="Alumni Meets"
-        title="Upcoming Events & Reunions"
+        title="Upcoming Events"
         description="Campus annual days, regional chapter gatherings, and batch milestones."
         action={
           <Link

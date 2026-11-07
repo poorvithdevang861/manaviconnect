@@ -71,9 +71,9 @@ export default function HostEventPage() {
       
       {/* Standardized Page Header with Back Action */}
       <PageHeader
-        tag="Reunions"
+        tag="Events"
         meta="New Gathering"
-        title="Host a Reunion or Meetup"
+        title="Host an Alumni Event"
         description="Coordinate batch decennials, city chapter breakfasts, or campus gatherings."
         action={
           <Link

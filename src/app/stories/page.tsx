@@ -36,10 +36,10 @@ export default function StoriesPage() {
       
       {/* Standardized Page Header */}
       <PageHeader
-        tag="Dispatches"
+        tag="Stories"
         meta="Archive"
         title="Alumni Stories & News"
-        description="Campus memories, achievements, and batch dispatches."
+        description="Campus memories, achievements, and batch stories."
         action={
           <Link
             href="/stories/new"
@@ -113,9 +113,9 @@ export default function StoriesPage() {
         {/* Right Column (4 cols): Guidelines */}
         <div className="lg:col-span-4 space-y-4">
           <Card className="p-5 space-y-3 bg-white">
-            <h3 className="text-sm font-semibold text-zinc-900">About Dispatches</h3>
+            <h3 className="text-sm font-semibold text-zinc-900">About Stories</h3>
             <p className="text-xs text-zinc-600 leading-relaxed">
-              Stories and dispatches chronicle achievements, alumni memoirs, and campus reunions.
+              Stories chronicle achievements, alumni memoirs, and campus reunions.
             </p>
             <div className="pt-2 border-t border-zinc-100 text-xs space-y-2 text-zinc-600">
               <div>

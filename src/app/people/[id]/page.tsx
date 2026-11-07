@@ -201,14 +201,14 @@ export default function MemberProfilePage({ params }: { params: Promise<{ id: st
             <div className="flex items-center justify-between">
               <h3 className="text-base font-semibold text-zinc-900 flex items-center gap-2">
                 <BookOpen size={16} />
-                Stories & Dispatches by {member.name}
+                Stories by {member.name}
               </h3>
               <span className="text-xs text-zinc-400 font-mono">{memberStories.length} published</span>
             </div>
 
             {memberStories.length === 0 ? (
               <Card className="p-8 text-center text-xs text-zinc-500 bg-white">
-                {member.name} has not authored any dispatches yet.
+                {member.name} has not authored any stories yet.
               </Card>
             ) : (
               <div className="space-y-3">

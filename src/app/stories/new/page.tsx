@@ -85,7 +85,7 @@ export default function WriteStoryPage() {
       
       {/* Standardized Page Header with Back Action */}
       <PageHeader
-        tag="Dispatches"
+        tag="Stories"
         meta="New Article"
         title="Write an Alumni Story"
         description="Share batch milestones, alumni achievements, campus reunions, or memoirs."

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Users, Calendar, User, MessageSquare } from "lucide-react";
+import { Home, Users, BookOpen, Calendar, User } from "lucide-react";
 
 export function MobileTabBar() {
   const pathname = usePathname();
@@ -14,8 +14,8 @@ export function MobileTabBar() {
   const tabs = [
     { label: "Home", href: "/", icon: Home },
     { label: "People", href: "/people", icon: Users },
+    { label: "Stories", href: "/stories", icon: BookOpen },
     { label: "Events", href: "/events", icon: Calendar },
-    { label: "Chat", href: "/messages", icon: MessageSquare },
     { label: "Me", href: "/me", icon: User },
   ];
 

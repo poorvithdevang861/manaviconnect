@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { Search, ArrowRight, Plus, MapPin, ShieldCheck, Compass, Calendar, Briefcase, Clock } from "lucide-react";
+import { Search, ArrowRight, Plus, MapPin, Calendar, Briefcase, Clock } from "lucide-react";
 import { 
   CURRENT_USER, 
   MOCK_STORIES, 
@@ -31,8 +31,8 @@ export default function HomePage() {
       
       {/* Standardized Header */}
       <PageHeader
-        title="MANAVI Alumni"
-        description="Updates, reunions, and opportunities across our verified network."
+        title="MANAVI Alumni Network"
+        description="Updates, stories, events, and opportunities across our verified alumni community."
         action={
           <div className="flex items-center gap-2">
             <Link
@@ -51,54 +51,6 @@ export default function HomePage() {
           </div>
         }
       />
-
-      {/* Collegiate Campus Metric Strip */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-        <Link
-          href="/people"
-          className="group p-4 bg-white border border-zinc-200/80 rounded-xl hover:border-zinc-300 transition-all hover:shadow-xs"
-        >
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-zinc-500">Verified Alumni</span>
-            <ShieldCheck size={16} className="text-emerald-600 transition-transform duration-200 group-hover:scale-110" />
-          </div>
-          <div className="mt-2 text-2xl font-bold tracking-tight text-zinc-900 font-mono">84</div>
-          <div className="mt-0.5 text-[11px] text-zinc-400 font-mono">Across 12 passing batches</div>
-        </Link>
-        <Link
-          href="/people"
-          className="group p-4 bg-white border border-zinc-200/80 rounded-xl hover:border-zinc-300 transition-all hover:shadow-xs"
-        >
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-zinc-500">Campus Houses</span>
-            <Compass size={16} className="text-orange-600 transition-transform duration-200 group-hover:scale-110" />
-          </div>
-          <div className="mt-2 text-2xl font-bold tracking-tight text-zinc-900 font-mono">4</div>
-          <div className="mt-0.5 text-[11px] text-zinc-400 font-mono">Aravali • Nilgiri • Shivalik • Udaygiri</div>
-        </Link>
-        <Link
-          href="/events"
-          className="group p-4 bg-white border border-zinc-200/80 rounded-xl hover:border-zinc-300 transition-all hover:shadow-xs"
-        >
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-zinc-500">Upcoming Meets</span>
-            <Calendar size={16} className="text-blue-600 transition-transform duration-200 group-hover:scale-110" />
-          </div>
-          <div className="mt-2 text-2xl font-bold tracking-tight text-zinc-900 font-mono">{MOCK_EVENTS.length}</div>
-          <div className="mt-0.5 text-[11px] text-zinc-400 font-mono">Winter reunions & city meetups</div>
-        </Link>
-        <Link
-          href="/jobs"
-          className="group p-4 bg-white border border-zinc-200/80 rounded-xl hover:border-zinc-300 transition-all hover:shadow-xs"
-        >
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-zinc-500">Open Opportunities</span>
-            <Briefcase size={16} className="text-amber-600 transition-transform duration-200 group-hover:scale-110" />
-          </div>
-          <div className="mt-2 text-2xl font-bold tracking-tight text-zinc-900 font-mono">{MOCK_JOBS.length}</div>
-          <div className="mt-0.5 text-[11px] text-zinc-400 font-mono">Internal referrals & active roles</div>
-        </Link>
-      </div>
 
       {/* Global Search Bar */}
       <div className="bg-white border border-zinc-200/80 rounded-xl p-3 shadow-xs relative transition-shadow duration-150 focus-within:shadow-sm focus-within:border-zinc-300">
@@ -209,7 +161,7 @@ export default function HomePage() {
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-semibold text-zinc-900 flex items-center gap-1.5">
                 <Calendar size={14} className="text-orange-600" />
-                Reunions & Meets
+                Upcoming Events
               </h3>
               <Link href="/events" className="text-xs text-orange-600 hover:underline font-medium transition-colors">
                 View all

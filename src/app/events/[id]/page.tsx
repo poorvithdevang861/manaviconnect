@@ -61,7 +61,7 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
       
       {/* Standardized Page Header with Back Action */}
       <PageHeader
-        tag="Reunions"
+        tag="Events"
         meta={`${event.date} • ${event.city}`}
         title={event.title}
         description={`Organised by ${event.host.name} (${event.host.batch})`}
