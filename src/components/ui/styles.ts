@@ -1,7 +1,7 @@
 export const pageCls = "max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6 animate-fade-in";
 
 export const inputCls =
-  "w-full px-3.5 py-2 text-sm bg-white border border-zinc-200 rounded-lg text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-1 focus:ring-orange-500 focus:border-orange-500 transition-colors disabled:bg-zinc-50 disabled:text-zinc-500";
+  "w-full min-w-0 px-3.5 py-2 text-base sm:text-sm bg-white border border-zinc-200 rounded-lg text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-1 focus:ring-orange-500 focus:border-orange-500 transition-colors disabled:bg-zinc-50 disabled:text-zinc-500";
 
 export const labelCls = "block text-xs font-medium text-zinc-700 mb-1.5";
 

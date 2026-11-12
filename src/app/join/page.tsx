@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { MailCheck } from "lucide-react";
+import { GoogleButton } from "@/components/auth/GoogleButton";
 import { AuthShell } from "@/components/layout/AuthShell";
 import { Field, TextInput } from "@/components/ui/Field";
 import { Notice } from "@/components/ui/States";
@@ -17,7 +18,7 @@ export default function JoinPage() {
   const router = useRouter();
   const params = useSearchParams();
   const inviteToken = params.get("invite");
-  const { signup } = useAuth();
+  const { signup, loginWithGoogle } = useAuth();
 
   const [invite, setInvite] = useState<InviteValidation | null>(null);
   const [form, setForm] = useState({ name: "", email: "", password: "", confirm_password: "" });
@@ -45,12 +46,16 @@ export default function JoinPage() {
     setBusy(true);
     try {
       await signup(parsed.data);
-      if (inviteToken && invite?.valid) await api.invites.accept(inviteToken).catch(() => undefined);
-      router.replace("/me?welcome=1");
+      await finish();
     } catch (err) {
       setFormError(errorText(err));
       setBusy(false);
     }
+  };
+
+  const finish = async () => {
+    if (inviteToken && invite?.valid) await api.invites.accept(inviteToken).catch(() => undefined);
+    router.replace("/me?welcome=1");
   };
 
   const set = (key: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement>) => setForm({ ...form, [key]: e.target.value });
@@ -77,9 +82,17 @@ export default function JoinPage() {
       {invite && !invite.valid && <Notice tone="error">{invite.message} You can still sign up below.</Notice>}
       {formError && <Notice tone="error">{formError}</Notice>}
 
+      <GoogleButton
+        mode="signup"
+        onCredential={async (idToken) => {
+          await loginWithGoogle(idToken);
+          await finish();
+        }}
+      />
+
       <form onSubmit={submit} className="space-y-4" noValidate>
         <Field label="Full name" error={errors.name}>
-          <TextInput autoComplete="name" autoFocus value={form.name} onChange={set("name")} />
+          <TextInput autoComplete="name" value={form.name} onChange={set("name")} />
         </Field>
         <Field label="Email" error={errors.email}>
           <TextInput type="email" autoComplete="email" value={form.email} onChange={set("email")} disabled={!!invite?.valid} />

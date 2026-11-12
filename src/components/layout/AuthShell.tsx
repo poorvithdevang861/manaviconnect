@@ -17,11 +17,11 @@ export function AuthShell({
   return (
     <div className="min-h-screen flex flex-col justify-center items-center px-4 py-12 bg-[#fafafa] animate-fade-in">
       <div className="text-center mb-8">
-        <Link href="/" className="inline-flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-orange-600 text-white flex items-center justify-center font-bold text-sm shadow-xs">M</div>
-          <span className="font-semibold text-2xl tracking-tight text-zinc-900">MANAVI</span>
+        <Link href="/" className="inline-block" aria-label="MANAVI home">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/brand/manavi-wordmark.png" alt="MANAVI" width={787} height={180} className="h-10 sm:h-12 w-auto" />
         </Link>
-        <p className="text-xs text-zinc-500 mt-1 font-mono">Navodaya Alumni Community</p>
+        <p className="text-xs text-zinc-500 mt-2 font-mono">Navodaya Alumni Community</p>
       </div>
 
       <Card className={`w-full ${wide ? "max-w-lg" : "max-w-md"} p-6 sm:p-8 space-y-5`}>

@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Suspense } from "react";
 import "./globals.css";
 import { Navbar } from "@/components/layout/Navbar";
@@ -9,6 +9,13 @@ export const metadata: Metadata = {
   title: "MANAVI • Navodaya Alumni Community",
   description:
     "The MANAVI alumni community: news, events, stories, jobs, the school timeline and gallery, a marketplace and carpools.",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: "#ffffff",
 };
 
 export default function RootLayout({
@@ -26,7 +33,7 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="min-h-screen bg-[#fafafa] text-zinc-900 selection:bg-orange-100 selection:text-orange-900 pb-16 md:pb-0">
+      <body className="min-h-screen bg-[#fafafa] text-zinc-900 selection:bg-orange-100 selection:text-orange-900 pb-[calc(4rem+env(safe-area-inset-bottom))] md:pb-0">
         <AuthProvider>
           <Navbar />
           <main>

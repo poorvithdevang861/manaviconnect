@@ -1,24 +1,23 @@
 import Link from "next/link";
 import { AlertTriangle, ArrowRight, Calendar, MapPin, Users } from "lucide-react";
-import { api, mediaUrl, type EventItem, type NewsArticle, type Story } from "@/lib/api";
+import { api, type EventItem, type NewsArticle, type Story } from "@/lib/api";
 import { formatDate, formatDateTime, isPast, titleCase } from "@/lib/format";
+import { imageOr } from "@/lib/placeholder";
 import { Avatar } from "@/components/ui/Avatar";
 import { Badge, Tags } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
 import { LikeButton } from "@/components/ui/LikeButton";
 
-function Cover({ src, className = "" }: { src: string | null; className?: string }) {
-  const url = mediaUrl(src);
-  if (!url) return null;
+function Cover({ src, seed, className = "" }: { src: string | null; seed: string; className?: string }) {
   // eslint-disable-next-line @next/next/no-img-element
-  return <img src={url} alt="" className={`w-full object-cover bg-zinc-100 ${className}`} />;
+  return <img src={imageOr(src, seed)} alt="" loading="lazy" className={`block w-full object-cover bg-zinc-100 ${className}`} />;
 }
 
 export function NewsCard({ article }: { article: NewsArticle }) {
   return (
     <Link href={`/news/${article.id}`} className="block group">
       <Card hoverable className="overflow-hidden">
-        <Cover src={article.image_url} className="h-40" />
+        <Cover src={article.image_url} seed={`news-${article.id}`} className="aspect-[16/9]" />
         <div className="p-5 space-y-2">
           <div className="flex flex-wrap items-center gap-2 text-xs">
             {article.severity === "critical" && (
@@ -45,7 +44,7 @@ export function StoryCard({ story }: { story: Story }) {
   return (
     <Link href={`/stories/${story.id}`} className="block group">
       <Card hoverable className="overflow-hidden">
-        <Cover src={story.image_url} className="h-44" />
+        <Cover src={story.image_url} seed={`story-${story.id}`} className="aspect-[16/9]" />
         <div className="p-5 space-y-2.5">
           <h3 className="text-base font-semibold text-zinc-900 group-hover:text-orange-600 transition-colors leading-snug">{story.title}</h3>
           <p className="text-sm text-zinc-600 line-clamp-3 leading-relaxed whitespace-pre-line">{story.content}</p>
@@ -72,7 +71,7 @@ export function EventCard({ event }: { event: EventItem }) {
   return (
     <Link href={`/events/${event.id}`} className="block group">
       <Card hoverable className="overflow-hidden sm:flex">
-        {event.banner_url && <Cover src={event.banner_url} className="h-40 sm:h-auto sm:w-56 shrink-0" />}
+        <Cover src={event.banner_url} seed={`event-${event.id}`} className="aspect-[16/9] sm:aspect-auto sm:w-56 shrink-0" />
         <div className="p-5 space-y-2 flex-1 min-w-0">
           <div className="flex flex-wrap items-center gap-2 text-xs">
             <span className="font-mono font-medium text-orange-700 bg-orange-50 px-2.5 py-0.5 rounded-md border border-orange-200/60 inline-flex items-center gap-1">
@@ -96,7 +95,7 @@ export function EventCard({ event }: { event: EventItem }) {
           </div>
           <p className="text-sm text-zinc-600 line-clamp-2 leading-relaxed">{event.description}</p>
           <div className="pt-3 border-t border-zinc-100 flex items-center justify-between gap-3 text-xs text-zinc-500">
-            <span>
+            <span className="min-w-0 truncate">
               Organised by <strong className="font-semibold text-zinc-900">{event.organizer.name}</strong>
             </span>
             <LikeButton liked={event.is_liked} count={event.like_count} onToggle={() => api.events.like(event.id)} />

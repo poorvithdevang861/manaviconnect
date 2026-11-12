@@ -53,6 +53,7 @@ export const api = {
   auth: {
     signup: (input: SignupInput) => post<AuthResponse>("/api/auth/signup", input),
     login: (email: string, password: string) => post<AuthResponse>("/api/auth/login", { email, password }),
+    google: (id_token: string) => post<AuthResponse>("/api/auth/google", { id_token }),
     forgotPassword: (email: string) => post<MessageResult>("/api/auth/forgot-password", { email }),
     resetPassword: (token: string, new_password: string) =>
       post<MessageResult>("/api/auth/reset-password", { token, new_password }),

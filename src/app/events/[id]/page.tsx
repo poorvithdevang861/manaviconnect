@@ -4,8 +4,9 @@ import Link from "next/link";
 import { use } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Calendar, Clock, MapPin, Users } from "lucide-react";
-import { api, mediaUrl } from "@/lib/api";
+import { api } from "@/lib/api";
 import { canManage, useAuth } from "@/lib/auth";
+import { imageOr } from "@/lib/placeholder";
 import { useApi } from "@/lib/useApi";
 import { formatDate, formatTime, isPast } from "@/lib/format";
 import { Avatar } from "@/components/ui/Avatar";
@@ -49,19 +50,17 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
         event && (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
             <Card className="lg:col-span-8 overflow-hidden">
-              {mediaUrl(event.banner_url) && (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={mediaUrl(event.banner_url)!} alt="" className="w-full max-h-[340px] object-cover" />
-              )}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={imageOr(event.banner_url, `event-${event.id}`)} alt="" className="block w-full aspect-[2/1] object-cover bg-zinc-100" />
               <div className="p-6 sm:p-8 space-y-5">
                 <div className="space-y-2">
                   {isPast(event.datetime) && <Badge size="sm">This event has ended</Badge>}
                   <h1 className="text-2xl sm:text-3xl font-semibold text-zinc-900 tracking-tight leading-tight">{event.title}</h1>
                 </div>
                 <div className="flex items-center justify-between gap-3 pb-5 border-b border-zinc-100">
-                  <span className="flex items-center gap-2 text-xs text-zinc-500">
+                  <span className="flex items-center gap-2 text-xs text-zinc-500 min-w-0">
                     <Avatar name={event.organizer.name} src={event.organizer.avatar_url} size="sm" />
-                    <span>
+                    <span className="min-w-0">
                       Organised by <strong className="text-zinc-900">{event.organizer.name}</strong>
                       {event.organizer.batch && <span className="font-mono"> ({event.organizer.batch})</span>}
                     </span>

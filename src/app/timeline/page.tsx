@@ -101,8 +101,8 @@ function TimelineItem({ entry, onChange, onDeleted }: { entry: TimelineEntry; on
     <li className="pl-6 relative">
       <span className="absolute -left-[7px] top-5 w-3 h-3 rounded-full bg-orange-600 ring-4 ring-[#fafafa]" aria-hidden />
       <Card className="p-5 space-y-3">
-        <div className="flex items-start justify-between gap-3">
-          <div>
+        <div className="flex flex-wrap items-start justify-between gap-x-3 gap-y-2">
+          <div className="min-w-0 flex-1 basis-48">
             <time className="text-xs font-mono font-medium text-orange-700">{formatDate(entry.entry_date)}</time>
             <h2 className="text-base font-semibold text-zinc-900 leading-snug mt-0.5">{entry.title}</h2>
           </div>
@@ -120,18 +120,18 @@ function TimelineItem({ entry, onChange, onDeleted }: { entry: TimelineEntry; on
         <p className="text-sm text-zinc-700 leading-relaxed whitespace-pre-line">{entry.content}</p>
 
         {entry.photos.length > 0 && (
-          <div className="flex flex-wrap gap-2">
+          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2">
             {entry.photos.map((p, i) => {
               const url = mediaUrl(p)!;
               return isPdf(url) ? (
-                <a key={i} href={url} target="_blank" rel="noopener noreferrer" className="w-24 h-24 rounded-lg border border-zinc-200 bg-zinc-50 flex flex-col items-center justify-center gap-1 text-[11px] text-zinc-600 hover:border-orange-300">
+                <a key={i} href={url} target="_blank" rel="noopener noreferrer" className="aspect-square rounded-lg border border-zinc-200 bg-zinc-50 flex flex-col items-center justify-center gap-1 text-[11px] text-zinc-600 hover:border-orange-300">
                   <FileText size={20} className="text-zinc-400" />
                   PDF
                 </a>
               ) : (
-                <a key={i} href={url} target="_blank" rel="noopener noreferrer">
+                <a key={i} href={url} target="_blank" rel="noopener noreferrer" className="block">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={url} alt="" className="w-24 h-24 rounded-lg object-cover border border-zinc-200 hover:opacity-90" />
+                  <img src={url} alt="" loading="lazy" className="block w-full aspect-square rounded-lg object-cover border border-zinc-200 bg-zinc-100 hover:opacity-90" />
                 </a>
               );
             })}
@@ -163,7 +163,7 @@ function TimelineItem({ entry, onChange, onDeleted }: { entry: TimelineEntry; on
               />
             </>
           )}
-          <span className="ml-auto text-[11px] text-zinc-400">Added by {entry.author.name}</span>
+          <span className="sm:ml-auto basis-full sm:basis-auto text-[11px] text-zinc-400">Added by {entry.author.name}</span>
         </div>
 
         {showComments && <Comments entryId={entry.id} onCountChange={(d) => setCommentCount((c) => c + d)} />}

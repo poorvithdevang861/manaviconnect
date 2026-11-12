@@ -89,7 +89,7 @@ export function Comments({ entryId, onCountChange }: { entryId: number; onCountC
             maxLength={1000}
             placeholder="Add a comment"
             aria-label="Add a comment"
-            className={`${inputCls} text-xs`}
+            className={inputCls}
           />
           <button type="submit" disabled={busy || !text.trim()} className="btn-press px-3 py-2 text-xs font-medium text-white bg-orange-600 hover:bg-orange-700 rounded-lg disabled:opacity-50 shrink-0" aria-label="Post comment">
             <Send size={13} />

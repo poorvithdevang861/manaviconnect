@@ -9,9 +9,13 @@
 
   html {
     overflow-y: scroll;
+    overflow-x: hidden;
   }
 
+  /* clip (not hidden) so the sticky header keeps working */
   body {
+    overflow-x: clip;
+    overflow-wrap: break-word;
     background-color: #fafafa;
     color: #09090b;
     font-family: var(--font-public-sans);

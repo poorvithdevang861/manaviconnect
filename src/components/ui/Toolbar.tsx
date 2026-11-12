@@ -23,7 +23,7 @@ export function SearchInput({
   }, [text, value, onChange]);
 
   return (
-    <div className="relative flex-1 min-w-[200px]">
+    <div className="relative flex-1 basis-full sm:basis-auto min-w-0 sm:min-w-[200px]">
       <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400" />
       <input
         type="search"
@@ -31,7 +31,7 @@ export function SearchInput({
         onChange={(e) => setText(e.target.value)}
         placeholder={placeholder}
         aria-label={placeholder}
-        className="w-full pl-9 pr-4 py-2 text-sm bg-zinc-50/60 hover:bg-zinc-50 focus:bg-white border border-zinc-200 focus:border-orange-500 rounded-lg outline-none transition-colors placeholder:text-zinc-400"
+        className="w-full pl-9 pr-4 py-2 text-base sm:text-sm bg-zinc-50/60 hover:bg-zinc-50 focus:bg-white border border-zinc-200 focus:border-orange-500 rounded-lg outline-none transition-colors placeholder:text-zinc-400"
       />
     </div>
   );
@@ -49,7 +49,7 @@ export function FilterChips<T extends string>({
   label?: string;
 }) {
   return (
-    <div className="flex items-center gap-1.5 overflow-x-auto" role="group" aria-label={label}>
+    <div className="flex items-center gap-1.5 overflow-x-auto max-w-full min-w-0 -mx-1 px-1 py-0.5 [scrollbar-width:none]" role="group" aria-label={label}>
       {label && <span className="text-xs font-medium text-zinc-500 mr-1 shrink-0">{label}:</span>}
       {options.map((o) => (
         <button key={o.id} type="button" onClick={() => onChange(o.id)} className={chipCls(o.id === value)} aria-pressed={o.id === value}>

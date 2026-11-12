@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { MapPin, Plus, Store } from "lucide-react";
-import { api, MARKET_CATEGORIES, mediaUrl, type MarketCategory } from "@/lib/api";
+import { MapPin, Plus } from "lucide-react";
+import { api, MARKET_CATEGORIES, type MarketCategory } from "@/lib/api";
+import { imageOr } from "@/lib/placeholder";
 import { useApi } from "@/lib/useApi";
 import { formatPrice, timeAgo, titleCase } from "@/lib/format";
 import { PageHeader } from "@/components/layout/PageHeader";
@@ -57,14 +58,8 @@ export default function MarketplacePage() {
               <li key={item.id}>
                 <Link href={`/marketplace/${item.id}`} className="block group h-full">
                   <Card hoverable className="overflow-hidden h-full flex flex-col">
-                    <div className="aspect-[4/3] bg-zinc-100 flex items-center justify-center">
-                      {mediaUrl(item.image_url) ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img src={mediaUrl(item.image_url)!} alt="" className="w-full h-full object-cover" />
-                      ) : (
-                        <Store size={28} className="text-zinc-300" />
-                      )}
-                    </div>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={imageOr(item.image_url, `market-${item.id}`)} alt="" loading="lazy" className="block w-full aspect-[4/3] object-cover bg-zinc-100" />
                     <div className="p-4 space-y-1.5 flex-1 flex flex-col">
                       <div className="flex items-center justify-between gap-2">
                         <span className="text-base font-semibold text-zinc-900 font-mono">{formatPrice(item.price)}</span>
@@ -72,16 +67,16 @@ export default function MarketplacePage() {
                       </div>
                       <h3 className="text-sm font-semibold text-zinc-900 group-hover:text-orange-600 leading-snug">{item.title}</h3>
                       <p className="text-xs text-zinc-600 line-clamp-2">{item.description}</p>
-                      <div className="mt-auto pt-2 flex items-center justify-between text-[11px] text-zinc-400">
-                        <span className="inline-flex items-center gap-1">
+                      <div className="mt-auto pt-2 flex items-center justify-between gap-2 text-[11px] text-zinc-400">
+                        <span className="inline-flex items-center gap-1 min-w-0">
                           {item.location && (
                             <>
-                              <MapPin size={11} />
-                              {item.location}
+                              <MapPin size={11} className="shrink-0" />
+                              <span className="truncate">{item.location}</span>
                             </>
                           )}
                         </span>
-                        <span>{timeAgo(item.created_at)}</span>
+                        <span className="shrink-0">{timeAgo(item.created_at)}</span>
                       </div>
                     </div>
                   </Card>

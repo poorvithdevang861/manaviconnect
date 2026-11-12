@@ -4,8 +4,9 @@ import Link from "next/link";
 import { use } from "react";
 import { useRouter } from "next/navigation";
 import { AlertTriangle, ArrowLeft } from "lucide-react";
-import { api, mediaUrl } from "@/lib/api";
+import { api } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
+import { imageOr } from "@/lib/placeholder";
 import { useApi } from "@/lib/useApi";
 import { formatDate, titleCase } from "@/lib/format";
 import { Avatar } from "@/components/ui/Avatar";
@@ -47,10 +48,8 @@ export default function NewsArticlePage({ params }: { params: Promise<{ id: stri
       ) : (
         article && (
           <Card className="max-w-3xl overflow-hidden">
-            {mediaUrl(article.image_url) && (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={mediaUrl(article.image_url)!} alt="" className="w-full max-h-[360px] object-cover" />
-            )}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={imageOr(article.image_url, `news-${article.id}`)} alt="" className="block w-full aspect-[2/1] object-cover bg-zinc-100" />
             <article className="p-6 sm:p-8 space-y-4">
               <div className="flex flex-wrap items-center gap-2">
                 {article.severity === "critical" && (

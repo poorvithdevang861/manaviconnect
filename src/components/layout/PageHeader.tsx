@@ -17,7 +17,7 @@ export function PageHeader({
 }: PageHeaderProps) {
   return (
     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-      <div>
+      <div className="min-w-0">
         {(tag || meta) && (
           <div className="flex items-center gap-2 mb-1 text-xs font-mono">
             {tag && <span className="text-brand-600 font-medium uppercase tracking-wider">{tag}</span>}
@@ -31,7 +31,7 @@ export function PageHeader({
         {description && <p className="text-sm text-ink-500 mt-0.5">{description}</p>}
       </div>
 
-      {action && <div className="flex items-center gap-2.5 shrink-0">{action}</div>}
+      {action && <div className="flex flex-wrap items-center gap-2.5 sm:shrink-0">{action}</div>}
     </div>
   );
 }

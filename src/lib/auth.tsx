@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
-import { api, type SignupInput, type User } from "@/lib/api";
+import { api, type AuthResponse, type SignupInput, type User } from "@/lib/api";
 import { AUTH_EXPIRED_EVENT, getToken, setToken } from "@/lib/api/client";
 
 interface AuthState {
@@ -9,6 +9,8 @@ interface AuthState {
   /** True until the stored token has been checked against /api/users/me. */
   loading: boolean;
   login: (email: string, password: string) => Promise<User>;
+  /** Exchanges a Google ID token for a session; creates the account on first use. */
+  loginWithGoogle: (idToken: string) => Promise<User>;
   signup: (input: SignupInput) => Promise<User>;
   logout: () => void;
   setUser: (user: User) => void;
@@ -41,14 +43,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => window.removeEventListener(AUTH_EXPIRED_EVENT, onExpired);
   }, []);
 
-  const login = useCallback(async (email: string, password: string) => {
-    const res = await api.auth.login(email, password);
+  const startSession = useCallback(async (res: AuthResponse) => {
     setToken(res.access_token);
-    // Login returns a trimmed user; fetch the full profile.
+    // Auth responses carry a trimmed user; fetch the full profile.
     const me = await api.users.me().catch(() => res.user);
     setUser(me);
     return me;
   }, []);
+
+  const login = useCallback(
+    async (email: string, password: string) => startSession(await api.auth.login(email, password)),
+    [startSession],
+  );
+
+  const loginWithGoogle = useCallback(
+    async (idToken: string) => startSession(await api.auth.google(idToken)),
+    [startSession],
+  );
 
   const signup = useCallback(async (input: SignupInput) => {
     const res = await api.auth.signup(input);
@@ -60,10 +71,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const logout = useCallback(() => {
     setToken(null);
     setUser(null);
+    window.google?.accounts.id.disableAutoSelect();
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, signup, logout, setUser }}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={{ user, loading, login, loginWithGoogle, signup, logout, setUser }}>
+      {children}
+    </AuthContext.Provider>
   );
 }
 

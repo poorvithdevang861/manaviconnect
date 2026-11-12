@@ -69,12 +69,12 @@ function SpotlightEditor() {
 
   return (
     <section className="space-y-3">
-      <div className="flex items-center justify-between gap-3">
-        <div>
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <div className="min-w-0">
           <h2 className="text-base font-semibold text-zinc-900">Home spotlight</h2>
           <p className="text-xs text-zinc-500">Saving replaces every slide. Removing a slide here deletes it.</p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <button type="button" className={btnSecondary} onClick={() => setSlides((s) => [...s, blankSlide(Math.max(0, ...s.map((x) => x.id)) + 1)])}>
             <Plus size={13} />
             Add slide
@@ -315,9 +315,9 @@ function Drafts() {
   const drafts = data?.articles.filter((a) => !a.is_published) ?? [];
 
   return (
-    <section id="drafts" className="space-y-3 scroll-mt-20">
-      <div className="flex items-center justify-between gap-3">
-        <div>
+    <section id="drafts" className="space-y-3 scroll-mt-20 lg:scroll-mt-36">
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <div className="min-w-0">
           <h2 className="text-base font-semibold text-zinc-900">News drafts</h2>
           <p className="text-xs text-zinc-500">Unpublished articles. Only admins can see these.</p>
         </div>

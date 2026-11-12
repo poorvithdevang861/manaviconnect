@@ -260,7 +260,7 @@ function InviteCard() {
   };
 
   return (
-    <Card id="invite" className="p-5 space-y-3 scroll-mt-20">
+    <Card id="invite" className="p-5 space-y-3 scroll-mt-20 lg:scroll-mt-36">
       <h3 className="text-sm font-semibold text-zinc-900 flex items-center gap-1.5">
         <Mail size={14} className="text-orange-600" />
         Invite a batchmate

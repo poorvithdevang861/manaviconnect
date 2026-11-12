@@ -18,7 +18,7 @@ export function MobileTabBar() {
   if (AUTH_ROUTES.includes(pathname)) return null;
 
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-line px-2 py-1.5 flex items-center justify-around" aria-label="Tabs">
+    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-zinc-200/80 px-2 pt-1.5 pb-[calc(0.375rem+env(safe-area-inset-bottom))] flex items-center justify-around" aria-label="Tabs">
       {TABS.map((tab) => {
         const Icon = tab.icon;
         const active = isActive(pathname, tab.href);
@@ -26,7 +26,7 @@ export function MobileTabBar() {
           <Link
             key={tab.href}
             href={tab.href}
-            className={`flex flex-col items-center justify-center py-1 px-3 rounded-lg text-[11px] transition-all duration-150 active:scale-90 ${
+            className={`flex-1 flex flex-col items-center justify-center py-1 rounded-lg text-[11px] transition-all duration-150 active:scale-90 ${
               active ? "text-orange-600 font-semibold" : "text-zinc-400 hover:text-zinc-700"
             }`}
           >

@@ -109,7 +109,7 @@ export default function JobsPage() {
           )}
         </div>
 
-        <div className="lg:col-span-5 lg:sticky lg:top-20">
+        <div className="lg:col-span-5 lg:sticky lg:top-36">
           {selected ? (
             <JobDetail
               job={selected}

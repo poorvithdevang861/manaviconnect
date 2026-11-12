@@ -1,9 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ApiError, type Method, type RequestOptions } from "./client";
 import type { SpotlightSlide, User } from "./types";
-import { MOCK_ADMIN_EMAIL, MOCK_PASSWORD } from "./demo";
+import { MOCK_ADMIN_EMAIL, MOCK_GOOGLE_PROFILE, MOCK_GOOGLE_TOKEN, MOCK_MEMBER_EMAIL, MOCK_PASSWORD } from "./demo";
+import { dummyImage as photo } from "@/lib/placeholder";
 
-const STORAGE_KEY = "community_hub_mock_db_v1";
+const avatar = (n: number) => `https://i.pravatar.cc/160?img=${n}`;
+
+const STORAGE_KEY = "community_hub_mock_db_v3";
 const E401 = () => new ApiError(401, "Could not validate credentials");
 
 type Row = Record<string, any> & { id: number };
@@ -55,47 +58,56 @@ function seed(): DB {
       bio: "2014 batch. Building the alumni platform and mentoring engineering aspirants.", is_mentor: true,
       mentoring_areas: "Web development, career guidance", phone: "+91 98450 12345",
     }),
-    blankUser(2, "Ananya Hegde", "ananya@example.com", { batch: "2010", city: "Mysuru", profession: "Consultant Pediatrician", company: "Apollo Hospitals", is_mentor: true, mentoring_areas: "NEET preparation" }),
-    blankUser(3, "Rohit Kulkarni", "rohit@example.com", { batch: "2008", city: "Shivamogga", profession: "Assistant Commissioner", company: "Government of Karnataka" }),
-    blankUser(4, "Sneha Bharadwaj", "sneha@example.com", { batch: "2012", city: "Bengaluru", profession: "Founder", company: "AgriNext Labs" }),
-    blankUser(5, "Kiran Prasad", "kiran@example.com", { batch: "2016", city: "Hyderabad", profession: "Cloud Engineer", company: "TCS" }),
+    blankUser(2, "Ananya Hegde", "ananya@example.com", { avatar_url: avatar(47), batch: "2010", city: "Mysuru", profession: "Consultant Pediatrician", company: "Apollo Hospitals", is_mentor: true, mentoring_areas: "NEET preparation" }),
+    blankUser(3, "Rohit Kulkarni", "rohit@example.com", { avatar_url: avatar(12), batch: "2008", city: "Shivamogga", profession: "Assistant Commissioner", company: "Government of Karnataka" }),
+    blankUser(4, "Sneha Bharadwaj", MOCK_MEMBER_EMAIL, { avatar_url: avatar(45), batch: "2012", city: "Bengaluru", profession: "Founder", company: "AgriNext Labs" }),
+    blankUser(5, "Kiran Prasad", "kiran@example.com", { avatar_url: avatar(59), batch: "2016", city: "Hyderabad", profession: "Cloud Engineer", company: "TCS" }),
   ];
 
   return {
     seq: 100,
     users,
     events: [
-      { id: 1, title: "Annual Winter Alumni Reunion", description: "The yearly gathering on the school quadrangle. Felicitation for the 2001 and 2016 batches, lunch, and a cultural evening in the multipurpose hall.", datetime: iso(38, 10), location: "Main Quadrangle, MANAVI Campus", banner_url: null, max_participants: 300, created_by: 3, created_at: iso(-12), is_active: true },
-      { id: 2, title: "Bengaluru Chapter Breakfast", description: "An informal morning walk and breakfast at Cubbon Park for alumni working in and around Bengaluru.", datetime: iso(10, 8), location: "Cubbon Park, Bengaluru", banner_url: null, max_participants: 40, created_by: 1, created_at: iso(-5), is_active: true },
-      { id: 3, title: "Career Guidance Day for Class 12", description: "Alumni from medicine, civil services and engineering spoke to the outgoing batch about entrance exams and college life.", datetime: iso(-30, 9), location: "School Auditorium", banner_url: null, max_participants: null, created_by: 2, created_at: iso(-50), is_active: true },
+      { id: 1, title: "Annual Winter Alumni Reunion", description: "The yearly gathering on the school quadrangle. Felicitation for the 2001 and 2016 batches, lunch, and a cultural evening in the multipurpose hall.", datetime: iso(38, 10), location: "Main Quadrangle, MANAVI Campus", banner_url: photo("reunion"), max_participants: 300, created_by: 3, created_at: iso(-12), is_active: true },
+      { id: 2, title: "Bengaluru Chapter Breakfast", description: "An informal morning walk and breakfast at Cubbon Park for alumni working in and around Bengaluru.", datetime: iso(10, 8), location: "Cubbon Park, Bengaluru", banner_url: photo("meetup"), max_participants: 40, created_by: 1, created_at: iso(-5), is_active: true },
+      { id: 3, title: "Career Guidance Day for Class 12", description: "Alumni from medicine, civil services and engineering spoke to the outgoing batch about entrance exams and college life.", datetime: iso(-30, 9), location: "School Auditorium", banner_url: photo("science"), max_participants: null, created_by: 2, created_at: iso(-50), is_active: true },
     ],
     stories: [
-      { id: 1, title: "Mornings at the 5:45 whistle", content: "No matter where our careers take us, the discipline and friendships formed in the hostel dormitories stay with us. I still wake up before the alarm.\n\nThe cross-country runs around the eucalyptus grove were where most of my lifelong friendships began.", image_url: null, tags: "memoir,hostel", created_by: 4, created_at: iso(-3), is_active: true },
-      { id: 2, title: "From a borrowed laptop to a soil-testing startup", content: "AgriNext Labs started on a borrowed laptop during my final year. Today our soil kits reach more than 4,500 coffee growers in Kodagu and Hassan.\n\nI owe my curiosity to the science exhibitions we ran in 2010.", image_url: null, tags: "startup,agriculture", created_by: 4, created_at: iso(-9), is_active: true },
-      { id: 3, title: "What the library taught me", content: "The school library was the first place I read a newspaper end to end. Twenty years later, I'm glad our batch could give back 1,200 books to it.", image_url: null, tags: "library,giving-back", created_by: 3, created_at: iso(-20), is_active: true },
+      { id: 1, title: "Mornings at the 5:45 whistle", content: "No matter where our careers take us, the discipline and friendships formed in the hostel dormitories stay with us. I still wake up before the alarm.\n\nThe cross-country runs around the eucalyptus grove were where most of my lifelong friendships began.", image_url: photo("sports"), tags: "memoir,hostel", created_by: 4, created_at: iso(-3), is_active: true },
+      { id: 2, title: "From a borrowed laptop to a soil-testing startup", content: "AgriNext Labs started on a borrowed laptop during my final year. Today our soil kits reach more than 4,500 coffee growers in Kodagu and Hassan.\n\nI owe my curiosity to the science exhibitions we ran in 2010.", image_url: photo("workspace"), tags: "startup,agriculture", created_by: 4, created_at: iso(-9), is_active: true },
+      { id: 3, title: "What the library taught me", content: "The school library was the first place I read a newspaper end to end. Twenty years later, I'm glad our batch could give back 1,200 books to it.", image_url: photo("library"), tags: "library,giving-back", created_by: 3, created_at: iso(-20), is_active: true },
     ],
     news: [
-      { id: 1, title: "Reunion registrations close on Dec 10", summary: "Register before Dec 10 so the committee can plan meals and dormitory beds.", content: "Registrations for the annual winter reunion close on December 10. Outstation alumni who need a dormitory bed should mention it in their registration. Families are welcome.", image_url: null, category: "announcement", severity: "critical", is_published: true, created_by: 1, created_at: iso(-1), updated_at: null },
-      { id: 2, title: "Alumni donate 1,200 books to the school library", summary: "The 2004–2012 batches handed over reference books and Olympiad material.", content: "During the reunion, representatives from eight batches handed over a curated collection of reference books, Olympiad material and computer science resources to the school library.", image_url: null, category: "update", severity: "normal", is_published: true, created_by: 1, created_at: iso(-14), updated_at: null },
-      { id: 3, title: "New alumni scholarship (draft)", summary: "Details being finalised with the principal.", content: "The alumni association is setting up a scholarship for students from the most remote villages in the district. More details soon.", image_url: null, category: "general", severity: "normal", is_published: false, created_by: 1, created_at: iso(-2), updated_at: null },
+      { id: 1, title: "Reunion registrations close on Dec 10", summary: "Register before Dec 10 so the committee can plan meals and dormitory beds.", content: "Registrations for the annual winter reunion close on December 10. Outstation alumni who need a dormitory bed should mention it in their registration. Families are welcome.", image_url: photo("campus"), category: "announcement", severity: "critical", is_published: true, created_by: 1, created_at: iso(-1), updated_at: null },
+      { id: 2, title: "Alumni donate 1,200 books to the school library", summary: "The 2004–2012 batches handed over reference books and Olympiad material.", content: "During the reunion, representatives from eight batches handed over a curated collection of reference books, Olympiad material and computer science resources to the school library.", image_url: photo("library"), category: "update", severity: "normal", is_published: true, created_by: 1, created_at: iso(-14), updated_at: null },
+      { id: 3, title: "New alumni scholarship (draft)", summary: "Details being finalised with the principal.", content: "The alumni association is setting up a scholarship for students from the most remote villages in the district. More details soon.", image_url: photo("science"), category: "general", severity: "normal", is_published: false, created_by: 1, created_at: iso(-2), updated_at: null },
     ],
     timeline: [
-      { id: 1, title: "School opens with its first batch", content: "Eighty students joined Class 6 in temporary buildings while the main campus was under construction.", photo_url: null, photos: [], entry_date: "1987-08-01", created_by: 1, created_at: iso(-100), updated_at: null },
-      { id: 2, title: "First Class 12 board results", content: "The first batch completed Class 12 with a 100% pass rate.", photo_url: null, photos: [], entry_date: "1994-05-20", created_by: 1, created_at: iso(-100), updated_at: null },
-      { id: 3, title: "Alumni association registered", content: "The association was registered with 40 founding members from the first five batches.", photo_url: null, photos: [], entry_date: "2003-08-15", created_by: 1, created_at: iso(-100), updated_at: null },
+      { id: 1, title: "School opens with its first batch", content: "Eighty students joined Class 6 in temporary buildings while the main campus was under construction.", photo_url: photo("campus"), photos: [{ id: 11, url: photo("sports") }], entry_date: "1987-08-01", created_by: 1, created_at: iso(-100), updated_at: null },
+      { id: 2, title: "First Class 12 board results", content: "The first batch completed Class 12 with a 100% pass rate.", photo_url: photo("science"), photos: [], entry_date: "1994-05-20", created_by: 1, created_at: iso(-100), updated_at: null },
+      { id: 3, title: "Alumni association registered", content: "The association was registered with 40 founding members from the first five batches.", photo_url: photo("reunion"), photos: [{ id: 12, url: photo("library") }, { id: 13, url: photo("meetup") }], entry_date: "2003-08-15", created_by: 1, created_at: iso(-100), updated_at: null },
     ],
     comments: [
       { id: 1, entry_id: 3, user_id: 3, content: "I was one of the forty. We met in the chemistry lab.", created_at: iso(-40) },
     ],
-    gallery: [],
+    gallery: ([
+      ["campus", "The main block on a winter morning", 3, -2],
+      ["reunion", "Reunion 2025, batch of 2010", 2, -5],
+      ["sports", "Sports day relay finals", 3, -9],
+      ["science", "Science exhibition, solar house and volcano models", 5, -15],
+      ["library", "The library after the 1,200-book donation", 1, -25],
+      ["meetup", "Bengaluru chapter breakfast at Cubbon Park", 1, -31],
+      ["coffee", "Drying yard at Sneha's family estate", 4, -38],
+      ["workspace", "Where AgriNext Labs started", 4, -45],
+    ] as const).map(([img, caption, by, days], i) => ({ id: i + 1, photo_url: photo(img), caption, uploaded_by: by, created_at: iso(days) })),
     jobs: [
       { id: 1, title: "Senior Full-Stack Engineer", company: "AgriNext Labs", description: "Lead our sensor telemetry platform. Strong TypeScript, Next.js and Postgres experience needed. Alumni referrals get a priority interview.", location: "Bengaluru (Hybrid)", job_type: "full-time", salary_range: "₹25–35 LPA", requirements: "5+ years full-stack, TypeScript, Postgres", tags: "typescript,nextjs,postgres", contact_email: "careers@agrinext.example", deadline: day(20), created_by: 4, created_at: iso(-2), is_active: true },
       { id: 2, title: "Pediatric Clinical Fellow", company: "Apollo Hospitals", description: "Opening for junior clinical fellows in the Department of Pediatrics, working with senior consultants on outpatient and neonatal care.", location: "Mysuru", job_type: "full-time", salary_range: null, requirements: "MD Pediatrics", tags: "medicine,pediatrics", contact_email: "ananya@example.com", deadline: day(30), created_by: 2, created_at: iso(-6), is_active: true },
       { id: 3, title: "Cloud Infrastructure Consultant", company: "Fascinateit", description: "Short engagement to move our deployment pipelines to Kubernetes.", location: "Remote", job_type: "contract", salary_range: "₹1.5 L / month", requirements: "Kubernetes, Terraform", tags: "devops,kubernetes", contact_email: "hiring@fascinateit.example", deadline: null, created_by: 1, created_at: iso(-10), is_active: true },
     ],
     marketplace: [
-      { id: 1, title: "Arabica coffee beans, 25 kg", description: "Sun-dried arabica from our family estate in Chikmagalur.", price: "9500.00", category: "produce", location: "Chikmagalur", image_url: null, contact_info: "+91 90000 11111", is_negotiable: true, tags: "coffee,organic", created_by: 4, created_at: iso(-4), is_active: true },
-      { id: 2, title: "Website design for small businesses", description: "Simple, fast websites for shops and clinics. Alumni get 20% off.", price: null, category: "services", location: "Bengaluru", image_url: null, contact_info: "kiran@example.com", is_negotiable: true, tags: "web,design", created_by: 5, created_at: iso(-8), is_active: true },
+      { id: 1, title: "Arabica coffee beans, 25 kg", description: "Sun-dried arabica from our family estate in Chikmagalur.", price: "9500.00", category: "produce", location: "Chikmagalur", image_url: photo("coffee"), contact_info: "+91 90000 11111", is_negotiable: true, tags: "coffee,organic", created_by: 4, created_at: iso(-4), is_active: true },
+      { id: 2, title: "Website design for small businesses", description: "Simple, fast websites for shops and clinics. Alumni get 20% off.", price: null, category: "services", location: "Bengaluru", image_url: photo("workspace"), contact_info: "kiran@example.com", is_negotiable: true, tags: "web,design", created_by: 5, created_at: iso(-8), is_active: true },
     ],
     transit: [
       { id: 1, title: "Bengaluru to campus for the reunion", description: "Driving down the evening before the reunion, returning the next night.", transit_type: "carpool", from_location: "Bengaluru", to_location: "MANAVI Campus", schedule: "Day before the reunion, 6 PM", available_seats: 3, contact_name: "Poorvith", contact_info: "+91 98450 12345", created_by: 1, created_at: iso(-3), is_active: true },
@@ -103,8 +115,8 @@ function seed(): DB {
     ],
     likes: ["event:1:2", "event:1:4", "story:2:1", "story:2:3", "timeline:3:3"],
     slides: [
-      { id: 1, image: "", sponsor: "AgriNext Labs", headline: "Hiring 2026 graduates", description: "Engineering and field roles in Bengaluru. Alumni referrals get a priority interview.", cta: "See the job", ctaLink: "/jobs", badge: "Sponsored", accentFrom: "#9a3412", accentTo: "#ea580c" },
-      { id: 2, image: "", sponsor: "Alumni Association", headline: "Annual reunion registrations are open", description: "Register before Dec 10 so we can plan meals and beds.", cta: "View event", ctaLink: "/events/1", badge: "Community", accentFrom: "#14532d", accentTo: "#15803d" },
+      { id: 1, image: photo("workspace"), sponsor: "AgriNext Labs", headline: "Hiring 2026 graduates", description: "Engineering and field roles in Bengaluru. Alumni referrals get a priority interview.", cta: "See the job", ctaLink: "/jobs", badge: "Sponsored", accentFrom: "#9a3412", accentTo: "#ea580c" },
+      { id: 2, image: photo("reunion"), sponsor: "Alumni Association", headline: "Annual reunion registrations are open", description: "Register before Dec 10 so we can plan meals and beds.", cta: "View event", ctaLink: "/events/1", badge: "Community", accentFrom: "#14532d", accentTo: "#15803d" },
     ],
     invites: [],
     notifications: [
@@ -308,6 +320,22 @@ const USER_FIELDS = ["name", "bio", "phone", "address", "city", "district", "sta
 
 const price = (v: unknown) => (v === null || v === undefined || v === "" ? null : Number(v).toFixed(2));
 
+/**
+ * Reads the claims of a Google ID token. The demo backend runs in the browser and cannot
+ * verify Google's signature; a real backend must verify the token before trusting it.
+ */
+function readGoogleToken(token: unknown): { email: string; name: string; picture: string | null } {
+  if (token === MOCK_GOOGLE_TOKEN) return MOCK_GOOGLE_PROFILE;
+  try {
+    const part = String(token).split(".")[1]!.replace(/-/g, "+").replace(/_/g, "/");
+    const claims = JSON.parse(new TextDecoder().decode(Uint8Array.from(atob(part), (c) => c.charCodeAt(0))));
+    if (!claims.email || claims.email_verified === false) throw new Error();
+    return { email: String(claims.email).toLowerCase(), name: claims.name || claims.email.split("@")[0], picture: claims.picture ?? null };
+  } catch {
+    throw new ApiError(401, "Google sign-in failed. Please try again.");
+  }
+}
+
 const routes: Array<[Method, RegExp, Handler]> = [
   ["GET", /^\/health$/, () => ({ status: "ok", version: "1.0.0", database: "connected" })],
 
@@ -327,6 +355,18 @@ const routes: Array<[Method, RegExp, Handler]> = [
   ["POST", /^\/api\/auth\/login$/, ({ body }) => {
     const user = load().users.find((u) => u.email === String(body?.email ?? "").toLowerCase().trim());
     if (!user || user.password !== body.password || !user.is_active) throw new ApiError(401, "Invalid email or password");
+    return { access_token: `mock.${user.id}`, token_type: "bearer", user: publicUser(user) };
+  }],
+  ["POST", /^\/api\/auth\/google$/, ({ body }) => {
+    const claims = readGoogleToken(body?.id_token);
+    const d = load();
+    let user = d.users.find((u) => u.email === claims.email);
+    if (!user) {
+      user = blankUser(nextId(), claims.name, claims.email, { avatar_url: claims.picture, created_at: nowIso() });
+      user.password = null;
+      d.users.push(user);
+    }
+    if (!user.is_active) throw new ApiError(403, "This account has been deactivated");
     return { access_token: `mock.${user.id}`, token_type: "bearer", user: publicUser(user) };
   }],
   ["POST", /^\/api\/auth\/forgot-password$/, ({ body }) => {
