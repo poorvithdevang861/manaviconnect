@@ -74,7 +74,7 @@ export default function HomePage() {
             ) : news.data!.articles.length === 0 ? (
               <Empty title="No news yet" />
             ) : (
-              <div className="grid gap-3.5 sm:grid-cols-2">
+              <div className="grid gap-3.5 sm:grid-cols-2 stagger">
                 {news.data!.articles.map((a, i) => (
                   <div key={a.id} className={i === 0 ? "sm:col-span-2" : ""}>
                     <NewsCard article={a} />
@@ -93,7 +93,7 @@ export default function HomePage() {
             ) : stories.data!.stories.length === 0 ? (
               <Empty title="No stories yet" action={<Link href="/stories/new" className={btnPrimary}>Write the first one</Link>} />
             ) : (
-              <div className="space-y-3.5">
+              <div className="space-y-3.5 stagger">
                 {stories.data!.stories.map((s) => (
                   <StoryCard key={s.id} story={s} />
                 ))}

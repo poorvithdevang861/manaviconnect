@@ -22,7 +22,12 @@ export function RequireAuth({
   const pathname = usePathname();
   const search = useSearchParams();
 
-  if (loading) return <Loading />;
+  if (loading)
+    return (
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <Loading variant="lines" />
+      </div>
+    );
 
   if (!user) {
     const next = encodeURIComponent(pathname + (search.toString() ? `?${search}` : ""));

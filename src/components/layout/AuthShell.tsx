@@ -15,7 +15,7 @@ export function AuthShell({
   wide?: boolean;
 }) {
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center px-4 py-12 bg-[#fafafa] animate-fade-in">
+    <div className="min-h-screen flex flex-col justify-center items-center px-4 py-12 bg-[#f4f4f5] animate-fade-in">
       <div className="text-center mb-8">
         <Link href="/" className="inline-block" aria-label="MANAVI home">
           {/* eslint-disable-next-line @next/next/no-img-element */}

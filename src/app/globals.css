@@ -16,7 +16,7 @@
   body {
     overflow-x: clip;
     overflow-wrap: break-word;
-    background-color: #fafafa;
+    background-color: #f4f4f5;
     color: #09090b;
     font-family: var(--font-public-sans);
     -webkit-font-smoothing: antialiased;
@@ -27,6 +27,16 @@
 
   .tabular-nums {
     font-variant-numeric: tabular-nums;
+  }
+
+  :focus-visible {
+    outline: 2px solid rgba(234, 88, 12, 0.55);
+    outline-offset: 2px;
+  }
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible {
+    outline: none;
   }
 }
 
@@ -71,12 +81,79 @@
   .chip-press:active {
     transform: translateY(0) scale(0.96);
   }
+
+  /* Children fade up one after another. */
+  .stagger > * {
+    animation: enter 0.32s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  .stagger > *:nth-child(2) { animation-delay: 40ms; }
+  .stagger > *:nth-child(3) { animation-delay: 80ms; }
+  .stagger > *:nth-child(4) { animation-delay: 120ms; }
+  .stagger > *:nth-child(5) { animation-delay: 160ms; }
+  .stagger > *:nth-child(6) { animation-delay: 200ms; }
+  .stagger > *:nth-child(7) { animation-delay: 240ms; }
+  .stagger > *:nth-child(n + 8) { animation-delay: 280ms; }
+
+  .skeleton {
+    background: linear-gradient(90deg, #f4f4f5 25%, #e9e9ec 37%, #f4f4f5 63%);
+    background-size: 400% 100%;
+    animation: shimmer 1.6s linear infinite;
+  }
+
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Dark pill tooltip for icon-only controls: <button data-tip="Remove"> */
+[data-tip] {
+  position: relative;
+}
+[data-tip]::after {
+  content: attr(data-tip);
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 8px);
+  transform: translate(-50%, 4px) scale(0.96);
+  padding: 4px 9px;
+  border-radius: 8px;
+  background: #18181b;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: 0;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.14s ease, transform 0.14s cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: 0s;
+  z-index: 60;
+}
+[data-tip]:hover::after,
+[data-tip]:focus-visible::after {
+  opacity: 1;
+  transform: translate(-50%, 0) scale(1);
+  transition-delay: 0.25s;
+}
+[data-tip-side="left"]::after {
+  left: auto;
+  right: calc(100% + 8px);
+  bottom: 50%;
+  transform: translate(4px, 50%) scale(0.96);
+}
+[data-tip-side="left"]:hover::after,
+[data-tip-side="left"]:focus-visible::after {
+  transform: translate(0, 50%) scale(1);
 }
 
 @keyframes enter {
   from {
     opacity: 0;
-    transform: translateY(5px);
+    transform: translateY(6px);
   }
   to {
     opacity: 1;
@@ -84,8 +161,30 @@
   }
 }
 
+@keyframes shimmer {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: -100% 0;
+  }
+}
+
 .animate-fade-in {
-  animation: enter 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: enter 0.24s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 /* Hide Next.js development indicator "N" icon overlay in bottom corner */

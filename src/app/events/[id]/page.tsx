@@ -43,7 +43,7 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
       </div>
 
       {loading ? (
-        <Loading />
+        <Loading variant="detail" />
       ) : error ? (
         <ErrorBox error={error} onRetry={reload} />
       ) : (

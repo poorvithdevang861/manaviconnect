@@ -48,7 +48,7 @@ export default function EventsPage() {
         <SearchInput value={search} onChange={(v) => { setSearch(v); setPage(1); }} placeholder="Search events by title" />
       </Toolbar>
 
-      <div className="max-w-4xl space-y-3.5">
+      <div className="max-w-4xl space-y-3.5 stagger">
         {loading ? (
           <Loading />
         ) : error ? (

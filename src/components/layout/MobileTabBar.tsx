@@ -26,11 +26,14 @@ export function MobileTabBar() {
           <Link
             key={tab.href}
             href={tab.href}
-            className={`flex-1 flex flex-col items-center justify-center py-1 rounded-lg text-[11px] transition-all duration-150 active:scale-90 ${
-              active ? "text-orange-600 font-semibold" : "text-zinc-400 hover:text-zinc-700"
+            aria-current={active ? "page" : undefined}
+            className={`flex-1 flex flex-col items-center justify-center gap-0.5 py-0.5 rounded-lg text-[11px] transition-[transform,color] duration-150 active:scale-90 ${
+              active ? "text-orange-700 font-semibold" : "text-zinc-400 hover:text-zinc-700"
             }`}
           >
-            <Icon size={18} strokeWidth={active ? 2.2 : 1.6} className="mb-0.5" />
+            <span className={`relative inline-flex items-center justify-center w-12 h-7 rounded-full ${active ? "bg-gradient-to-b from-orange-100 to-orange-50 animate-pop-in" : ""}`}>
+              <Icon size={18} strokeWidth={active ? 2.2 : 1.6} />
+            </span>
             <span>{tab.label}</span>
           </Link>
         );

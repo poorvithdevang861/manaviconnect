@@ -4,16 +4,18 @@ import Link from "next/link";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
 import { Send, Trash2 } from "lucide-react";
-import { api } from "@/lib/api";
+import { api, type TimelineComment } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
 import { errorText, useApi } from "@/lib/useApi";
 import { timeAgo } from "@/lib/format";
 import { Avatar } from "@/components/ui/Avatar";
 import { ErrorBox, Loading } from "@/components/ui/States";
+import { UNDO_WINDOW, useToast } from "@/components/ui/Toast";
 import { inputCls } from "@/components/ui/styles";
 
 export function Comments({ entryId, onCountChange }: { entryId: number; onCountChange: (delta: number) => void }) {
   const { user } = useAuth();
+  const toast = useToast();
   const pathname = usePathname();
   const { data, error, loading, reload, setData } = useApi(() => api.timeline.comments(entryId), [entryId]);
   const [text, setText] = useState("");
@@ -38,21 +40,37 @@ export function Comments({ entryId, onCountChange }: { entryId: number; onCountC
     }
   };
 
-  const remove = async (commentId: number) => {
-    if (!window.confirm("Delete this comment?")) return;
-    try {
-      await api.timeline.removeComment(entryId, commentId);
-      setData((prev) => prev?.filter((c) => c.id !== commentId));
-      onCountChange(-1);
-    } catch (err) {
-      window.alert(errorText(err));
-    }
+  const remove = (comment: TimelineComment) => {
+    const restore = () => {
+      setData((prev) => [...(prev ?? []), comment].sort((a, b) => a.id - b.id));
+      onCountChange(1);
+    };
+    setData((prev) => prev?.filter((c) => c.id !== comment.id));
+    onCountChange(-1);
+    const timer = window.setTimeout(async () => {
+      try {
+        await api.timeline.removeComment(entryId, comment.id);
+      } catch (err) {
+        restore();
+        toast.error(errorText(err));
+      }
+    }, UNDO_WINDOW);
+    toast.show({
+      message: "Comment deleted",
+      action: {
+        label: "Undo",
+        onClick: () => {
+          window.clearTimeout(timer);
+          restore();
+        },
+      },
+    });
   };
 
   return (
     <div className="pt-3 border-t border-zinc-100 space-y-3">
       {loading ? (
-        <Loading label="Loading comments…" />
+        <Loading label="Loading comments…" variant="lines" />
       ) : error ? (
         <ErrorBox error={error} onRetry={reload} />
       ) : data!.length === 0 ? (
@@ -69,7 +87,14 @@ export function Comments({ entryId, onCountChange }: { entryId: number; onCountC
                     <span className="text-zinc-400"> · {timeAgo(c.created_at)}</span>
                   </span>
                   {user && (user.id === c.user_id || user.is_admin) && (
-                    <button type="button" onClick={() => remove(c.id)} className="text-zinc-400 hover:text-red-600" aria-label="Delete comment">
+                    <button
+                      type="button"
+                      onClick={() => remove(c)}
+                      className="p-1 -m-1 rounded-full text-zinc-400 hover:text-red-600 hover:bg-red-50 transition-colors"
+                      aria-label="Delete comment"
+                      data-tip="Delete"
+                      data-tip-side="left"
+                    >
                       <Trash2 size={12} />
                     </button>
                   )}

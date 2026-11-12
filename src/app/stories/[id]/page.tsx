@@ -43,7 +43,7 @@ export default function StoryPage({ params }: { params: Promise<{ id: string }> 
       </div>
 
       {loading ? (
-        <Loading />
+        <Loading variant="detail" />
       ) : error ? (
         <ErrorBox error={error} onRetry={reload} />
       ) : (

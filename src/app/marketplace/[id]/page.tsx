@@ -42,7 +42,7 @@ export default function MarketListingPage({ params }: { params: Promise<{ id: st
       </div>
 
       {loading ? (
-        <Loading />
+        <Loading variant="detail" />
       ) : error ? (
         <ErrorBox error={error} onRetry={reload} />
       ) : (

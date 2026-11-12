@@ -2,14 +2,18 @@
 
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { X } from "lucide-react";
+import { Flag, Landmark, Trophy, Users, X } from "lucide-react";
 import { api, type TimelineEntry } from "@/lib/api";
 import { editId, errorText } from "@/lib/useApi";
+import { useDraft } from "@/lib/useDraft";
+import { today } from "@/lib/prefill";
 import { fieldErrors, timelineSchema } from "@/lib/validations";
 import { AsideNote, EditLoader, FormActions, FormLayout } from "@/components/layout/FormLayout";
-import { Field, TextArea, TextInput } from "@/components/ui/Field";
+import { DraftBanner, Suggestions, TemplatePicker, type Template } from "@/components/forms/Prefill";
+import { Field, TextArea, TextInput, focusFirstError } from "@/components/ui/Field";
 import { RequireAuth } from "@/components/ui/RequireAuth";
 import { Notice } from "@/components/ui/States";
+import { flashToast } from "@/components/ui/Toast";
 
 const ACCEPT = ["image/jpeg", "image/png", "image/webp", "application/pdf"];
 
@@ -22,9 +26,47 @@ export default function TimelineEditorPage() {
   );
 }
 
+type TimelineValues = { title: string; content: string; entry_date: string };
+
+const TEMPLATES: Template<TimelineValues>[] = [
+  {
+    id: "results",
+    title: "Board exam results",
+    description: "Pass rates, toppers, records broken",
+    icon: Trophy,
+    values: { title: "Class 12 board results", content: "Pass percentage:\n\nToppers:\n\nWhat made this year special:" },
+  },
+  {
+    id: "visit",
+    title: "Visit or ceremony",
+    description: "A guest, an inauguration, a function",
+    icon: Landmark,
+    tone: "amber",
+    values: { title: "Visit by ", content: "Who visited and why:\n\nWhat happened on the day:" },
+  },
+  {
+    id: "first",
+    title: "A first for the school",
+    description: "New building, first batch, first award",
+    icon: Flag,
+    tone: "peach",
+    values: { title: "First ", content: "What happened:\n\nWho made it possible:" },
+  },
+  {
+    id: "batch",
+    title: "Batch event",
+    description: "Farewells, reunions, alumni drives",
+    icon: Users,
+    tone: "sand",
+    values: { title: " batch ", content: "The occasion:\n\nWho attended:\n\nA moment worth remembering:" },
+  },
+];
+
 function TimelineForm({ initial }: { initial: TimelineEntry | null }) {
   const router = useRouter();
-  const [form, setForm] = useState({ title: initial?.title ?? "", content: initial?.content ?? "", entry_date: initial?.entry_date ?? "" });
+  const [start] = useState<TimelineValues>({ title: initial?.title ?? "", content: initial?.content ?? "", entry_date: initial?.entry_date ?? (initial ? "" : today()) });
+  const [form, setForm] = useState(start);
+  const draft = useDraft(initial ? null : "milestone", form, setForm, start);
   const [files, setFiles] = useState<File[]>([]);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [formError, setFormError] = useState("");
@@ -41,13 +83,18 @@ function TimelineForm({ initial }: { initial: TimelineEntry | null }) {
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     const parsed = timelineSchema.safeParse(form);
-    if (!parsed.success) return setErrors(fieldErrors(parsed.error));
+    if (!parsed.success) {
+      setErrors(fieldErrors(parsed.error));
+      return focusFirstError();
+    }
     setErrors({});
     setFormError("");
     setBusy(true);
     try {
       const saved = initial ? await api.timeline.update(initial.id, parsed.data) : await api.timeline.create(parsed.data);
       if (files.length) await api.timeline.addPhotos(saved.id, files);
+      draft.clear();
+      flashToast(initial ? "Milestone updated" : "Milestone added");
       router.push("/timeline");
     } catch (err) {
       setFormError(errorText(err));
@@ -61,6 +108,7 @@ function TimelineForm({ initial }: { initial: TimelineEntry | null }) {
       title={initial ? "Edit milestone" : "Add a milestone"}
       description="Record a moment in the school's history."
       backHref="/timeline"
+      prefill={initial ? undefined : <TemplatePicker templates={TEMPLATES} onPick={(v) => setForm({ ...form, ...v })} />}
       aside={
         <AsideNote title="Good milestones">
           <p>Firsts, foundings, results, visits and big batch events all belong here.</p>
@@ -69,13 +117,19 @@ function TimelineForm({ initial }: { initial: TimelineEntry | null }) {
         </AsideNote>
       }
     >
-      <form onSubmit={submit} className="space-y-4" noValidate>
+      <form onSubmit={submit} className="space-y-5" noValidate>
+        {draft.restoredAt && <DraftBanner savedAt={draft.restoredAt} onDiscard={draft.discard} />}
         {formError && <Notice tone="error">{formError}</Notice>}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
           <Field label="Title" required error={errors.title} className="sm:col-span-2">
             <TextInput value={form.title} maxLength={255} onChange={(e) => setForm({ ...form, title: e.target.value })} />
           </Field>
-          <Field label="Date" required error={errors.entry_date}>
+          <Field
+            label="Date"
+            required
+            error={errors.entry_date}
+            suggestions={<Suggestions options={[{ label: "Today", value: today() }]} current={form.entry_date} onPick={(entry_date) => setForm({ ...form, entry_date })} />}
+          >
             <TextInput type="date" value={form.entry_date} onChange={(e) => setForm({ ...form, entry_date: e.target.value })} className="font-mono text-xs" />
           </Field>
         </div>
@@ -104,7 +158,14 @@ function TimelineForm({ initial }: { initial: TimelineEntry | null }) {
               {files.map((f, i) => (
                 <li key={i} className="flex items-center justify-between text-xs bg-zinc-50 border border-zinc-200 rounded-lg px-3 py-1.5">
                   <span className="truncate">{f.name}</span>
-                  <button type="button" onClick={() => setFiles(files.filter((_, j) => j !== i))} className="text-zinc-400 hover:text-zinc-700" aria-label={`Remove ${f.name}`}>
+                  <button
+                    type="button"
+                    onClick={() => setFiles(files.filter((_, j) => j !== i))}
+                    className="p-1 rounded-full text-zinc-400 hover:text-zinc-700 hover:bg-zinc-200/70"
+                    aria-label={`Remove ${f.name}`}
+                    data-tip="Remove"
+                    data-tip-side="left"
+                  >
                     <X size={13} />
                   </button>
                 </li>
@@ -112,7 +173,7 @@ function TimelineForm({ initial }: { initial: TimelineEntry | null }) {
             </ul>
           )}
         </div>
-        <FormActions cancelHref="/timeline" busy={busy} label={initial ? "Save changes" : "Add milestone"} />
+        <FormActions cancelHref="/timeline" busy={busy} label={initial ? "Save changes" : "Add milestone"} draftSavedAt={draft.savedAt} />
       </form>
     </FormLayout>
   );

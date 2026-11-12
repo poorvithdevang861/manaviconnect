@@ -12,23 +12,38 @@ import { Card } from "@/components/ui/Card";
 import { Field, TextInput } from "@/components/ui/Field";
 import { ImagePicker } from "@/components/ui/ImagePicker";
 import { Empty, ErrorBox, Loading, Notice } from "@/components/ui/States";
+import { UNDO_WINDOW, useToast } from "@/components/ui/Toast";
 import { btnPrimary, btnSecondary, pageCls } from "@/components/ui/styles";
 
 export default function GalleryPage() {
   const { user } = useAuth();
+  const toast = useToast();
   const { data, error, loading, reload, setData } = useApi(() => api.gallery.list(), []);
   const [showUpload, setShowUpload] = useState(false);
   const [viewing, setViewing] = useState<GalleryPhoto | null>(null);
 
-  const remove = async (photo: GalleryPhoto) => {
-    if (!window.confirm("Delete this photo from the gallery?")) return;
-    try {
-      await api.gallery.remove(photo.id);
-      setData((prev) => prev?.filter((p) => p.id !== photo.id));
-      setViewing(null);
-    } catch (err) {
-      window.alert(errorText(err));
-    }
+  const remove = (photo: GalleryPhoto) => {
+    const restore = () => setData((prev) => [...(prev ?? []), photo].sort((a, b) => b.id - a.id));
+    setData((prev) => prev?.filter((p) => p.id !== photo.id));
+    setViewing(null);
+    const timer = window.setTimeout(async () => {
+      try {
+        await api.gallery.remove(photo.id);
+      } catch (err) {
+        restore();
+        toast.error(errorText(err));
+      }
+    }, UNDO_WINDOW);
+    toast.show({
+      message: "Photo deleted",
+      action: {
+        label: "Undo",
+        onClick: () => {
+          window.clearTimeout(timer);
+          restore();
+        },
+      },
+    });
   };
 
   return (
@@ -56,19 +71,20 @@ export default function GalleryPage() {
           onDone={(photo) => {
             setData((prev) => [photo, ...(prev ?? [])]);
             setShowUpload(false);
+            toast.success("Photo added to the gallery");
           }}
           onCancel={() => setShowUpload(false)}
         />
       )}
 
       {loading ? (
-        <Loading />
+        <Loading variant="grid" />
       ) : error ? (
         <ErrorBox error={error} onRetry={reload} />
       ) : data!.length === 0 ? (
         <Empty title="No photos yet">Old class photos, reunion pictures and campus shots all belong here.</Empty>
       ) : (
-        <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+        <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 stagger">
           {data!.map((photo) => (
             <li key={photo.id}>
               <button type="button" onClick={() => setViewing(photo)} className="group block w-full text-left">

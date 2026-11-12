@@ -46,14 +46,14 @@ export default function MarketplacePage() {
       </Toolbar>
 
       {loading ? (
-        <Loading />
+        <Loading variant="grid" />
       ) : error ? (
         <ErrorBox error={error} onRetry={reload} />
       ) : data!.listings.length === 0 ? (
         <Empty title="Nothing listed here yet" action={<Link href="/marketplace/new" className={btnPrimary}>Create a listing</Link>} />
       ) : (
         <>
-          <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 stagger">
             {data!.listings.map((item) => (
               <li key={item.id}>
                 <Link href={`/marketplace/${item.id}`} className="block group h-full">

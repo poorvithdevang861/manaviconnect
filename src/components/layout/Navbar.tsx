@@ -6,12 +6,13 @@ import { useEffect, useRef, useState } from "react";
 import { Bell, ChevronDown, LogOut, Menu, Settings, Shield, User as UserIcon, X } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { Avatar } from "@/components/ui/Avatar";
+import { IconTile } from "@/components/ui/IconTile";
 import { AUTH_ROUTES, MORE_NAV, PRIMARY_NAV, isActive } from "./nav";
 
 const linkCls = (active: boolean) =>
-  `inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-150 active:scale-95 ${
+  `inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium transition-[background-color,color,transform] duration-150 active:scale-95 ${
     active
-      ? "text-orange-700 bg-orange-50 font-semibold border border-orange-200/70 shadow-xs"
+      ? "text-orange-800 bg-gradient-to-r from-orange-100 to-amber-50 font-semibold border border-orange-200/70 shadow-xs"
       : "text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100 border border-transparent"
   }`;
 
@@ -104,7 +105,7 @@ export function Navbar() {
                   <ChevronDown size={12} className="text-zinc-400 hidden sm:block" />
                 </button>
                 {userOpen && (
-                  <div role="menu" className="absolute right-0 mt-1.5 w-52 bg-white border border-zinc-200/80 rounded-xl shadow-dropdown p-1.5 animate-fade-in text-xs">
+                  <div role="menu" className="absolute right-0 mt-2 w-56 origin-top-right bg-white border border-zinc-200/70 rounded-2xl shadow-dropdown p-1.5 animate-pop-in text-xs">
                     <div className="px-2.5 py-2 border-b border-zinc-100 mb-1">
                       <div className="font-semibold text-zinc-900 truncate">{user.name}</div>
                       <div className="text-zinc-500 truncate">{user.email}</div>
@@ -163,7 +164,7 @@ export function Navbar() {
               <ChevronDown size={13} className={`transition-transform ${moreOpen ? "rotate-180" : ""}`} />
             </button>
             {moreOpen && (
-              <div role="menu" className="absolute right-0 mt-1.5 w-48 bg-white border border-zinc-200/80 rounded-xl shadow-dropdown p-1.5 animate-fade-in">
+              <div role="menu" className="absolute right-0 mt-2 w-52 origin-top-right bg-white border border-zinc-200/70 rounded-2xl shadow-dropdown p-1.5 animate-pop-in">
                 {MORE_NAV.map((item) => {
                   const Icon = item.icon;
                   const active = isActive(pathname, item.href);
@@ -172,11 +173,11 @@ export function Navbar() {
                       key={item.href}
                       href={item.href}
                       role="menuitem"
-                      className={`flex items-center gap-2 px-2.5 py-2 rounded-lg text-xs font-medium ${
-                        active ? "bg-orange-50 text-orange-700" : "text-zinc-700 hover:bg-zinc-50"
+                      className={`flex items-center gap-2.5 p-1.5 rounded-xl text-xs font-medium ${
+                        active ? "bg-orange-50 text-orange-800" : "text-zinc-700 hover:bg-zinc-50"
                       }`}
                     >
-                      <Icon size={14} className="text-zinc-400" />
+                      <IconTile icon={Icon} size="sm" tone={active ? "orange" : "sand"} />
                       {item.label}
                     </Link>
                   );
@@ -188,26 +189,26 @@ export function Navbar() {
       </div>
 
       {mobileOpen && (
-        <nav className="lg:hidden max-h-[calc(100dvh-4rem)] border-t border-zinc-100 overflow-y-auto bg-white border-b border-zinc-200/80 px-4 sm:px-6 pt-2 pb-4 grid grid-cols-2 sm:grid-cols-3 gap-1 animate-fade-in" aria-label="Main">
+        <nav className="lg:hidden max-h-[calc(100dvh-4rem)] border-t border-zinc-100 overflow-y-auto bg-white border-b border-zinc-200/80 px-4 sm:px-6 pt-3 pb-4 grid grid-cols-2 sm:grid-cols-3 gap-1.5 stagger" aria-label="Main">
           {[...PRIMARY_NAV, ...MORE_NAV].map((item) => {
-            const Icon = item.icon;
             const active = isActive(pathname, item.href);
             return (
               <Link
                 key={item.href}
                 href={item.href}
-                className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium ${
-                  active ? "text-orange-700 font-semibold bg-orange-50" : "text-zinc-700 hover:bg-zinc-100"
+                aria-current={active ? "page" : undefined}
+                className={`flex items-center gap-2.5 p-2 rounded-xl text-sm font-medium transition-colors ${
+                  active ? "text-orange-800 font-semibold bg-orange-50" : "text-zinc-700 hover:bg-zinc-100 active:bg-zinc-100"
                 }`}
               >
-                <Icon size={16} className="shrink-0 text-zinc-400" />
+                <IconTile icon={item.icon} size="sm" tone={active ? "orange" : "sand"} />
                 {item.label}
               </Link>
             );
           })}
           {user?.is_admin && (
-            <Link href="/admin" className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium text-zinc-700 hover:bg-zinc-100">
-              <Shield size={16} className="shrink-0 text-zinc-400" />
+            <Link href="/admin" className="flex items-center gap-2.5 p-2 rounded-xl text-sm font-medium text-zinc-700 hover:bg-zinc-100">
+              <IconTile icon={Shield} size="sm" tone="sand" />
               Admin
             </Link>
           )}

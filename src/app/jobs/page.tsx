@@ -63,7 +63,7 @@ export default function JobsPage() {
       </Toolbar>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
-        <div className="lg:col-span-7 space-y-3">
+        <div className="lg:col-span-7 space-y-3 stagger">
           {loading ? (
             <Loading />
           ) : error ? (
@@ -82,8 +82,8 @@ export default function JobsPage() {
                     type="button"
                     onClick={() => select(job.id)}
                     aria-pressed={active}
-                    className={`w-full text-left p-5 rounded-xl border bg-white transition-all group ${
-                      active ? "border-orange-500 ring-1 ring-orange-500/20 shadow-xs" : "border-zinc-200/80 hover:border-zinc-300 hover:shadow-xs"
+                    className={`w-full text-left p-5 rounded-xl border bg-white transition-[border-color,box-shadow,transform] duration-200 active:scale-[0.995] group ${
+                      active ? "border-orange-400 shadow-focus" : "border-zinc-200/70 shadow-card hover:border-zinc-300 hover:shadow-lift"
                     }`}
                   >
                     <div className="flex items-start justify-between gap-3">

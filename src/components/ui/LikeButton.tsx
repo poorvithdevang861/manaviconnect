@@ -50,15 +50,20 @@ export function LikeButton({
       onClick={handle}
       aria-pressed={state.liked}
       aria-label={state.liked ? "Unlike" : "Like"}
-      className={`chip-press inline-flex items-center gap-1.5 rounded-lg border font-medium ${
-        size === "md" ? "px-3 py-1.5 text-xs" : "px-2 py-1 text-[11px]"
+      className={`chip-press inline-flex items-center gap-1.5 rounded-full border font-medium ${
+        size === "md" ? "px-3 py-1.5 text-xs" : "px-2.5 py-1 text-[11px]"
       } ${
         state.liked
-          ? "bg-orange-50 border-orange-200/80 text-orange-700"
+          ? "bg-gradient-to-r from-orange-100 to-amber-50 border-orange-200/80 text-orange-700"
           : "bg-white border-zinc-200 text-zinc-600 hover:text-zinc-900 hover:bg-zinc-50"
       }`}
     >
-      <Heart size={size === "md" ? 14 : 12} fill={state.liked ? "currentColor" : "none"} />
+      <Heart
+        key={state.liked ? "on" : "off"}
+        size={size === "md" ? 14 : 12}
+        fill={state.liked ? "currentColor" : "none"}
+        className={state.liked ? "animate-pop" : ""}
+      />
       <span className="font-mono tabular-nums">{state.count}</span>
     </button>
   );

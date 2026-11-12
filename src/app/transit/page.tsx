@@ -47,7 +47,7 @@ export default function TransitPage() {
         <FilterChips options={TYPE_OPTIONS} value={type} onChange={(v) => { setType(v); setPage(1); }} />
       </Toolbar>
 
-      <div className="max-w-4xl space-y-3">
+      <div className="max-w-4xl space-y-3 stagger">
         {loading ? (
           <Loading />
         ) : error ? (

@@ -3,6 +3,8 @@ import { Suspense } from "react";
 import "./globals.css";
 import { Navbar } from "@/components/layout/Navbar";
 import { MobileTabBar } from "@/components/layout/MobileTabBar";
+import { Shortcuts } from "@/components/layout/Shortcuts";
+import { ToastProvider } from "@/components/ui/Toast";
 import { AuthProvider } from "@/lib/auth";
 
 export const metadata: Metadata = {
@@ -33,13 +35,16 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="min-h-screen bg-[#fafafa] text-zinc-900 selection:bg-orange-100 selection:text-orange-900 pb-[calc(4rem+env(safe-area-inset-bottom))] md:pb-0">
+      <body className="min-h-screen bg-[#f4f4f5] text-zinc-900 selection:bg-orange-100 selection:text-orange-900 pb-[calc(4rem+env(safe-area-inset-bottom))] md:pb-0">
         <AuthProvider>
-          <Navbar />
-          <main>
-            <Suspense>{children}</Suspense>
-          </main>
-          <MobileTabBar />
+          <ToastProvider>
+            <Navbar />
+            <main>
+              <Suspense>{children}</Suspense>
+            </main>
+            <MobileTabBar />
+            <Shortcuts />
+          </ToastProvider>
         </AuthProvider>
       </body>
     </html>

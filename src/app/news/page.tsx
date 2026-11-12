@@ -53,7 +53,7 @@ export default function NewsPage() {
         <FilterChips options={CATEGORY_OPTIONS} value={category} onChange={(v) => { setCategory(v); setPage(1); }} />
       </Toolbar>
 
-      <div className="max-w-4xl space-y-3.5">
+      <div className="max-w-4xl space-y-3.5 stagger">
         {loading ? (
           <Loading />
         ) : error ? (

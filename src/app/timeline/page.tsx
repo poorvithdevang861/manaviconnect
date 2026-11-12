@@ -13,6 +13,7 @@ import { Card } from "@/components/ui/Card";
 import { LikeButton } from "@/components/ui/LikeButton";
 import { OwnerActions } from "@/components/ui/OwnerActions";
 import { Empty, ErrorBox, Loading } from "@/components/ui/States";
+import { useToast } from "@/components/ui/Toast";
 import { btnPrimary, btnSecondary, chipCls, pageCls } from "@/components/ui/styles";
 
 const isPdf = (url: string) => url.startsWith("data:application/pdf") || /\.pdf($|\?)/i.test(url);
@@ -47,7 +48,7 @@ export default function TimelinePage() {
       />
 
       {years.length > 1 && (
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1" role="group" aria-label="Filter by year">
+        <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar -mx-1 px-1 py-0.5" role="group" aria-label="Filter by year">
           <button type="button" className={chipCls(year === null)} onClick={() => setYear(null)}>
             All years
           </button>
@@ -67,7 +68,7 @@ export default function TimelinePage() {
         ) : data!.entries.length === 0 ? (
           <Empty title="No milestones yet" action={<Link href="/timeline/new" className={btnPrimary}>Add the first one</Link>} />
         ) : (
-          <ol className="relative border-l-2 border-orange-200 ml-3 space-y-6">
+          <ol className="relative border-l-2 border-orange-200 ml-3 space-y-6 stagger">
             {data!.entries.map((entry) => (
               <TimelineItem key={entry.id} entry={entry} onChange={replace} onDeleted={() => remove(entry.id)} />
             ))}
@@ -80,6 +81,7 @@ export default function TimelinePage() {
 
 function TimelineItem({ entry, onChange, onDeleted }: { entry: TimelineEntry; onChange: (e: TimelineEntry) => void; onDeleted: () => void }) {
   const { user } = useAuth();
+  const toast = useToast();
   const [showComments, setShowComments] = useState(false);
   const [commentCount, setCommentCount] = useState(entry.comment_count);
   const [uploading, setUploading] = useState(false);
@@ -90,8 +92,9 @@ function TimelineItem({ entry, onChange, onDeleted }: { entry: TimelineEntry; on
     setUploading(true);
     try {
       onChange(await api.timeline.addPhotos(entry.id, [...files]));
+      toast.success(files.length === 1 ? "Photo added" : `${files.length} photos added`);
     } catch (err) {
-      window.alert(errorText(err));
+      toast.error(errorText(err));
     } finally {
       setUploading(false);
     }
@@ -99,7 +102,7 @@ function TimelineItem({ entry, onChange, onDeleted }: { entry: TimelineEntry; on
 
   return (
     <li className="pl-6 relative">
-      <span className="absolute -left-[7px] top-5 w-3 h-3 rounded-full bg-orange-600 ring-4 ring-[#fafafa]" aria-hidden />
+      <span className="absolute -left-[7px] top-5 w-3 h-3 rounded-full bg-orange-600 ring-4 ring-[#f4f4f5]" aria-hidden />
       <Card className="p-5 space-y-3">
         <div className="flex flex-wrap items-start justify-between gap-x-3 gap-y-2">
           <div className="min-w-0 flex-1 basis-48">
