@@ -1,0 +1,743 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Community Hub API Reference</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+/* Layout: sticky module index on the left, endpoint cards in a single reading column on the right; stacks on phones. */
+:root {
+  --bg: #f6f8f8;
+  --surface: #ffffff;
+  --sunk: #eef2f2;
+  --fg: #142024;
+  --muted: #5a6b70;
+  --line: #d9e1e2;
+  --accent: #0e7c74;
+  --accent-soft: #d8efec;
+  --code-bg: #10191c;
+  --code-fg: #d7e4e3;
+  --code-key: #7fd4c9;
+  --code-str: #f0c78a;
+  --code-num: #b7a6f5;
+  --code-lit: #f08fa8;
+  --get: #18794e;   --get-bg: #dcf3e6;
+  --post: #1f5fbf;  --post-bg: #dde8fb;
+  --put: #9a5b00;   --put-bg: #fbecd2;
+  --del: #b42335;   --del-bg: #fbe0e3;
+  --font-display: "Schibsted Grotesk", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Schibsted Grotesk", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1517; --surface: #131e21; --sunk: #18262a; --fg: #e3ecec; --muted: #8fa3a6;
+    --line: #26373b; --accent: #4cc2b5; --accent-soft: #163b38;
+    --code-bg: #0a1113; --code-fg: #d7e4e3;
+    --get: #5fd39a; --get-bg: #12301f; --post: #82aef5; --post-bg: #172742;
+    --put: #f2b45c; --put-bg: #352612; --del: #f4899a; --del-bg: #3a1820;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1517; --surface: #131e21; --sunk: #18262a; --fg: #e3ecec; --muted: #8fa3a6;
+  --line: #26373b; --accent: #4cc2b5; --accent-soft: #163b38;
+  --code-bg: #0a1113; --code-fg: #d7e4e3;
+  --get: #5fd39a; --get-bg: #12301f; --post: #82aef5; --post-bg: #172742;
+  --put: #f2b45c; --put-bg: #352612; --del: #f4899a; --del-bg: #3a1820;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; }
+[hidden] { display: none !important; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 15px; line-height: 1.55; }
+code, pre, .mono { font-family: var(--font-mono); }
+a { color: var(--accent); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.shell {
+  display: grid; grid-template-columns: 260px minmax(0, 1fr); gap: 40px;
+  max-width: 1240px; margin: 0 auto;
+  padding-block: 32px 80px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+
+/* Sidebar */
+.side { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 20px); align-self: start; max-height: calc(100vh - 40px); overflow-y: auto; display: flex; flex-direction: column; gap: 16px; }
+.brand { display: flex; flex-direction: column; gap: 2px; }
+.brand .eyebrow { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); font-weight: 700; }
+.brand strong { font-family: var(--font-display); font-size: 20px; font-weight: 800; letter-spacing: -.01em; }
+.search { width: 100%; padding: 9px 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); color: var(--fg); font: inherit; font-size: 14px; }
+.nav { display: flex; flex-direction: column; gap: 1px; }
+.nav a { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 6px 10px; border-radius: 6px; color: var(--fg); text-decoration: none; font-size: 14px; }
+.nav a:hover { background: var(--sunk); }
+.nav a.active { background: var(--accent-soft); color: var(--accent); font-weight: 600; }
+.nav .count { font-family: var(--font-mono); font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.nav .sep { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); padding: 12px 10px 4px; font-weight: 600; }
+
+/* Main */
+main { min-width: 0; display: flex; flex-direction: column; gap: 56px; }
+.intro h1 { font-family: var(--font-display); font-size: clamp(28px, 4vw, 40px); line-height: 1.1; letter-spacing: -.02em; margin: 0 0 12px; text-wrap: balance; }
+.intro p { margin: 0 0 12px; max-width: 68ch; color: var(--muted); }
+.facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; margin-top: 20px; }
+.facts div { background: var(--surface); padding: 12px 14px; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.facts dt { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+.facts dd { margin: 0; font-family: var(--font-mono); font-size: 13px; overflow-wrap: anywhere; }
+
+h2.group { font-family: var(--font-display); font-size: 26px; letter-spacing: -.015em; margin: 0; display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+h2.group .prefix { font-family: var(--font-mono); font-size: 14px; font-weight: 500; color: var(--muted); }
+.group-desc { color: var(--muted); margin: 6px 0 20px; max-width: 70ch; }
+section.mod { display: flex; flex-direction: column; scroll-margin-top: 20px; }
+.eps { display: flex; flex-direction: column; gap: 14px; }
+
+.prose h3 { font-family: var(--font-display); font-size: 17px; margin: 18px 0 6px; }
+.prose p, .prose li { max-width: 72ch; }
+.prose ul { padding-left: 20px; margin: 6px 0; }
+
+/* Endpoint card */
+details.ep { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+details.ep[open] { border-color: color-mix(in srgb, var(--accent) 35%, var(--line)); }
+details.ep > summary { list-style: none; cursor: pointer; display: grid; grid-template-columns: 64px minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 12px 14px; }
+details.ep > summary::-webkit-details-marker { display: none; }
+.method { font-family: var(--font-mono); font-weight: 600; font-size: 12px; text-align: center; padding: 3px 0; border-radius: 5px; letter-spacing: .03em; }
+.m-GET { color: var(--get); background: var(--get-bg); }
+.m-POST { color: var(--post); background: var(--post-bg); }
+.m-PUT { color: var(--put); background: var(--put-bg); }
+.m-DELETE { color: var(--del); background: var(--del-bg); }
+.sum-main { min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+.path { font-family: var(--font-mono); font-size: 14px; font-weight: 500; overflow-wrap: anywhere; }
+.path .param { color: var(--accent); }
+.sum-title { font-size: 13px; color: var(--muted); }
+.auth { font-size: 11px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; padding: 3px 8px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); white-space: nowrap; }
+.auth.user { color: var(--accent); border-color: color-mix(in srgb, var(--accent) 40%, transparent); }
+.auth.admin { color: var(--del); border-color: color-mix(in srgb, var(--del) 40%, transparent); }
+.auth.optional { border-style: dashed; }
+
+.ep-body { padding: 4px 14px 16px; border-top: 1px solid var(--line); display: flex; flex-direction: column; gap: 14px; }
+.ep-body > p { margin: 10px 0 0; max-width: 75ch; }
+.label { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); font-weight: 700; margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.status { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0; text-transform: none; padding: 1px 7px; border-radius: 4px; background: var(--get-bg); color: var(--get); }
+.note { font-size: 13.5px; background: var(--sunk); border-radius: 6px; padding: 8px 12px; max-width: 80ch; }
+.note b { color: var(--put); }
+
+.tbl-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; }
+table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
+th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+tr:last-child td { border-bottom: 0; }
+th { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); background: var(--sunk); font-weight: 600; }
+td code { font-size: 12.5px; }
+td.req { color: var(--del); font-size: 12px; font-weight: 600; white-space: nowrap; }
+td.opt { color: var(--muted); font-size: 12px; white-space: nowrap; }
+
+.code { position: relative; }
+.code pre { margin: 0; background: var(--code-bg); color: var(--code-fg); border-radius: 8px; padding: 12px 14px; overflow-x: auto; font-size: 12.5px; line-height: 1.6; }
+.code .k { color: var(--code-key); } .code .s { color: var(--code-str); } .code .n { color: var(--code-num); } .code .l { color: var(--code-lit); }
+.copy { font: inherit; font-size: 11px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); background: transparent; border: 1px solid var(--line); border-radius: 5px; padding: 2px 8px; cursor: pointer; }
+.copy:hover { color: var(--accent); border-color: var(--accent); }
+.errs { display: flex; flex-wrap: wrap; gap: 6px; }
+.err { font-size: 12.5px; border: 1px solid var(--line); border-radius: 6px; padding: 3px 8px; display: flex; gap: 6px; }
+.err b { font-family: var(--font-mono); color: var(--del); }
+
+.toolbar { display: flex; gap: 8px; flex-wrap: wrap; }
+.toolbar button { font: inherit; font-size: 13px; padding: 6px 12px; border-radius: 6px; border: 1px solid var(--line); background: var(--surface); color: var(--fg); cursor: pointer; }
+.toolbar button:hover { border-color: var(--accent); color: var(--accent); }
+.empty { color: var(--muted); padding: 20px; border: 1px dashed var(--line); border-radius: 10px; }
+
+@media (max-width: 860px) {
+  .shell { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+  .side { position: static; max-height: none; }
+  .nav { flex-direction: row; flex-wrap: wrap; gap: 4px; }
+  .nav a { border: 1px solid var(--line); }
+  .nav .count, .nav .sep { display: none; }
+  details.ep > summary { grid-template-columns: 58px minmax(0, 1fr); }
+  details.ep > summary .auth { grid-column: 2; justify-self: start; }
+}
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+</style>
+</head>
+<body>
+
+<div class="shell">
+  <aside class="side">
+    <div class="brand">
+      <span class="eyebrow">FastAPI · v1.0.0</span>
+      <strong>Community Hub API</strong>
+    </div>
+    <input id="q" class="search" type="search" placeholder="Filter by path or name…" aria-label="Filter endpoints">
+    <nav class="nav" id="nav"></nav>
+  </aside>
+
+  <main id="main">
+    <section class="intro" id="overview">
+      <h1>Community Hub API Reference</h1>
+      <p>This covers every HTTP endpoint the backend exposes, with a request and response example for each. The examples are built from the Pydantic schemas and router code in <code>backend/app</code>. Data values are made up.</p>
+      <dl class="facts">
+        <div><dt>Base path</dt><dd>/api</dd></div>
+        <div><dt>Auth</dt><dd>Authorization: Bearer &lt;JWT&gt;</dd></div>
+        <div><dt>Token lifetime</dt><dd>1440 min (24 h)</dd></div>
+        <div><dt>Uploads served at</dt><dd>/uploads/&lt;folder&gt;/&lt;uuid&gt;.&lt;ext&gt;</dd></div>
+        <div><dt>Live docs</dt><dd>/api/docs · /api/redoc</dd></div>
+        <div><dt>Endpoints</dt><dd id="ep-count">—</dd></div>
+      </dl>
+    </section>
+
+    <section class="mod prose" id="conventions">
+      <h2 class="group">Conventions</h2>
+      <h3>Access levels</h3>
+      <ul>
+        <li><span class="auth">Public</span> No token needed.</li>
+        <li><span class="auth optional">Optional auth</span> Works without a token. With one, the response is personalised (for example <code>is_liked</code>).</li>
+        <li><span class="auth user">Login</span> A valid bearer token is required. "Owner or admin" endpoints also check that you created the record or have <code>is_admin = true</code>.</li>
+        <li><span class="auth admin">Admin</span> The token's user must have <code>is_admin = true</code>, otherwise <code>403</code>.</li>
+      </ul>
+      <h3>Pagination</h3>
+      <p>List endpoints take <code>page</code> (default 1) and <code>limit</code> (default 10, max 100) and return <code>{ total, page, limit, &lt;items&gt; }</code>. The items key differs per module: <code>events</code>, <code>stories</code>, <code>articles</code>, <code>listings</code>, <code>profiles</code> or <code>notifications</code>.</p>
+      <h3>Deletes</h3>
+      <p>Events, stories, jobs, marketplace, transit and matrimony are soft-deleted (<code>is_active = false</code>). News, timeline entries, comments and gallery photos are hard-deleted. A successful delete returns <code>204 No Content</code> with an empty body.</p>
+      <h3>File uploads</h3>
+      <p>Uploads use <code>multipart/form-data</code> with a field named <code>file</code> (or <code>files</code> for multi-upload). Accepted types are JPEG, PNG and WebP. The limit is 5 MB unless an endpoint says otherwise.</p>
+      <h3>Error format</h3>
+      <p>Errors raised by the routers come back as <code>{"detail": "message"}</code>. Request-body validation failures return <code>422</code> in FastAPI's standard shape:</p>
+      <div class="code"><pre id="err422"></pre></div>
+      <p>Any endpoint that requires login returns <code>401 {"detail": "Could not validate credentials"}</code> when the token is missing, expired or invalid.</p>
+      <h3>The UserOut object</h3>
+      <p>Every user that appears in a response (<code>user</code>, <code>author</code>, <code>organizer</code>, <code>poster</code>, <code>owner</code>, <code>requester</code>) is a full <code>UserOut</code>. In the examples below, nested users are trimmed to a few fields.</p>
+      <div class="code"><pre id="userout"></pre></div>
+    </section>
+
+    <div class="toolbar">
+      <button type="button" id="expand">Expand all</button>
+      <button type="button" id="collapse">Collapse all</button>
+    </div>
+    <div id="groups"></div>
+    <p class="empty" id="empty" hidden>No endpoints match that filter.</p>
+  </main>
+</div>
+
+<script>
+// ── Sample objects (shared across examples) ───────────────────────────────
+const TS = "2026-10-20T10:15:30Z";
+const USER = {
+  id: 12, name: "Ravi Kumar", email: "ravi.kumar@example.com",
+  bio: "Alumnus, 2005 batch. Building things in Chennai.",
+  avatar_url: "/uploads/avatars/3f2c9b1e-7a4d-4e1b-9c55-2a1f0e8d7b61.jpg",
+  created_at: "2026-03-14T09:21:05Z", is_admin: false,
+  phone: "+91 98765 43210", address: "12, Anna Nagar", city: "Chennai", district: "Chennai",
+  state: "Tamil Nadu", pincode: "600040", profession: "Software Engineer",
+  company: "Tech Solutions Pvt Ltd", website: "https://ravikumar.in", batch: "2005",
+  linkedin_url: "https://linkedin.com/in/ravikumar", twitter_url: null, instagram_url: null, facebook_url: null,
+  is_mentor: true, mentoring_areas: "Career guidance, Web development",
+  interests: "Cricket, Photography", consent_agreed: true
+};
+const U = { id: 12, name: "Ravi Kumar", email: "ravi.kumar@example.com", avatar_url: "/uploads/avatars/3f2c9b1e.jpg", "…": "other UserOut fields" };
+const ADMIN_U = { id: 1, name: "Priya Raman", email: "admin@example.com", is_admin: true, "…": "other UserOut fields" };
+const JWT = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMiIsImV4cCI6MTc2MTU1MDEzMH0.Qm9n...";
+
+const EVENT = {
+  id: 41, title: "Annual Alumni Meet 2026", description: "Reunion dinner, talks from the 2005 batch and a campus walk.",
+  datetime: "2026-12-14T17:30:00Z", location: "College Auditorium, Chennai",
+  banner_url: "/uploads/events/8c1d2a7e.jpg", max_participants: 250,
+  created_by: 12, created_at: TS, organizer: U, like_count: 18, is_liked: true
+};
+const STORY = {
+  id: 77, title: "From hostel room to startup", content: "It started with a borrowed laptop in Block C…",
+  image_url: "/uploads/stories/a91f03c2.jpg", tags: "startup,career",
+  created_by: 12, created_at: TS, author: U, like_count: 32, is_liked: false
+};
+const NEWS = {
+  id: 9, title: "Library extended hours during exams", summary: "Open until midnight from Nov 1 to Nov 30.",
+  content: "The central library will remain open until 12 AM on all weekdays during the exam period…",
+  image_url: "/uploads/news/5b7e0d91.jpg", category: "announcement", severity: "normal", is_published: true,
+  created_by: 1, created_at: TS, updated_at: null, author: ADMIN_U
+};
+const TL = {
+  id: 5, title: "Founding of the Alumni Association", content: "The association was registered with 40 founding members.",
+  photo_url: "/uploads/timeline/1e2f3a4b.jpg",
+  photos: ["/uploads/timeline/1e2f3a4b.jpg", "/uploads/timeline/9d8c7b6a.pdf"],
+  entry_date: "1998-08-15", created_by: 1, created_at: TS, updated_at: null, author: ADMIN_U,
+  like_count: 6, is_liked: false, comment_count: 2
+};
+const COMMENT = { id: 101, entry_id: 5, user_id: 12, content: "My father was one of the 40!", created_at: TS, author: U };
+const PHOTO = { id: 23, photo_url: "/uploads/gallery/c0ffee12.jpg", caption: "Convocation 2025", uploaded_by: 12, created_at: TS,
+  uploader: { id: 12, name: "Ravi Kumar", avatar_url: "/uploads/avatars/3f2c9b1e.jpg" } };
+const JOB = {
+  id: 14, title: "Frontend Developer", company: "Tech Solutions Pvt Ltd",
+  description: "Build and maintain our React dashboard.", location: "Chennai (Hybrid)", job_type: "full-time",
+  salary_range: "₹8–12 LPA", requirements: "2+ years React, TypeScript", tags: "react,typescript",
+  contact_email: "hr@techsolutions.example", deadline: "2026-11-30",
+  created_by: 12, created_at: TS, poster: U
+};
+const MKT = {
+  id: 30, title: "Organic turmeric, 50 kg", description: "Freshly harvested, sun-dried turmeric from Erode.",
+  price: "8500.00", category: "produce", location: "Erode", image_url: "/uploads/marketplace/7a7a7a7a.jpg",
+  contact_info: "+91 90000 11111", is_negotiable: true, tags: "turmeric,organic",
+  created_by: 12, created_at: TS, poster: U
+};
+const TRANSIT = {
+  id: 8, title: "Daily carpool to OMR", description: "Leaving Anna Nagar 8:15 AM, returning 6:30 PM.",
+  transit_type: "carpool", from_location: "Anna Nagar", to_location: "Sholinganallur",
+  schedule: "Mon–Fri, 8:15 AM", available_seats: 2, contact_name: "Ravi", contact_info: "+91 98765 43210",
+  created_by: 12, created_at: TS, poster: U
+};
+const MAT = {
+  id: 3, name: "Anjali S", age: 27, gender: "female", religion: "Hindu", caste: null,
+  education: "M.Tech", profession: "Data Analyst", height: "5'4\"",
+  about: "Loves classical music and travel.", expectations: "Educated, family-oriented",
+  photo_url: "/uploads/matrimony/0b0b0b0b.jpg", contact_info: null, location: "Coimbatore",
+  created_by: 20, created_at: TS, owner: { id: 20, name: "Suresh S", "…": "other UserOut fields" },
+  connection_status: "pending", connection_id: 55
+};
+const CONN = { id: 55, profile_id: 3, requester_id: 12, status: "pending",
+  message: "Hello, I'd like to connect on behalf of my brother.", created_at: TS, requester: U };
+const SLIDE = { id: 1, image: "/uploads/spotlight/4f4f4f4f.jpg", sponsor: "Tech Solutions",
+  headline: "Hiring 2026 graduates", description: "Apply before Nov 30.", cta: "Apply now",
+  ctaLink: "/jobs/14", badge: "Sponsored", accentFrom: "#0ea5e9", accentTo: "#6366f1" };
+const NOTIF = { id: 210, title: "New Event: Annual Alumni Meet 2026", body: "College Auditorium, Chennai",
+  url: "/events/41", type: "event", created_at: TS };
+const INVITE = { id: 4, token: "6f1c2d3e-4b5a-4c6d-8e9f-0a1b2c3d4e5f", email: "friend@example.com",
+  invited_by: 12, status: "pending", expires_at: "2026-11-02T10:15:30Z", created_at: TS };
+
+const page = (key, item, limit = 10) => ({ total: 42, page: 1, limit, [key]: [item] });
+const omit = (o, ...ks) => Object.fromEntries(Object.entries(o).filter(([k]) => !ks.includes(k)));
+const PAGING = [["page", "int", "Page number, ≥ 1. Default 1."], ["limit", "int", "Items per page, 1–100. Default 10."]];
+const OWNER = "Only the creator or an admin can do this.";
+const E401 = [401, "Could not validate credentials"];
+
+// ── Endpoint catalogue ───────────────────────────────────────────────────
+const GROUPS = [
+{ id: "health", name: "Health", prefix: "/health", desc: "Liveness and database connectivity check. Mounted at the root, without /api.", eps: [
+  { m: "GET", p: "/health", auth: "public", t: "Health check",
+    d: "Returns ok when the database answers, degraded when it does not. Both cases return 200.",
+    res: { status: "ok", version: "1.0.0", database: "connected" } },
+]},
+{ id: "auth", name: "Authentication", prefix: "/api/auth", desc: "Sign-up, login, password reset and admin bulk user import.", eps: [
+  { m: "POST", p: "/api/auth/signup", auth: "public", t: "Create an account", code: 201,
+    d: "Password needs at least 8 characters, one uppercase letter and one digit. confirm_password must match. Returns a token so the user is logged in right away.",
+    body: { name: "Ravi Kumar", email: "ravi.kumar@example.com", password: "Secret123", confirm_password: "Secret123" },
+    res: { access_token: JWT, token_type: "bearer", user: USER },
+    errs: [[409, "An account with this email already exists"], [422, "Password must contain at least one uppercase letter"]] },
+  { m: "POST", p: "/api/auth/login", auth: "public", t: "Log in",
+    d: "Takes a JSON body, not form data. Inactive users cannot log in.",
+    body: { email: "ravi.kumar@example.com", password: "Secret123" },
+    res: { access_token: JWT, token_type: "bearer", user: U },
+    errs: [[401, "Invalid email or password"]] },
+  { m: "POST", p: "/api/auth/forgot-password", auth: "public", t: "Request a password reset email",
+    d: "Always returns the same message whether or not the email exists, so accounts can't be discovered. Earlier unused reset tokens are invalidated. The new link is valid for 1 hour.",
+    body: { email: "ravi.kumar@example.com" },
+    res: { message: "If that email exists, a reset link has been sent." },
+    errs: [[500, "Failed to send reset email. Please try again later."]] },
+  { m: "POST", p: "/api/auth/reset-password", auth: "public", t: "Set a new password with a reset token",
+    d: "token comes from the reset link. new_password has the same strength rules as sign-up.",
+    body: { token: "Zq3k9V0mJ2xQ7rT1yW5bN8cD4fG6hL0pS2uA9eX1", new_password: "NewSecret456" },
+    res: { message: "Password reset successfully. You can now log in." },
+    errs: [[400, "Invalid or expired reset token."], [400, "Reset token has expired. Please request a new one."], [404, "User not found."]] },
+  { m: "GET", p: "/api/auth/bulk-template", auth: "admin", t: "Download the bulk-import Excel template",
+    d: "Returns an .xlsx file with a Users sheet (one sample row) and an Instructions sheet.",
+    resRaw: "200 OK\nContent-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet\nContent-Disposition: attachment; filename=community_hub_user_template.xlsx\n\n<binary .xlsx>",
+    errs: [E401, [403, "Admin access required"]] },
+  { m: "POST", p: "/api/auth/bulk-upload", auth: "admin", t: "Import users from Excel",
+    d: "Columns 'Full Name *' and 'Email *' are required. The optional columns are Phone, Profession, Company / Business, City, District, State, Pincode, Address, Website and Batch / Year. Each new user gets a random password and a reset email valid for 24 hours. Rows with existing emails are skipped. Max 5 MB.",
+    form: [["file", "file (.xlsx)", "The filled-in template."]],
+    res: { summary: { total: 3, created: 1, skipped: 2, failed: 0 }, rows: [
+      { row: 2, email: "meena@example.com", name: "Meena R", status: "created", note: "Password-reset email queued" },
+      { row: 3, email: "ravi.kumar@example.com", name: "Ravi Kumar", status: "skipped", note: "Email already registered" },
+      { row: 4, email: "bad-email", name: "Arun", status: "skipped", note: "Invalid email format" } ] },
+    errs: [[400, "Only .xlsx files are accepted"], [400, "File too large (max 5 MB)"], [400, "Missing required columns 'Full Name *' and/or 'Email *'. Use the provided template."], [403, "Admin access required"]] },
+]},
+{ id: "users", name: "Users", prefix: "/api/users", desc: "The logged-in user's profile and content.", eps: [
+  { m: "GET", p: "/api/users/me", auth: "user", t: "Get my profile", res: USER, errs: [E401] },
+  { m: "PUT", p: "/api/users/me", auth: "user", t: "Update my profile",
+    d: "Send only the fields you want to change. Fields sent as null are ignored. Email and password cannot be changed here.",
+    body: { bio: "Mentor for final-year students.", city: "Bengaluru", is_mentor: true, mentoring_areas: "Interview prep" },
+    res: { ...USER, bio: "Mentor for final-year students.", city: "Bengaluru", mentoring_areas: "Interview prep" }, errs: [E401] },
+  { m: "GET", p: "/api/users/me/events", auth: "user", t: "Events I created",
+    d: "Not paginated. Newest first. In this response like_count is always 0 and is_liked is always false.",
+    res: [{ ...EVENT, like_count: 0, is_liked: false }], errs: [E401] },
+  { m: "GET", p: "/api/users/me/stories", auth: "user", t: "Stories I wrote",
+    d: "Not paginated. Newest first. like_count and is_liked are not filled in here.",
+    res: [{ ...STORY, like_count: 0, is_liked: false }], errs: [E401] },
+  { m: "POST", p: "/api/users/me/avatar", auth: "user", t: "Upload my avatar",
+    form: [["file", "image", "JPEG, PNG or WebP, max 5 MB."]],
+    res: { ...USER, avatar_url: "/uploads/avatars/d4e5f6a7-1b2c-4d3e-8f9a-0b1c2d3e4f5a.png" },
+    errs: [[400, "Only JPEG/PNG/WebP images allowed"], [400, "File too large (max 5MB)"], E401] },
+]},
+{ id: "spotlight", name: "Spotlight", prefix: "/api/users/spotlight", desc: "Home-page sponsor carousel. Slides are stored in backend/data/spotlight.json, not the database. The router is mounted under /api/users.", eps: [
+  { m: "GET", p: "/api/users/spotlight", auth: "public", t: "List carousel slides", res: [SLIDE] },
+  { m: "PUT", p: "/api/users/spotlight", auth: "admin", t: "Replace all slides",
+    d: "The array you send replaces the whole file. Omitting a slide removes it.",
+    body: [SLIDE], res: [SLIDE], errs: [[403, "Admins only"], E401] },
+  { m: "POST", p: "/api/users/spotlight/upload", auth: "admin", t: "Upload a slide image", code: 201,
+    d: "Returns the URL to put into a slide's image field. Max 10 MB.",
+    form: [["file", "image", "JPEG, PNG or WebP, max 10 MB."]],
+    res: { image_url: "/uploads/spotlight/4f4f4f4f-aaaa-bbbb-cccc-1234567890ab.jpg" },
+    errs: [[400, "Only JPEG, PNG and WebP images are allowed"], [400, "Image must be under 10 MB"], [403, "Admins only"]] },
+]},
+{ id: "invites", name: "Invites", prefix: "/api/invites", desc: "Email invitations to join. Invites expire after 7 days.", eps: [
+  { m: "POST", p: "/api/invites", auth: "user", t: "Send an invite", code: 201,
+    d: "Creates the invite and sends the email in the background.",
+    body: { email: "friend@example.com" }, res: INVITE,
+    errs: [[409, "A pending invite for this email already exists."], E401] },
+  { m: "GET", p: "/api/invites/validate/{token}", auth: "public", t: "Check an invite link",
+    d: "Always returns 200. Check the valid field. An expired invite is marked expired the first time it is checked.",
+    res: { valid: true, email: "friend@example.com", message: "Invite is valid." },
+    alt: [["Already used", { valid: false, email: "friend@example.com", message: "This invite has already been used." }],
+          ["Unknown token", { valid: false, email: null, message: "Invite not found." }]] },
+  { m: "POST", p: "/api/invites/accept/{token}", auth: "public", t: "Mark an invite accepted",
+    d: "Called by the frontend after a successful sign-up. Returns the same response for unknown tokens.",
+    res: { accepted: true } },
+]},
+{ id: "events", name: "Events", prefix: "/api/events", desc: "Community events with likes and a banner image. Creating an event sends a push notification to all subscribers.", eps: [
+  { m: "GET", p: "/api/events", auth: "optional", t: "List events",
+    d: "Sorted by event date, earliest first. With a token, is_liked reflects the caller.",
+    q: [["type", "string", "upcoming or past (compared to now)."], ["search", "string", "Case-insensitive match on title."], ...PAGING],
+    ex: "?type=upcoming&page=1&limit=10",
+    res: page("events", EVENT) },
+  { m: "GET", p: "/api/events/{event_id}", auth: "optional", t: "Get one event", res: EVENT, errs: [[404, "Event not found"]] },
+  { m: "POST", p: "/api/events", auth: "user", t: "Create an event", code: 201,
+    d: "title, description and location cannot be blank. Upload a banner afterwards with POST /{event_id}/banner.",
+    body: { title: "Annual Alumni Meet 2026", description: "Reunion dinner, talks from the 2005 batch and a campus walk.",
+      datetime: "2026-12-14T17:30:00Z", location: "College Auditorium, Chennai", banner_url: null, max_participants: 250 },
+    res: { ...EVENT, banner_url: null, like_count: 0, is_liked: false }, errs: [[422, "Title cannot be empty"], E401] },
+  { m: "PUT", p: "/api/events/{event_id}", auth: "user", owner: true, t: "Update an event",
+    d: "Partial update. Send only the fields that change. " + OWNER,
+    body: { location: "Main Lawn, Chennai Campus", max_participants: 300 },
+    res: { ...EVENT, location: "Main Lawn, Chennai Campus", max_participants: 300 },
+    errs: [[403, "Not authorized"], [404, "Event not found"]] },
+  { m: "DELETE", p: "/api/events/{event_id}", auth: "user", owner: true, t: "Delete an event", code: 204,
+    d: "Soft delete. " + OWNER, errs: [[403, "Not authorized"], [404, "Event not found"]] },
+  { m: "POST", p: "/api/events/{event_id}/like", auth: "user", t: "Like or unlike an event",
+    d: "Toggles. Calling it again undoes the like.", res: { liked: true, like_count: 19 }, errs: [[404, "Event not found"]] },
+  { m: "POST", p: "/api/events/{event_id}/banner", auth: "user", owner: true, t: "Upload the event banner",
+    form: [["file", "image", "JPEG, PNG or WebP, max 5 MB."]], res: EVENT,
+    errs: [[400, "Only JPEG/PNG/WebP images allowed"], [400, "File too large (max 5MB)"], [403, "Not authorized"]] },
+]},
+{ id: "stories", name: "Stories", prefix: "/api/stories", desc: "Member stories with likes and an optional image. Creating a story sends a push notification.", eps: [
+  { m: "GET", p: "/api/stories", auth: "optional", t: "List stories", d: "Newest first.",
+    q: [["search", "string", "Case-insensitive match on title."], ...PAGING], ex: "?search=startup",
+    res: page("stories", STORY) },
+  { m: "GET", p: "/api/stories/{story_id}", auth: "optional", t: "Get one story", res: STORY, errs: [[404, "Story not found"]] },
+  { m: "POST", p: "/api/stories", auth: "user", t: "Create a story", code: 201,
+    body: { title: "From hostel room to startup", content: "It started with a borrowed laptop in Block C…", image_url: null, tags: "startup,career" },
+    res: { ...STORY, image_url: null, like_count: 0 }, errs: [[422, "Content cannot be empty"], E401] },
+  { m: "PUT", p: "/api/stories/{story_id}", auth: "user", owner: true, t: "Update a story", d: "Partial update. " + OWNER,
+    body: { tags: "startup,career,inspiration" }, res: { ...STORY, tags: "startup,career,inspiration" },
+    errs: [[403, "Not authorized"], [404, "Story not found"]] },
+  { m: "DELETE", p: "/api/stories/{story_id}", auth: "user", owner: true, t: "Delete a story", code: 204,
+    d: "Soft delete. " + OWNER, errs: [[403, "Not authorized"], [404, "Story not found"]] },
+  { m: "POST", p: "/api/stories/{story_id}/like", auth: "user", t: "Like or unlike a story", res: { liked: false, like_count: 31 } },
+  { m: "POST", p: "/api/stories/{story_id}/image", auth: "user", owner: true, t: "Upload the story image",
+    form: [["file", "image", "JPEG, PNG or WebP, max 5 MB."]], res: STORY,
+    errs: [[400, "Only JPEG/PNG/WebP images allowed"], [403, "Not authorized"]] },
+]},
+{ id: "news", name: "News", prefix: "/api/news", desc: "Announcements written by admins. Only published articles are visible to the public. Creating an article sends a push notification.", eps: [
+  { m: "GET", p: "/api/news", auth: "optional", t: "List published news",
+    d: "Newest first. Drafts are never included, even for admins. Use /admin/all to see drafts.",
+    q: [["category", "string", "announcement, update, event or general."], ["severity", "string", "critical or normal."], ["search", "string", "Match on title."], ...PAGING],
+    ex: "?category=announcement&severity=critical", res: page("articles", NEWS) },
+  { m: "GET", p: "/api/news/admin/all", auth: "admin", t: "List all news, including drafts",
+    q: [["page", "int", "Default 1."], ["limit", "int", "1–100. Default 20."]],
+    res: page("articles", { ...NEWS, is_published: false }, 20), errs: [[403, "Admin access required"]] },
+  { m: "GET", p: "/api/news/{news_id}", auth: "public", t: "Get one article",
+    d: "Unpublished articles return 404.", res: NEWS, errs: [[404, "Article not found"]] },
+  { m: "POST", p: "/api/news", auth: "admin", t: "Create an article", code: 201,
+    d: "title 3–255 chars, content at least 10 chars, summary up to 500 chars. category defaults to general, severity to normal, is_published to true.",
+    body: { title: "Library extended hours during exams", content: "The central library will remain open until 12 AM on all weekdays during the exam period…",
+      summary: "Open until midnight from Nov 1 to Nov 30.", category: "announcement", severity: "normal", is_published: true },
+    res: { ...NEWS, image_url: null }, errs: [[403, "Admin access required"], [422, "String should match pattern '^(critical|normal)$'"]] },
+  { m: "PUT", p: "/api/news/{news_id}", auth: "admin", t: "Update an article", d: "Partial update.",
+    body: { severity: "critical", is_published: true }, res: { ...NEWS, severity: "critical", updated_at: "2026-10-21T08:00:00Z" },
+    errs: [[403, "Admin access required"], [404, "Article not found"]] },
+  { m: "DELETE", p: "/api/news/{news_id}", auth: "admin", t: "Delete an article", code: 204, d: "Permanent delete.",
+    errs: [[403, "Admin access required"], [404, "Article not found"]] },
+  { m: "POST", p: "/api/news/{news_id}/image", auth: "admin", t: "Upload the article image",
+    form: [["file", "image", "JPEG, PNG or WebP, max 5 MB."]], res: NEWS, errs: [[400, "Only JPEG/PNG/WebP images allowed"]] },
+]},
+{ id: "timeline", name: "Timeline", prefix: "/api/timeline", desc: "History of the community. Entries have photo or PDF attachments, likes and comments. Any logged-in user can add an entry, but only admins can edit or delete one.", eps: [
+  { m: "GET", p: "/api/timeline", auth: "optional", t: "List entries",
+    d: "Not paginated. Sorted by entry_date, newest first. photos merges the legacy photo_url with the multi-photo table.",
+    q: [["year", "int", "Only entries whose entry_date falls in this year."]], ex: "?year=1998",
+    res: { total: 1, entries: [TL] } },
+  { m: "GET", p: "/api/timeline/{entry_id}", auth: "optional", t: "Get one entry", res: TL, errs: [[404, "Timeline entry not found"]] },
+  { m: "POST", p: "/api/timeline", auth: "user", t: "Create an entry", code: 201,
+    d: "title 3–255 chars, content at least 5 chars.",
+    body: { title: "Founding of the Alumni Association", content: "The association was registered with 40 founding members.", entry_date: "1998-08-15" },
+    res: { ...TL, photo_url: null, photos: [], like_count: 0, comment_count: 0 }, errs: [E401] },
+  { m: "PUT", p: "/api/timeline/{entry_id}", auth: "admin", t: "Update an entry", d: "Partial update.",
+    body: { entry_date: "1998-08-16" }, res: { ...TL, entry_date: "1998-08-16" }, errs: [[403, "Admin access required"]] },
+  { m: "DELETE", p: "/api/timeline/{entry_id}", auth: "admin", t: "Delete an entry", code: 204, errs: [[403, "Admin access required"]] },
+  { m: "POST", p: "/api/timeline/{entry_id}/photo", auth: "user", t: "Set the main attachment",
+    d: "Replaces the entry's single photo_url. Accepts PDFs too: images up to 5 MB, PDFs up to 10 MB. Any logged-in user can call it.",
+    form: [["file", "image or PDF", "JPEG, PNG, WebP or PDF."]], res: TL,
+    errs: [[400, "Only JPEG, PNG, WebP images or PDF files allowed"], [400, "File too large (max 5MB for images)"]] },
+  { m: "POST", p: "/api/timeline/{entry_id}/photos", auth: "user", t: "Add several attachments",
+    d: "Appends files in the order sent. The same type and size rules apply as for a single upload.",
+    form: [["files", "file[] (repeat field)", "One or more JPEG, PNG, WebP or PDF files."]], res: TL,
+    errs: [[400, "File type not allowed: image/gif"]] },
+  { m: "DELETE", p: "/api/timeline/{entry_id}/photos/{photo_id}", auth: "user", owner: true, t: "Remove an attachment", code: 204,
+    d: "Removes one item from the multi-photo table. " + OWNER, errs: [[403, "Not authorised"], [404, "Photo not found"]] },
+  { m: "POST", p: "/api/timeline/{entry_id}/like", auth: "user", t: "Like or unlike an entry", res: { liked: true, like_count: 7 } },
+  { m: "GET", p: "/api/timeline/{entry_id}/comments", auth: "public", t: "List comments", d: "Oldest first.", res: [COMMENT] },
+  { m: "POST", p: "/api/timeline/{entry_id}/comments", auth: "user", t: "Add a comment", code: 201,
+    d: "content is 1–1000 characters.", body: { content: "My father was one of the 40!" }, res: COMMENT },
+  { m: "DELETE", p: "/api/timeline/{entry_id}/comments/{comment_id}", auth: "user", owner: true, t: "Delete a comment", code: 204,
+    d: "The comment's author or an admin.", errs: [[403, "Not allowed"], [404, "Comment not found"]] },
+]},
+{ id: "gallery", name: "Gallery", prefix: "/api/gallery", desc: "Shared photo gallery.", eps: [
+  { m: "GET", p: "/api/gallery", auth: "public", t: "List photos", d: "Not paginated. Newest first.", res: [PHOTO] },
+  { m: "POST", p: "/api/gallery", auth: "user", t: "Upload a photo", code: 201,
+    d: "caption is a query parameter, not a form field. Max 10 MB.",
+    q: [["caption", "string", "Optional caption, up to 255 chars."]], ex: "?caption=Convocation%202025",
+    form: [["file", "image", "JPEG, PNG or WebP, max 10 MB."]], res: PHOTO,
+    errs: [[400, "Only JPEG, PNG and WebP images are allowed"], [400, "Image must be under 10 MB"]] },
+  { m: "DELETE", p: "/api/gallery/{photo_id}", auth: "user", owner: true, t: "Delete a photo", code: 204,
+    d: "The uploader or an admin. The database row is removed, the file stays on disk.", errs: [[403, "Not authorised"], [404, "Photo not found"]] },
+]},
+{ id: "jobs", name: "Jobs", prefix: "/api/jobs", desc: "Job listings. Creating a listing sends a push notification.", eps: [
+  { m: "GET", p: "/api/jobs", auth: "public", t: "List jobs", d: "Newest first.",
+    q: [["job_type", "string", "full-time, part-time, contract or freelance."], ["tag", "string", "Substring match on tags."],
+        ["search", "string", "Matches title, company, location or tags."], ...PAGING],
+    ex: "?job_type=full-time&search=react", res: page("listings", JOB) },
+  { m: "GET", p: "/api/jobs/{job_id}", auth: "public", t: "Get one job", res: JOB, errs: [[404, "Job listing not found"]] },
+  { m: "POST", p: "/api/jobs", auth: "user", t: "Post a job", code: 201,
+    d: "job_type must be full-time, part-time, contract or freelance. deadline is a date (YYYY-MM-DD).",
+    body: omit(JOB, "id", "created_by", "created_at", "poster"), res: JOB, errs: [[422, "job_type must be one of {...}"], E401] },
+  { m: "PUT", p: "/api/jobs/{job_id}", auth: "user", owner: true, t: "Update a job", d: "Partial update. " + OWNER,
+    body: { salary_range: "₹10–14 LPA", deadline: "2026-12-15" }, res: { ...JOB, salary_range: "₹10–14 LPA", deadline: "2026-12-15" },
+    errs: [[403, "Not authorized"], [404, "Job listing not found"]] },
+  { m: "DELETE", p: "/api/jobs/{job_id}", auth: "user", owner: true, t: "Delete a job", code: 204, d: "Soft delete. " + OWNER,
+    errs: [[403, "Not authorized"]] },
+]},
+{ id: "marketplace", name: "Marketplace", prefix: "/api/marketplace", desc: "Buy and sell listings for produce, goods and services. Creating a listing sends a push notification.", eps: [
+  { m: "GET", p: "/api/marketplace", auth: "public", t: "List listings", d: "Newest first.",
+    q: [["category", "string", "crops, produce, business, services, goods or other."], ["tag", "string", "Substring match on tags."],
+        ["search", "string", "Matches title, description or tags."], ...PAGING],
+    ex: "?category=produce", res: page("listings", MKT) },
+  { m: "GET", p: "/api/marketplace/{listing_id}", auth: "public", t: "Get one listing", res: MKT, errs: [[404, "Listing not found"]] },
+  { m: "POST", p: "/api/marketplace", auth: "user", t: "Create a listing", code: 201,
+    d: "price is a decimal and is returned as a string. Upload an image afterwards with POST /{listing_id}/image.",
+    body: { title: "Organic turmeric, 50 kg", description: "Freshly harvested, sun-dried turmeric from Erode.", price: 8500,
+      category: "produce", location: "Erode", contact_info: "+91 90000 11111", is_negotiable: true, tags: "turmeric,organic" },
+    res: { ...MKT, image_url: null }, errs: [[422, "category must be one of {...}"], E401] },
+  { m: "PUT", p: "/api/marketplace/{listing_id}", auth: "user", owner: true, t: "Update a listing", d: "Partial update. " + OWNER,
+    body: { price: 8000, is_negotiable: false }, res: { ...MKT, price: "8000.00", is_negotiable: false }, errs: [[403, "Not authorized"]] },
+  { m: "DELETE", p: "/api/marketplace/{listing_id}", auth: "user", owner: true, t: "Delete a listing", code: 204, d: "Soft delete. " + OWNER,
+    errs: [[403, "Not authorized"]] },
+  { m: "POST", p: "/api/marketplace/{listing_id}/image", auth: "user", owner: true, t: "Upload the listing image",
+    form: [["file", "image", "JPEG, PNG or WebP, max 5 MB."]], res: MKT,
+    errs: [[400, "Only JPEG/PNG/WebP images allowed"], [400, "File too large (max 5MB)"], [403, "Not authorized"]] },
+]},
+{ id: "transit", name: "Transit", prefix: "/api/transit", desc: "Carpools, rideshares and bus information. No push notification is sent.", eps: [
+  { m: "GET", p: "/api/transit", auth: "public", t: "List transit offers", d: "Newest first.",
+    q: [["transit_type", "string", "carpool, rideshare, bus or other."], ["search", "string", "Matches title, from_location or to_location."], ...PAGING],
+    ex: "?transit_type=carpool&search=OMR", res: page("listings", TRANSIT) },
+  { m: "GET", p: "/api/transit/{listing_id}", auth: "public", t: "Get one offer", res: TRANSIT, errs: [[404, "Transit listing not found"]] },
+  { m: "POST", p: "/api/transit", auth: "user", t: "Create an offer", code: 201,
+    body: omit(TRANSIT, "id", "created_by", "created_at", "poster"), res: TRANSIT, errs: [[422, "transit_type must be one of {...}"], E401] },
+  { m: "PUT", p: "/api/transit/{listing_id}", auth: "user", owner: true, t: "Update an offer", d: "Partial update. " + OWNER,
+    body: { available_seats: 1 }, res: { ...TRANSIT, available_seats: 1 }, errs: [[403, "Not authorized"]] },
+  { m: "DELETE", p: "/api/transit/{listing_id}", auth: "user", owner: true, t: "Delete an offer", code: 204, d: "Soft delete. " + OWNER,
+    errs: [[403, "Not authorized"]] },
+]},
+{ id: "matrimony", name: "Matrimony", prefix: "/api/matrimony", desc: "Matrimony profiles with connection requests. Every endpoint requires login. contact_info is only shown to the profile owner, admins, and requesters whose connection was accepted.", eps: [
+  { m: "GET", p: "/api/matrimony", auth: "user", t: "List profiles",
+    d: "Newest first. contact_info is always null in the list.",
+    q: [["gender", "string", "male, female or other."], ["religion", "string", "Substring match."],
+        ["search", "string", "Matches name, profession or location."], ...PAGING],
+    ex: "?gender=female&religion=hindu", res: page("profiles", { ...MAT, connection_status: null, connection_id: null }) },
+  { m: "GET", p: "/api/matrimony/requests/received", auth: "user", t: "Pending requests to my profiles",
+    d: "All pending connection requests across every profile the caller owns.", res: [CONN] },
+  { m: "GET", p: "/api/matrimony/{profile_id}", auth: "user", t: "Get one profile",
+    d: "Includes the caller's connection_status and connection_id with this profile.", res: MAT,
+    alt: [["After the connection is accepted", { ...MAT, contact_info: "+91 94444 22222", connection_status: "accepted" }]],
+    errs: [[404, "Profile not found"]] },
+  { m: "POST", p: "/api/matrimony", auth: "user", t: "Create a profile", code: 201,
+    d: "age must be 18–80. gender must be male, female or other.",
+    body: { name: "Anjali S", age: 27, gender: "female", religion: "Hindu", caste: null, education: "M.Tech",
+      profession: "Data Analyst", height: "5'4\"", about: "Loves classical music and travel.",
+      expectations: "Educated, family-oriented", contact_info: "+91 94444 22222", location: "Coimbatore" },
+    res: { ...MAT, created_by: 12, owner: U, photo_url: null, contact_info: "+91 94444 22222", connection_status: null, connection_id: null },
+    errs: [[422, "Age must be between 18 and 80"]] },
+  { m: "PUT", p: "/api/matrimony/{profile_id}", auth: "user", owner: true, t: "Update a profile", d: "Partial update. " + OWNER,
+    body: { profession: "Senior Data Analyst" }, res: { ...MAT, profession: "Senior Data Analyst", contact_info: "+91 94444 22222", connection_status: null, connection_id: null },
+    errs: [[403, "Not authorized"]] },
+  { m: "DELETE", p: "/api/matrimony/{profile_id}", auth: "user", owner: true, t: "Delete a profile", code: 204, d: "Soft delete. " + OWNER,
+    errs: [[403, "Not authorized"]] },
+  { m: "POST", p: "/api/matrimony/{profile_id}/photo", auth: "user", owner: true, t: "Upload the profile photo",
+    form: [["file", "image", "JPEG, PNG or WebP, max 5 MB."]], res: { ...MAT, contact_info: "+91 94444 22222", connection_status: null, connection_id: null },
+    errs: [[400, "Only JPEG/PNG/WebP images allowed"], [403, "Not authorized"]] },
+  { m: "POST", p: "/api/matrimony/{profile_id}/connect", auth: "user", t: "Send a connection request", code: 201,
+    d: "If an earlier request was rejected, it is reset to pending with the new message.",
+    body: { message: "Hello, I'd like to connect on behalf of my brother." }, res: CONN,
+    errs: [[400, "Cannot connect to your own profile"], [400, "Request already pending"]] },
+  { m: "GET", p: "/api/matrimony/{profile_id}/connection", auth: "user", t: "My connection with a profile",
+    d: "Returns null when the caller has not sent a request.", res: CONN },
+  { m: "DELETE", p: "/api/matrimony/{profile_id}/connect", auth: "user", t: "Withdraw my pending request", code: 204,
+    errs: [[404, "No pending request found"]] },
+  { m: "PUT", p: "/api/matrimony/connections/{conn_id}/accept", auth: "user", t: "Accept a request",
+    d: "Only the owner of the requested profile can do this. Admins cannot.", res: { ...CONN, status: "accepted" },
+    errs: [[403, "Not your profile"], [404, "Request not found"]] },
+  { m: "PUT", p: "/api/matrimony/connections/{conn_id}/reject", auth: "user", t: "Reject a request",
+    res: { ...CONN, status: "rejected" }, errs: [[403, "Not your profile"], [404, "Request not found"]] },
+]},
+{ id: "notifications", name: "Notifications", prefix: "/api/notifications", desc: "Web Push subscriptions and the feed of notifications sent so far. New events, stories, news, jobs and marketplace listings create notifications.", eps: [
+  { m: "GET", p: "/api/notifications/vapid-public-key", auth: "public", t: "Get the VAPID public key",
+    d: "Pass it as applicationServerKey to PushManager.subscribe().",
+    res: { public_key: "BBTA-_VVtj8cHbQmINH1CkzSkSl8Td3c9cP69E4x0RnL6wc9PAEy_5EfgYAddrHdapxHS9gEiCY6k2QikOub210" } },
+  { m: "POST", p: "/api/notifications/subscribe", auth: "optional", t: "Register a push subscription", code: 201,
+    d: "Upserts by endpoint. If a token is sent, the subscription is linked to that user.",
+    body: { endpoint: "https://fcm.googleapis.com/fcm/send/dXk1…", p256dh: "BNcRdreALRFXTkOOUHK1EtK2wtaz5Ry4YfYCA_0QTpQtUbVlUls0VJXg7A8u-Ts1XbjhazAkj7I99e8QcYP7DkM", auth: "tBHItJI5svbpez7KI4CCXg" },
+    res: { status: "subscribed" } },
+  { m: "DELETE", p: "/api/notifications/subscribe", auth: "public", t: "Remove a push subscription",
+    d: "DELETE with a JSON body. Some HTTP clients need an explicit option to send one.",
+    body: { endpoint: "https://fcm.googleapis.com/fcm/send/dXk1…" }, res: { status: "unsubscribed" } },
+  { m: "GET", p: "/api/notifications", auth: "public", t: "List sent notifications",
+    d: "Newest first. The feed is global, not per user.",
+    q: [["page", "int", "Default 1."], ["limit", "int", "1–100. Default 20."]],
+    res: { total: 128, page: 1, limit: 20, notifications: [NOTIF] } },
+]},
+];
+
+// ── Rendering ────────────────────────────────────────────────────────────
+const esc = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+function hl(json) {
+  return esc(json).replace(/("(?:\\.|[^"\\])*")(\s*:)?|\b(true|false|null)\b|(-?\d+(?:\.\d+)?)/g, (m, str, colon, lit, num) => {
+    if (str) return colon ? `<span class="k">${str}</span>${colon}` : `<span class="s">${str}</span>`;
+    if (lit) return `<span class="l">${lit}</span>`;
+    return `<span class="n">${num}</span>`;
+  });
+}
+const J = o => JSON.stringify(o, null, 2);
+const AUTH_LABEL = { public: "Public", optional: "Optional auth", user: "Login", admin: "Admin" };
+const pathHtml = p => esc(p).replace(/\{(\w+)\}/g, '<span class="param">{$1}</span>');
+const sampleId = name => ({ event_id: 41, story_id: 77, news_id: 9, entry_id: 5, photo_id: 23, comment_id: 101, job_id: 14,
+  listing_id: 30, profile_id: 3, conn_id: 55, token: "6f1c2d3e-4b5a-4c6d-8e9f-0a1b2c3d4e5f" }[name] ?? 1);
+
+function curl(ep) {
+  const url = ep.p.replace(/\{(\w+)\}/g, (_, n) => sampleId(n)) + (ep.ex || "");
+  const lines = [`curl -X ${ep.m} "$BASE${url}"`];
+  if (ep.auth === "user" || ep.auth === "admin") lines.push(`-H "Authorization: Bearer $TOKEN"`);
+  if (ep.auth === "optional") lines.push(`-H "Authorization: Bearer $TOKEN"   # optional`);
+  if (ep.form) ep.form.forEach(([n, type]) => {
+    const f = type.includes("xlsx") ? "users.xlsx" : type.includes("PDF") ? "photo.jpg" : "photo.jpg";
+    lines.push(`-F "${n}=@${f}"`);
+    if (n === "files") lines.push(`-F "files=@scan.pdf"`);
+  });
+  if (ep.body !== undefined) {
+    lines.push(`-H "Content-Type: application/json"`);
+    lines.push(`-d '${JSON.stringify(ep.body, null, 2).replace(/'/g, "'\\''")}'`);
+  }
+  return lines.join(" \\\n  ");
+}
+
+function codeBlock(label, text, html, extra = "") {
+  return `<div class="code"><div class="label"><span>${label}${extra}</span><button type="button" class="copy">Copy</button></div><pre>${html ?? esc(text)}</pre></div>`;
+}
+
+function table(rows, head, reqCol) {
+  return `<div class="tbl-wrap"><table><thead><tr>${head.map(h => `<th>${h}</th>`).join("")}</tr></thead><tbody>${
+    rows.map(r => `<tr><td><code>${esc(r[0])}</code></td><td class="mono" style="font-size:12.5px">${esc(r[1])}</td>${reqCol ? `<td class="${r[3] ? "req" : "opt"}">${r[3] ? "required" : "optional"}</td>` : ""}<td>${esc(r[2])}</td></tr>`).join("")
+  }</tbody></table></div>`;
+}
+
+function renderEp(ep, gid, i) {
+  const id = `${gid}-${i}`;
+  const code = ep.code || 200;
+  const statusText = { 200: "200 OK", 201: "201 Created", 204: "204 No Content" }[code];
+  const pathParams = [...ep.p.matchAll(/\{(\w+)\}/g)].map(m => [m[1], m[1] === "token" ? "string" : "int", "Path parameter.", true]);
+  let body = "";
+  if (ep.d || ep.owner) body += `<p>${esc(ep.d || OWNER)}</p>`;
+  if (pathParams.length) body += `<div><div class="label">Path parameters</div>${table(pathParams, ["Name", "Type", "", "Description"], true)}</div>`;
+  if (ep.q) body += `<div><div class="label">Query parameters</div>${table(ep.q, ["Name", "Type", "Description"])}</div>`;
+  if (ep.form) body += `<div><div class="label">Form data (multipart/form-data)</div>${table(ep.form.map(f => [...f, true]), ["Field", "Type", "", "Description"], true)}</div>`;
+  body += codeBlock("Request", null, esc(curl(ep)));
+  if (code === 204) body += `<div><div class="label"><span>Response <span class="status">${statusText}</span></span></div><div class="note">Empty body.</div></div>`;
+  else if (ep.resRaw) body += codeBlock("Response", ep.resRaw);
+  else body += codeBlock("Response", null, hl(J(ep.res)), ` <span class="status">${statusText}</span>`);
+  (ep.alt || []).forEach(([name, obj]) => body += codeBlock(`Response · ${esc(name)}`, null, hl(J(obj))));
+  if (ep.errs) body += `<div><div class="label">Errors</div><div class="errs">${ep.errs.map(([c, m]) => `<span class="err"><b>${c}</b>${esc(m)}</span>`).join("")}</div></div>`;
+
+  const search = `${ep.m} ${ep.p} ${ep.t}`.toLowerCase();
+  return `<details class="ep" id="${id}" data-search="${esc(search)}">
+    <summary>
+      <span class="method m-${ep.m}">${ep.m}</span>
+      <span class="sum-main"><span class="path">${pathHtml(ep.p)}</span><span class="sum-title">${esc(ep.t)}</span></span>
+      <span class="auth ${ep.auth}">${AUTH_LABEL[ep.auth]}${ep.owner ? " · owner" : ""}</span>
+    </summary>
+    <div class="ep-body">${body}</div>
+  </details>`;
+}
+
+const groupsEl = document.getElementById("groups");
+groupsEl.innerHTML = GROUPS.map(g => `
+  <section class="mod" id="${g.id}" data-group>
+    <h2 class="group">${esc(g.name)} <span class="prefix">${esc(g.prefix)}</span></h2>
+    <p class="group-desc">${esc(g.desc)}</p>
+    <div class="eps">${g.eps.map((ep, i) => renderEp(ep, g.id, i)).join("")}</div>
+  </section>`).join("");
+groupsEl.style.display = "flex"; groupsEl.style.flexDirection = "column"; groupsEl.style.gap = "56px";
+
+const total = GROUPS.reduce((n, g) => n + g.eps.length, 0);
+document.getElementById("ep-count").textContent = `${total} across ${GROUPS.length} modules`;
+document.getElementById("userout").innerHTML = hl(J(USER));
+document.getElementById("err422").innerHTML = hl(J({ detail: [{ type: "value_error", loc: ["body", "password"],
+  msg: "Value error, Password must contain at least one uppercase letter", input: "secret123", ctx: { error: {} } }] }));
+
+const nav = document.getElementById("nav");
+nav.innerHTML = `<a href="#overview">Overview</a><a href="#conventions">Conventions</a><span class="sep">Modules</span>` +
+  GROUPS.map(g => `<a href="#${g.id}" data-nav="${g.id}"><span>${esc(g.name)}</span><span class="count">${g.eps.length}</span></a>`).join("");
+
+// Copy buttons
+document.addEventListener("click", e => {
+  const btn = e.target.closest(".copy");
+  if (!btn) return;
+  const pre = btn.closest(".code").querySelector("pre");
+  const done = () => { btn.textContent = "Copied"; setTimeout(() => btn.textContent = "Copy", 1400); };
+  try {
+    navigator.clipboard.writeText(pre.innerText).then(done, () => selectText(pre));
+  } catch { selectText(pre); }
+});
+function selectText(el) { const r = document.createRange(); r.selectNodeContents(el); const s = getSelection(); s.removeAllRanges(); s.addRange(r); }
+
+// Expand / collapse
+document.getElementById("expand").onclick = () => document.querySelectorAll("details.ep").forEach(d => { if (!d.closest("[hidden]") && !d.hidden) d.open = true; });
+document.getElementById("collapse").onclick = () => document.querySelectorAll("details.ep").forEach(d => d.open = false);
+
+// Filter
+const q = document.getElementById("q");
+q.addEventListener("input", () => {
+  const term = q.value.trim().toLowerCase();
+  let shown = 0;
+  document.querySelectorAll("[data-group]").forEach(sec => {
+    let any = 0;
+    sec.querySelectorAll("details.ep").forEach(d => {
+      const hit = !term || d.dataset.search.includes(term);
+      d.hidden = !hit; if (hit) any++;
+      if (term && hit) d.open = true;
+    });
+    sec.hidden = !any; shown += any;
+    const link = nav.querySelector(`[data-nav="${sec.id}"] .count`);
+    if (link) link.textContent = any;
+  });
+  document.getElementById("empty").hidden = shown > 0;
+});
+
+// Active section highlight
+const links = [...nav.querySelectorAll("[data-nav]")];
+const io = new IntersectionObserver(entries => {
+  entries.forEach(en => {
+    if (en.isIntersecting) links.forEach(a => a.classList.toggle("active", a.dataset.nav === en.target.id));
+  });
+}, { rootMargin: "-10% 0px -80% 0px" });
+document.querySelectorAll("[data-group]").forEach(s => io.observe(s));
+
+// Open an endpoint or module from the link hash
+const h = location.hash.slice(1);
+if (h) { const el = document.getElementById(h); if (el) { if (el.tagName === "DETAILS") el.open = true; el.scrollIntoView(); } }
+</script>
+</body>
+</html>

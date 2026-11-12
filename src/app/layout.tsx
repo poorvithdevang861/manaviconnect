@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import "./globals.css";
 import { Navbar } from "@/components/layout/Navbar";
 import { MobileTabBar } from "@/components/layout/MobileTabBar";
+import { AuthProvider } from "@/lib/auth";
 
 export const metadata: Metadata = {
-  title: "MANAVI • Verified Navodaya Alumni Network",
+  title: "MANAVI • Navodaya Alumni Community",
   description:
-    "A private, verified alumni network for Jawahar Navodaya Vidyalaya graduates to find batchmates, share news, post jobs and host reunions.",
+    "The MANAVI alumni community: news, events, stories, jobs, the school timeline and gallery, a marketplace and carpools.",
 };
 
 export default function RootLayout({
@@ -25,9 +27,13 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-screen bg-[#fafafa] text-zinc-900 selection:bg-orange-100 selection:text-orange-900 pb-16 md:pb-0">
-        <Navbar />
-        <main>{children}</main>
-        <MobileTabBar />
+        <AuthProvider>
+          <Navbar />
+          <main>
+            <Suspense>{children}</Suspense>
+          </main>
+          <MobileTabBar />
+        </AuthProvider>
       </body>
     </html>
   );

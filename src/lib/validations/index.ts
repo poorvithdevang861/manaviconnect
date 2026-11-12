@@ -1,79 +1,91 @@
 import { z } from "zod";
+import { JOB_TYPES, MARKET_CATEGORIES, NEWS_CATEGORIES, TRANSIT_TYPES } from "@/lib/api/types";
 
-export const signInSchema = z.object({
-  identifier: z
-    .string()
-    .min(3, "Enter a valid email address or 10-digit mobile number")
-    .refine((val) => {
-      const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
-      const isPhone = /^[6-9]\d{9}$/.test(val.replace(/[\s-]/g, ""));
-      return isEmail || isPhone;
-    }, "Must be a valid email or 10-digit mobile number"),
+const optionalText = z.string().trim().optional().or(z.literal(""));
+const notBlank = (label: string) => z.string().trim().min(1, `${label} is required`);
+
+export const passwordSchema = z
+  .string()
+  .min(8, "At least 8 characters")
+  .regex(/[A-Z]/, "Include at least one uppercase letter")
+  .regex(/\d/, "Include at least one digit");
+
+export const loginSchema = z.object({
+  email: z.string().trim().email("Enter a valid email address"),
+  password: z.string().min(1, "Enter your password"),
 });
 
-export const otpVerifySchema = z.object({
-  identifier: z.string(),
-  code: z.string().length(6, "Code must be 6 digits").regex(/^\d+$/, "Code must contain numbers only"),
+export const signupSchema = z
+  .object({
+    name: z.string().trim().min(2, "Enter your full name"),
+    email: z.string().trim().email("Enter a valid email address"),
+    password: passwordSchema,
+    confirm_password: z.string(),
+  })
+  .refine((d) => d.password === d.confirm_password, { message: "Passwords don't match", path: ["confirm_password"] });
+
+export const resetPasswordSchema = z
+  .object({ new_password: passwordSchema, confirm: z.string() })
+  .refine((d) => d.new_password === d.confirm, { message: "Passwords don't match", path: ["confirm"] });
+
+export const eventSchema = z.object({
+  title: notBlank("Title"),
+  description: notBlank("Description"),
+  location: notBlank("Location"),
+  datetime: z.string().min(1, "Pick a date and time"),
+  max_participants: z.union([z.coerce.number().int().positive("Must be a positive number"), z.literal("")]).optional(),
 });
 
-export const joinRequestSchema = z.object({
-  schoolName: z.string().default("MANAVI"),
-  yearJoined: z.coerce
-    .number()
-    .int()
-    .min(1986, "Navodaya was founded in 1986")
-    .max(new Date().getFullYear(), "Cannot be in the future"),
-  yearLeft: z.coerce
-    .number()
-    .int()
-    .min(1986, "Invalid year")
-    .max(new Date().getFullYear() + 7, "Invalid leaving year"),
-  admissionNumber: z.string().optional(),
-  name: z.string().min(2, "Full name is required"),
-  email: z.string().email("Valid email required"),
-  phone: z.string().optional(),
-  city: z.string().min(2, "Current city is required"),
-  house: z.string().optional(),
-  role: z.string().optional(),
-  organisation: z.string().optional(),
-}).refine((data) => data.yearLeft >= data.yearJoined, {
-  message: "Year left must be after or equal to year joined",
-  path: ["yearLeft"],
+export const storySchema = z.object({
+  title: notBlank("Title"),
+  content: notBlank("Story"),
+  tags: optionalText,
 });
 
-export const jobPostSchema = z.object({
-  title: z.string().min(3, "Title must be at least 3 characters"),
-  company: z.string().min(2, "Company name is required"),
-  city: z.string().min(2, "City or 'Remote' is required"),
-  type: z.enum(["Full-time", "Internship", "Contract", "Remote"]),
-  experienceLevel: z.enum(["Fresher", "1-3 years", "Mid-Senior (4-8 yrs)", "Lead / Executive (8+ yrs)"]),
-  description: z.string().min(30, "Please provide a detailed role overview and requirements"),
-  applyMethod: z.string().min(5, "Enter application URL or recruiter email"),
+export const newsSchema = z.object({
+  title: z.string().trim().min(3, "At least 3 characters").max(255, "At most 255 characters"),
+  content: z.string().trim().min(10, "At least 10 characters"),
+  summary: z.string().trim().max(500, "At most 500 characters").optional(),
+  category: z.enum(NEWS_CATEGORIES),
+  severity: z.enum(["critical", "normal"]),
+  is_published: z.boolean(),
 });
 
-export const storyPostSchema = z.object({
-  headline: z.string().min(5, "Headline is required").max(140, "Keep headline under 140 characters"),
-  type: z.enum(["news", "achievement", "memoir", "general"]),
-  audience: z.enum(["all", "school", "batch"]),
-  body: z.string().min(50, "Story content must be at least 50 characters"),
-  coverImage: z.string().optional(),
+export const timelineSchema = z.object({
+  title: z.string().trim().min(3, "At least 3 characters").max(255, "At most 255 characters"),
+  content: z.string().trim().min(5, "At least 5 characters"),
+  entry_date: z.string().min(1, "Pick the date this happened"),
 });
 
-export const eventHostSchema = z.object({
-  name: z.string().min(3, "Event title is required"),
-  description: z.string().min(20, "Please provide event details and agenda"),
-  venue: z.string().min(3, "Venue or online link is required"),
-  city: z.string().min(2, "City name is required"),
-  startsAt: z.string().min(1, "Start date and time are required"),
-  audience: z.enum(["all", "school", "batch"]),
+export const jobSchema = z.object({
+  title: notBlank("Title"),
+  company: notBlank("Company"),
+  description: notBlank("Description"),
+  job_type: z.enum(JOB_TYPES),
+  contact_email: z.string().trim().email("Enter a valid email").optional().or(z.literal("")),
 });
 
-export const profileUpdateSchema = z.object({
-  name: z.string().min(2, "Name is required"),
-  role: z.string().optional(),
-  organisation: z.string().optional(),
-  city: z.string().min(2, "City is required"),
-  bio: z.string().max(300, "Bio should be concise").optional(),
-  phoneVisibility: z.enum(["me", "batch", "school", "all"]),
-  emailVisibility: z.enum(["me", "batch", "school", "all"]),
+export const marketSchema = z.object({
+  title: notBlank("Title"),
+  description: notBlank("Description"),
+  category: z.enum(MARKET_CATEGORIES),
+  price: z.union([z.coerce.number().nonnegative("Price can't be negative"), z.literal("")]).optional(),
 });
+
+export const transitSchema = z.object({
+  title: notBlank("Title"),
+  transit_type: z.enum(TRANSIT_TYPES),
+  from_location: notBlank("From"),
+  to_location: notBlank("To"),
+  available_seats: z.union([z.coerce.number().int().nonnegative("Can't be negative"), z.literal("")]).optional(),
+});
+
+/** Flattens a failed parse into { field: firstMessage }. */
+export function fieldErrors(error: z.ZodError): Record<string, string> {
+  const out: Record<string, string> = {};
+  for (const issue of error.errors) {
+    const key = String(issue.path[0] ?? "form");
+    if (!out[key]) out[key] = issue.message;
+  }
+  return out;
+}

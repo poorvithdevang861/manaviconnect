@@ -2,39 +2,35 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Users, BookOpen, Calendar, User } from "lucide-react";
+import { Briefcase, Calendar, Home, Newspaper, User } from "lucide-react";
+import { AUTH_ROUTES, isActive } from "./nav";
+
+const TABS = [
+  { label: "Home", href: "/", icon: Home },
+  { label: "News", href: "/news", icon: Newspaper },
+  { label: "Events", href: "/events", icon: Calendar },
+  { label: "Jobs", href: "/jobs", icon: Briefcase },
+  { label: "Me", href: "/me", icon: User },
+];
 
 export function MobileTabBar() {
   const pathname = usePathname();
-
-  if (pathname === "/sign-in" || pathname === "/join") {
-    return null;
-  }
-
-  const tabs = [
-    { label: "Home", href: "/", icon: Home },
-    { label: "People", href: "/people", icon: Users },
-    { label: "Stories", href: "/stories", icon: BookOpen },
-    { label: "Events", href: "/events", icon: Calendar },
-    { label: "Me", href: "/me", icon: User },
-  ];
+  if (AUTH_ROUTES.includes(pathname)) return null;
 
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-line px-2 py-1.5 flex items-center justify-around">
-      {tabs.map((tab) => {
+    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-line px-2 py-1.5 flex items-center justify-around" aria-label="Tabs">
+      {TABS.map((tab) => {
         const Icon = tab.icon;
-        const isActive = pathname === tab.href || (tab.href !== "/" && pathname.startsWith(tab.href));
+        const active = isActive(pathname, tab.href);
         return (
           <Link
             key={tab.href}
             href={tab.href}
             className={`flex flex-col items-center justify-center py-1 px-3 rounded-lg text-[11px] transition-all duration-150 active:scale-90 ${
-              isActive
-                ? "text-orange-600 font-semibold"
-                : "text-zinc-400 hover:text-zinc-700"
+              active ? "text-orange-600 font-semibold" : "text-zinc-400 hover:text-zinc-700"
             }`}
           >
-            <Icon size={18} strokeWidth={isActive ? 2.2 : 1.6} className="mb-0.5 transition-transform" />
+            <Icon size={18} strokeWidth={active ? 2.2 : 1.6} className="mb-0.5" />
             <span>{tab.label}</span>
           </Link>
         );

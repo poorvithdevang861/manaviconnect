@@ -1,38 +1,21 @@
 import React from "react";
-import { 
-  Trophy, 
-  Newspaper, 
-  BookOpen, 
-  FileText, 
-  Briefcase, 
-  GraduationCap, 
-  Globe, 
-  FileCheck,
-  ShieldCheck,
-  Award,
-  Compass,
-  Users
-} from "lucide-react";
+import { Briefcase, Clock, FileCheck, Laptop, Tag } from "lucide-react";
+import { splitTags, titleCase } from "@/lib/format";
 
 interface BadgeProps {
   children: React.ReactNode;
-  variant?: "neutral" | "orange" | "brand" | "dark" | "verified";
+  variant?: "neutral" | "brand" | "dark" | "verified" | "danger";
   size?: "sm" | "md";
   className?: string;
 }
 
-export function Badge({
-  children,
-  variant = "neutral",
-  size = "md",
-  className = "",
-}: BadgeProps) {
+export function Badge({ children, variant = "neutral", size = "md", className = "" }: BadgeProps) {
   const variantStyles = {
     neutral: "bg-zinc-100 text-zinc-700 border border-zinc-200/80",
-    orange: "bg-orange-50 text-orange-700 border border-orange-200/70 font-medium",
     brand: "bg-orange-50 text-orange-700 border border-orange-200/70 font-medium",
     dark: "bg-zinc-900 text-white font-medium",
     verified: "bg-emerald-50 text-emerald-800 border border-emerald-200/70 font-medium",
+    danger: "bg-red-50 text-red-700 border border-red-200/70 font-medium",
   };
 
   const sizeStyles = {
@@ -41,93 +24,40 @@ export function Badge({
   };
 
   return (
-    <span
-      className={`inline-flex items-center gap-1.5 rounded-md font-mono transition-transform duration-100 ${sizeStyles[size]} ${variantStyles[variant]} ${className}`}
-    >
+    <span className={`inline-flex items-center gap-1.5 rounded-md font-mono ${sizeStyles[size]} ${variantStyles[variant]} ${className}`}>
       {children}
     </span>
   );
 }
 
-export function StoryCategoryBadge({
-  type,
-  size = "sm",
-  className = "",
-}: {
-  type: "news" | "achievement" | "memoir" | "general" | string;
-  size?: "sm" | "md";
-  className?: string;
-}) {
-  const configs: Record<string, { label: string; icon: React.ComponentType<{ size?: number; className?: string }>; variant: "brand" | "neutral" }> = {
-    news: { label: "News", icon: Newspaper, variant: "neutral" },
-    achievement: { label: "Achievement", icon: Trophy, variant: "brand" },
-    memoir: { label: "Memoir", icon: BookOpen, variant: "neutral" },
-    general: { label: "General", icon: FileText, variant: "neutral" },
-  };
+const JOB_TYPE_ICONS: Record<string, React.ComponentType<{ size?: number; className?: string }>> = {
+  "full-time": Briefcase,
+  "part-time": Clock,
+  contract: FileCheck,
+  freelance: Laptop,
+};
 
-  const config = configs[type.toLowerCase()] || { label: type, icon: FileText, variant: "neutral" };
-  const Icon = config.icon;
-
+export function JobTypeBadge({ type, size = "sm" }: { type: string; size?: "sm" | "md" }) {
+  const Icon = JOB_TYPE_ICONS[type] ?? Briefcase;
   return (
-    <Badge variant={config.variant} size={size} className={className}>
+    <Badge variant={type === "full-time" ? "brand" : "neutral"} size={size}>
       <Icon size={size === "sm" ? 11 : 13} className="shrink-0" />
-      <span>{config.label}</span>
+      {titleCase(type)}
     </Badge>
   );
 }
 
-export function JobTypeBadge({
-  type,
-  size = "sm",
-  className = "",
-}: {
-  type: "Full-time" | "Internship" | "Remote" | "Contract" | string;
-  size?: "sm" | "md";
-  className?: string;
-}) {
-  const configs: Record<string, { icon: React.ComponentType<{ size?: number; className?: string }>; variant: "brand" | "neutral" }> = {
-    "full-time": { icon: Briefcase, variant: "brand" },
-    "internship": { icon: GraduationCap, variant: "neutral" },
-    "remote": { icon: Globe, variant: "brand" },
-    "contract": { icon: FileCheck, variant: "neutral" },
-  };
-
-  const config = configs[type.toLowerCase()] || { icon: Briefcase, variant: "neutral" };
-  const Icon = config.icon;
-
+export function Tags({ tags }: { tags: string | null | undefined }) {
+  const list = splitTags(tags);
+  if (list.length === 0) return null;
   return (
-    <Badge variant={config.variant} size={size} className={className}>
-      <Icon size={size === "sm" ? 11 : 13} className="shrink-0" />
-      <span>{type}</span>
-    </Badge>
-  );
-}
-
-export function HouseBadge({
-  house,
-  size = "sm",
-  className = "",
-}: {
-  house: "Aravali" | "Nilgiri" | "Shivalik" | "Udaygiri" | string;
-  size?: "sm" | "md";
-  className?: string;
-}) {
-  const houseStyles: Record<string, string> = {
-    aravali: "bg-emerald-50 text-emerald-800 border-emerald-200/80",
-    nilgiri: "bg-blue-50 text-blue-800 border-blue-200/80",
-    shivalik: "bg-rose-50 text-rose-800 border-rose-200/80",
-    udaygiri: "bg-amber-50 text-amber-800 border-amber-200/80",
-  };
-
-  const style = houseStyles[house.toLowerCase()] || "bg-zinc-100 text-zinc-700 border-zinc-200";
-  const sizeClass = size === "sm" ? "px-2 py-0.5 text-[11px]" : "px-2.5 py-0.5 text-xs";
-
-  return (
-    <span
-      className={`inline-flex items-center gap-1 rounded-md font-mono border font-medium ${sizeClass} ${style} ${className}`}
-    >
-      <Compass size={size === "sm" ? 10 : 12} className="shrink-0" />
-      <span>{house}</span>
-    </span>
+    <div className="flex flex-wrap items-center gap-1">
+      {list.map((t) => (
+        <Badge key={t} size="sm">
+          <Tag size={10} className="shrink-0 text-zinc-400" />
+          {t}
+        </Badge>
+      ))}
+    </div>
   );
 }

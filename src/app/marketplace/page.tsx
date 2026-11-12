@@ -1,0 +1,97 @@
+"use client";
+
+import Link from "next/link";
+import { useState } from "react";
+import { MapPin, Plus, Store } from "lucide-react";
+import { api, MARKET_CATEGORIES, mediaUrl, type MarketCategory } from "@/lib/api";
+import { useApi } from "@/lib/useApi";
+import { formatPrice, timeAgo, titleCase } from "@/lib/format";
+import { PageHeader } from "@/components/layout/PageHeader";
+import { Badge } from "@/components/ui/Badge";
+import { Card } from "@/components/ui/Card";
+import { Pagination } from "@/components/ui/Pagination";
+import { Empty, ErrorBox, Loading } from "@/components/ui/States";
+import { FilterChips, SearchInput, Toolbar } from "@/components/ui/Toolbar";
+import { btnPrimary, pageCls } from "@/components/ui/styles";
+
+const CATEGORY_OPTIONS = [{ id: "all", label: "All" }, ...MARKET_CATEGORIES.map((c) => ({ id: c, label: titleCase(c) }))] as const;
+
+export default function MarketplacePage() {
+  const [category, setCategory] = useState<MarketCategory | "all">("all");
+  const [search, setSearch] = useState("");
+  const [page, setPage] = useState(1);
+  const { data, error, loading, reload } = useApi(
+    () => api.marketplace.list({ category: category === "all" ? undefined : category, search, page, limit: 12 }),
+    [category, search, page],
+  );
+
+  return (
+    <div className={pageCls}>
+      <PageHeader
+        tag="Marketplace"
+        title="Marketplace"
+        description="Buy from and sell to fellow alumni: farm produce, goods and services."
+        action={
+          <Link href="/marketplace/new" className={btnPrimary}>
+            <Plus size={14} />
+            List something
+          </Link>
+        }
+      />
+
+      <Toolbar>
+        <SearchInput value={search} onChange={(v) => { setSearch(v); setPage(1); }} placeholder="Search title, description or tags" />
+        <FilterChips options={CATEGORY_OPTIONS} value={category} onChange={(v) => { setCategory(v); setPage(1); }} />
+      </Toolbar>
+
+      {loading ? (
+        <Loading />
+      ) : error ? (
+        <ErrorBox error={error} onRetry={reload} />
+      ) : data!.listings.length === 0 ? (
+        <Empty title="Nothing listed here yet" action={<Link href="/marketplace/new" className={btnPrimary}>Create a listing</Link>} />
+      ) : (
+        <>
+          <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {data!.listings.map((item) => (
+              <li key={item.id}>
+                <Link href={`/marketplace/${item.id}`} className="block group h-full">
+                  <Card hoverable className="overflow-hidden h-full flex flex-col">
+                    <div className="aspect-[4/3] bg-zinc-100 flex items-center justify-center">
+                      {mediaUrl(item.image_url) ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={mediaUrl(item.image_url)!} alt="" className="w-full h-full object-cover" />
+                      ) : (
+                        <Store size={28} className="text-zinc-300" />
+                      )}
+                    </div>
+                    <div className="p-4 space-y-1.5 flex-1 flex flex-col">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="text-base font-semibold text-zinc-900 font-mono">{formatPrice(item.price)}</span>
+                        <Badge size="sm">{titleCase(item.category)}</Badge>
+                      </div>
+                      <h3 className="text-sm font-semibold text-zinc-900 group-hover:text-orange-600 leading-snug">{item.title}</h3>
+                      <p className="text-xs text-zinc-600 line-clamp-2">{item.description}</p>
+                      <div className="mt-auto pt-2 flex items-center justify-between text-[11px] text-zinc-400">
+                        <span className="inline-flex items-center gap-1">
+                          {item.location && (
+                            <>
+                              <MapPin size={11} />
+                              {item.location}
+                            </>
+                          )}
+                        </span>
+                        <span>{timeAgo(item.created_at)}</span>
+                      </div>
+                    </div>
+                  </Card>
+                </Link>
+              </li>
+            ))}
+          </ul>
+          <Pagination page={data!.page} limit={data!.limit} total={data!.total} onChange={setPage} />
+        </>
+      )}
+    </div>
+  );
+}

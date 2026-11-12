@@ -1,241 +1,200 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
-import { Search, ArrowRight, Plus, MapPin, Calendar, Briefcase, Clock } from "lucide-react";
-import { 
-  CURRENT_USER, 
-  MOCK_STORIES, 
-  MOCK_EVENTS, 
-  MOCK_JOBS, 
-  MOCK_MEMBERS 
-} from "@/lib/mockData";
-import { Card } from "@/components/ui/Card";
-import { Badge, StoryCategoryBadge, JobTypeBadge, HouseBadge } from "@/components/ui/Badge";
+import { AlertTriangle, Briefcase, Calendar, Car, History, Images, MapPin, Plus, Store } from "lucide-react";
+import { api } from "@/lib/api";
+import { useAuth } from "@/lib/auth";
+import { useApi } from "@/lib/useApi";
+import { formatDay, formatTime, timeAgo } from "@/lib/format";
 import { PageHeader } from "@/components/layout/PageHeader";
+import { Spotlight } from "@/components/home/Spotlight";
+import { NewsCard, SectionHeading, StoryCard } from "@/components/cards";
+import { Card } from "@/components/ui/Card";
+import { JobTypeBadge } from "@/components/ui/Badge";
+import { Empty, ErrorBox, Loading } from "@/components/ui/States";
+import { btnPrimary, btnSecondary, pageCls } from "@/components/ui/styles";
+
+const EXPLORE = [
+  { label: "Timeline", href: "/timeline", icon: History, text: "The school's history, year by year" },
+  { label: "Gallery", href: "/gallery", icon: Images, text: "Photos shared by alumni" },
+  { label: "Marketplace", href: "/marketplace", icon: Store, text: "Produce, goods and services" },
+  { label: "Transit", href: "/transit", icon: Car, text: "Carpools and rides" },
+];
 
 export default function HomePage() {
-  const [searchQuery, setSearchQuery] = useState("");
-
-  const filteredMembers = MOCK_MEMBERS.filter(m => 
-    searchQuery.trim() !== "" && (
-      m.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      m.role.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      m.city.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      m.batch.toLowerCase().includes(searchQuery.toLowerCase())
-    )
-  );
+  const { user } = useAuth();
+  const slides = useApi(() => api.spotlight.list(), []);
+  const critical = useApi(() => api.news.list({ severity: "critical", limit: 2 }), []);
+  const news = useApi(() => api.news.list({ limit: 3 }), []);
+  const stories = useApi(() => api.stories.list({ limit: 3 }), [user?.id]);
+  const events = useApi(() => api.events.list({ type: "upcoming", limit: 3 }), [user?.id]);
+  const jobs = useApi(() => api.jobs.list({ limit: 4 }), []);
 
   return (
-    <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6 animate-fade-in">
-      
-      {/* Standardized Header */}
+    <div className={pageCls}>
       <PageHeader
-        title="MANAVI Alumni Network"
-        description="Updates, stories, events, and opportunities across our verified alumni community."
+        title={user ? `Welcome back, ${user.name.split(" ")[0]}` : "MANAVI Alumni Community"}
+        description="News, events, stories and opportunities from across our alumni."
         action={
-          <div className="flex items-center gap-2">
-            <Link
-              href="/people"
-              className="btn-press px-3.5 py-1.5 text-xs font-medium text-zinc-700 bg-white hover:bg-zinc-50 rounded-lg border border-zinc-200 shadow-xs"
-            >
-              Directory
+          <>
+            <Link href="/events/new" className={btnSecondary}>
+              Host an event
             </Link>
-            <Link
-              href="/stories/new"
-              className="btn-press inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-medium text-white bg-orange-600 hover:bg-orange-700 rounded-lg shadow-xs"
-            >
+            <Link href="/stories/new" className={btnPrimary}>
               <Plus size={14} />
-              Share Story
+              Share a story
             </Link>
-          </div>
+          </>
         }
       />
 
-      {/* Global Search Bar */}
-      <div className="bg-white border border-zinc-200/80 rounded-xl p-3 shadow-xs relative transition-shadow duration-150 focus-within:shadow-sm focus-within:border-zinc-300">
-        <div className="relative">
-          <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400 transition-colors" />
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search alumni by name, batch, city, or company..."
-            className="w-full pl-9 pr-4 py-2 text-sm bg-zinc-50/60 hover:bg-white focus:bg-white border border-zinc-200 focus:border-orange-500 rounded-lg outline-none transition-all placeholder:text-zinc-400"
-          />
-        </div>
+      {slides.data && <Spotlight slides={slides.data} />}
 
-        {searchQuery.trim().length > 0 && (
-          <div className="absolute top-full left-0 right-0 mt-1.5 bg-white border border-zinc-200/80 rounded-xl shadow-dropdown p-2 z-20 max-h-72 overflow-y-auto animate-fade-in">
-            {filteredMembers.length === 0 ? (
-              <div className="p-3 text-xs text-zinc-400 text-center">
-                No batchmates match "{searchQuery}"
-              </div>
+      {critical.data?.articles.map((a) => (
+        <Link
+          key={a.id}
+          href={`/news/${a.id}`}
+          className="flex items-start gap-3 p-3.5 bg-red-50/70 border border-red-200 rounded-xl text-sm text-red-900 hover:bg-red-50 transition-colors"
+        >
+          <AlertTriangle size={16} className="shrink-0 mt-0.5 text-red-600" />
+          <span>
+            <strong className="font-semibold">{a.title}.</strong> {a.summary}
+          </span>
+        </Link>
+      ))}
+
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
+        <div className="lg:col-span-8 space-y-8">
+          <section className="space-y-3.5">
+            <SectionHeading title="Latest news" href="/news" />
+            {news.loading ? (
+              <Loading />
+            ) : news.error ? (
+              <ErrorBox error={news.error} onRetry={news.reload} />
+            ) : news.data!.articles.length === 0 ? (
+              <Empty title="No news yet" />
             ) : (
-              <div className="space-y-1">
-                {filteredMembers.map((m) => (
-                  <Link
-                    key={m.id}
-                    href={`/people/${m.id}`}
-                    className="flex items-center justify-between p-2 rounded-lg hover:bg-zinc-50 transition-colors group"
-                  >
-                    <div className="flex items-center gap-2.5">
-                      <div className="w-7 h-7 rounded-full bg-orange-50 border border-orange-200 text-orange-700 flex items-center justify-center text-xs font-semibold font-mono transition-transform group-hover:scale-105">
-                        {m.initials}
-                      </div>
-                      <div>
-                        <div className="text-sm font-semibold text-zinc-900 group-hover:text-orange-600 transition-colors">{m.name}</div>
-                        <div className="text-xs text-zinc-500">{m.role} • {m.organisation}</div>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-1.5 shrink-0">
-                      {m.house && <HouseBadge house={m.house} size="sm" />}
-                      <Badge variant="brand" size="sm">{m.batch}</Badge>
-                    </div>
-                  </Link>
+              <div className="grid gap-3.5 sm:grid-cols-2">
+                {news.data!.articles.map((a, i) => (
+                  <div key={a.id} className={i === 0 ? "sm:col-span-2" : ""}>
+                    <NewsCard article={a} />
+                  </div>
                 ))}
               </div>
             )}
-          </div>
-        )}
-      </div>
+          </section>
 
-      {/* Main Grid: 8 Cols (Left) / 4 Cols (Right) */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
-        
-        {/* Left Column (8 cols): Recent Stories & News */}
-        <section className="lg:col-span-8 space-y-4">
-          <div className="flex items-center justify-between">
-            <h2 className="text-base font-semibold text-zinc-900">Recent Stories</h2>
-            <Link
-              href="/stories"
-              className="text-xs font-medium text-orange-600 hover:text-orange-700 inline-flex items-center gap-1 group transition-colors"
-            >
-              All stories
-              <ArrowRight size={13} className="transition-transform duration-150 group-hover:translate-x-0.5" />
-            </Link>
-          </div>
-
-          <div className="space-y-3.5">
-            {MOCK_STORIES.map((story) => (
-              <Card key={story.id} hoverable className="p-5 sm:p-6 space-y-2.5 bg-white group">
-                <div className="flex items-center gap-2 text-xs">
-                  <StoryCategoryBadge type={story.type} size="sm" />
-                  <span className="text-zinc-400 font-mono">{story.publishedAt}</span>
-                  <span className="text-zinc-300">•</span>
-                  <span className="text-zinc-400 flex items-center gap-1 font-mono text-[11px]">
-                    <Clock size={11} className="text-zinc-400" />
-                    {story.readTime}
-                  </span>
-                </div>
-
-                <Link href="/stories" className="block">
-                  <h3 className="text-base font-semibold text-zinc-900 group-hover:text-orange-600 transition-colors leading-snug">
-                    {story.title}
-                  </h3>
-                </Link>
-
-                <p className="text-sm text-zinc-600 line-clamp-2 leading-relaxed">
-                  {story.excerpt}
-                </p>
-
-                <div className="pt-3 border-t border-zinc-100 flex items-center justify-between text-xs text-zinc-500">
-                  <span>
-                    By <strong className="font-semibold text-zinc-900">{story.author.name}</strong> ({story.author.batch})
-                  </span>
-                  <span className="text-orange-600 font-medium inline-flex items-center gap-1 group-hover:gap-1.5 transition-all">
-                    Read article
-                    <ArrowRight size={12} className="transition-transform group-hover:translate-x-0.5" />
-                  </span>
-                </div>
-              </Card>
-            ))}
-          </div>
-        </section>
-
-        {/* Right Column (4 cols): Events & Jobs */}
-        <div className="lg:col-span-4 space-y-4">
-          
-          {/* Upcoming Events */}
-          <Card className="p-5 space-y-4 bg-white">
-            <div className="flex items-center justify-between">
-              <h3 className="text-sm font-semibold text-zinc-900 flex items-center gap-1.5">
-                <Calendar size={14} className="text-orange-600" />
-                Upcoming Events
-              </h3>
-              <Link href="/events" className="text-xs text-orange-600 hover:underline font-medium transition-colors">
-                View all
-              </Link>
-            </div>
-
-            <div className="space-y-3.5 divide-y divide-zinc-100">
-              {MOCK_EVENTS.map((event, idx) => (
-                <div key={event.id} className={idx > 0 ? "pt-3.5" : ""}>
-                  <div className="text-[11px] font-mono text-orange-700 font-medium">
-                    {event.date}
-                  </div>
-                  <Link href={`/events/${event.id}`}>
-                    <h4 className="text-sm font-semibold text-zinc-900 hover:text-orange-600 transition-colors mt-0.5 leading-snug">
-                      {event.title}
-                    </h4>
-                  </Link>
-                  <div className="text-xs text-zinc-500 mt-1 flex items-center gap-1">
-                    <MapPin size={12} className="text-zinc-400 shrink-0" />
-                    <span>{event.venue}</span>
-                  </div>
-                  <div className="mt-2.5 flex items-center justify-between text-xs text-zinc-500">
-                    <span className="font-mono text-[11px]">{event.goingCount} attending</span>
-                    <Link
-                      href={`/events/${event.id}`}
-                      className="btn-press px-2.5 py-1 rounded-lg text-xs font-medium bg-zinc-100 hover:bg-zinc-200 text-zinc-800 transition-colors"
-                    >
-                      RSVP
-                    </Link>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </Card>
-
-          {/* Jobs Board */}
-          <Card className="p-5 space-y-4 bg-white">
-            <div className="flex items-center justify-between">
-              <h3 className="text-sm font-semibold text-zinc-900 flex items-center gap-1.5">
-                <Briefcase size={14} className="text-orange-600" />
-                Alumni Job Board
-              </h3>
-              <Link href="/jobs" className="text-xs text-orange-600 hover:underline font-medium transition-colors">
-                View all
-              </Link>
-            </div>
-
-            <div className="space-y-3 divide-y divide-zinc-100">
-              {MOCK_JOBS.map((job, idx) => (
-                <div key={job.id} className={idx > 0 ? "pt-3" : ""}>
-                  <div className="flex items-center justify-between gap-2">
-                    <Link href="/jobs" className="text-sm font-medium text-zinc-900 hover:text-orange-600 transition-colors truncate">
-                      {job.title}
-                    </Link>
-                    <JobTypeBadge type={job.type} size="sm" />
-                  </div>
-                  <div className="text-xs text-zinc-500 mt-0.5">
-                    {job.company} • {job.city}
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div className="pt-2">
-              <Link
-                href="/jobs/new"
-                className="btn-press w-full py-2 text-xs font-medium text-center text-zinc-700 bg-zinc-50 hover:bg-zinc-100 rounded-lg block border border-zinc-200"
-              >
-                Post an Opportunity
-              </Link>
-            </div>
-          </Card>
-
+          <section className="space-y-3.5">
+            <SectionHeading title="Recent stories" href="/stories" />
+            {stories.loading ? (
+              <Loading />
+            ) : stories.error ? (
+              <ErrorBox error={stories.error} onRetry={stories.reload} />
+            ) : stories.data!.stories.length === 0 ? (
+              <Empty title="No stories yet" action={<Link href="/stories/new" className={btnPrimary}>Write the first one</Link>} />
+            ) : (
+              <div className="space-y-3.5">
+                {stories.data!.stories.map((s) => (
+                  <StoryCard key={s.id} story={s} />
+                ))}
+              </div>
+            )}
+          </section>
         </div>
+
+        <aside className="lg:col-span-4 space-y-4">
+          <Card className="p-5 space-y-4">
+            <h3 className="text-sm font-semibold text-zinc-900 flex items-center justify-between">
+              <span className="flex items-center gap-1.5">
+                <Calendar size={14} className="text-orange-600" />
+                Upcoming events
+              </span>
+              <Link href="/events" className="text-xs text-orange-600 hover:underline font-medium">
+                View all
+              </Link>
+            </h3>
+            {events.loading ? (
+              <Loading />
+            ) : events.error ? (
+              <ErrorBox error={events.error} onRetry={events.reload} />
+            ) : events.data!.events.length === 0 ? (
+              <p className="text-xs text-zinc-500">Nothing scheduled yet.</p>
+            ) : (
+              <ul className="divide-y divide-zinc-100">
+                {events.data!.events.map((ev) => (
+                  <li key={ev.id} className="py-3 first:pt-0 last:pb-0">
+                    <div className="text-[11px] font-mono text-orange-700 font-medium">
+                      {formatDay(ev.datetime)} · {formatTime(ev.datetime)}
+                    </div>
+                    <Link href={`/events/${ev.id}`} className="block text-sm font-semibold text-zinc-900 hover:text-orange-600 mt-0.5 leading-snug">
+                      {ev.title}
+                    </Link>
+                    <div className="text-xs text-zinc-500 mt-1 flex items-center gap-1">
+                      <MapPin size={12} className="text-zinc-400 shrink-0" />
+                      {ev.location}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </Card>
+
+          <Card className="p-5 space-y-4">
+            <h3 className="text-sm font-semibold text-zinc-900 flex items-center justify-between">
+              <span className="flex items-center gap-1.5">
+                <Briefcase size={14} className="text-orange-600" />
+                New jobs
+              </span>
+              <Link href="/jobs" className="text-xs text-orange-600 hover:underline font-medium">
+                View all
+              </Link>
+            </h3>
+            {jobs.loading ? (
+              <Loading />
+            ) : jobs.error ? (
+              <ErrorBox error={jobs.error} onRetry={jobs.reload} />
+            ) : jobs.data!.listings.length === 0 ? (
+              <p className="text-xs text-zinc-500">No openings posted yet.</p>
+            ) : (
+              <ul className="divide-y divide-zinc-100">
+                {jobs.data!.listings.map((job) => (
+                  <li key={job.id} className="py-3 first:pt-0 last:pb-0">
+                    <div className="flex items-start justify-between gap-2">
+                      <Link href={`/jobs?id=${job.id}`} className="text-sm font-medium text-zinc-900 hover:text-orange-600 leading-snug">
+                        {job.title}
+                      </Link>
+                      <JobTypeBadge type={job.job_type} />
+                    </div>
+                    <div className="text-xs text-zinc-500 mt-0.5">
+                      {job.company}
+                      {job.location && ` · ${job.location}`} · {timeAgo(job.created_at)}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+            <Link href="/jobs/new" className={`${btnSecondary} w-full py-2`}>
+              Post a job
+            </Link>
+          </Card>
+
+          <Card className="p-2">
+            <h3 className="px-3 pt-3 pb-1 text-sm font-semibold text-zinc-900">Explore</h3>
+            <ul>
+              {EXPLORE.map(({ label, href, icon: Icon, text }) => (
+                <li key={href}>
+                  <Link href={href} className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-zinc-50 group">
+                    <Icon size={16} className="text-zinc-400 group-hover:text-orange-600 shrink-0" />
+                    <span className="min-w-0">
+                      <span className="block text-sm font-medium text-zinc-900">{label}</span>
+                      <span className="block text-xs text-zinc-500">{text}</span>
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </Card>
+        </aside>
       </div>
     </div>
   );
