@@ -52,7 +52,7 @@ export function Navbar() {
 
   if (AUTH_ROUTES.includes(pathname)) return null;
 
-  const moreActive = MORE_NAV.some((i) => isActive(pathname, i.href));
+  const moreActive = MORE_NAV.some((i) => isActive(pathname, i));
   const signOut = () => {
     logout();
     router.push("/");
@@ -145,8 +145,9 @@ export function Navbar() {
         <nav className="hidden lg:flex items-center justify-center gap-1 h-12 border-t border-zinc-100" aria-label="Main">
           {PRIMARY_NAV.map((item) => {
             const Icon = item.icon;
+            const active = isActive(pathname, item);
             return (
-              <Link key={item.href} href={item.href} className={linkCls(isActive(pathname, item.href))}>
+              <Link key={item.href} href={item.href} aria-current={active ? "page" : undefined} className={linkCls(active)}>
                 <Icon size={13} className="shrink-0 opacity-80" />
                 {item.label}
               </Link>
@@ -167,7 +168,7 @@ export function Navbar() {
               <div role="menu" className="absolute right-0 mt-2 w-52 origin-top-right bg-white border border-zinc-200/70 rounded-2xl shadow-dropdown p-1.5 animate-pop-in">
                 {MORE_NAV.map((item) => {
                   const Icon = item.icon;
-                  const active = isActive(pathname, item.href);
+                  const active = isActive(pathname, item);
                   return (
                     <Link
                       key={item.href}
@@ -191,7 +192,7 @@ export function Navbar() {
       {mobileOpen && (
         <nav className="lg:hidden max-h-[calc(100dvh-4rem)] border-t border-zinc-100 overflow-y-auto bg-white border-b border-zinc-200/80 px-4 sm:px-6 pt-3 pb-4 grid grid-cols-2 sm:grid-cols-3 gap-1.5 stagger" aria-label="Main">
           {[...PRIMARY_NAV, ...MORE_NAV].map((item) => {
-            const active = isActive(pathname, item.href);
+            const active = isActive(pathname, item);
             return (
               <Link
                 key={item.href}

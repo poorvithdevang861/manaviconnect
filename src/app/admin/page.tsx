@@ -124,7 +124,7 @@ function SpotlightEditor() {
                 <Field label="Button text">
                   <TextInput value={slide.cta} onChange={(e) => update(i, { cta: e.target.value })} placeholder="e.g. Apply now" />
                 </Field>
-                <Field label="Button link" hint="A page like /jobs/14 or a full https:// URL">
+                <Field label="Button link" hint="A page like /career?id=14 or a full https:// URL">
                   <TextInput value={slide.ctaLink} onChange={(e) => update(i, { ctaLink: e.target.value })} />
                 </Field>
                 <Field label="Badge">

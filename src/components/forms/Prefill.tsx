@@ -23,13 +23,16 @@ export function TemplatePicker<T>({
   onPick,
   title = "Start from a template",
   subtitle = "Fills the form for you. Everything stays editable.",
+  defaultPicked,
 }: {
   templates: Template<T>[];
   onPick: (values: Partial<T>) => void;
   title?: string;
   subtitle?: string;
+  /** Template already applied before render, e.g. from a link. */
+  defaultPicked?: string;
 }) {
-  const [picked, setPicked] = useState<string | null>(null);
+  const [picked, setPicked] = useState<string | null>(defaultPicked ?? null);
   return (
     <section aria-label={title} className="space-y-2.5">
       <div className="flex items-start gap-2.5 px-1">

@@ -6,7 +6,7 @@ import { dummyImage as photo } from "@/lib/placeholder";
 
 const avatar = (n: number) => `https://i.pravatar.cc/160?img=${n}`;
 
-const STORAGE_KEY = "community_hub_mock_db_v3";
+const STORAGE_KEY = "community_hub_mock_db_v4";
 const E401 = () => new ApiError(401, "Could not validate credentials");
 
 type Row = Record<string, any> & { id: number };
@@ -74,8 +74,9 @@ function seed(): DB {
     ],
     stories: [
       { id: 1, title: "Mornings at the 5:45 whistle", content: "No matter where our careers take us, the discipline and friendships formed in the hostel dormitories stay with us. I still wake up before the alarm.\n\nThe cross-country runs around the eucalyptus grove were where most of my lifelong friendships began.", image_url: photo("sports"), tags: "memoir,hostel", created_by: 4, created_at: iso(-3), is_active: true },
-      { id: 2, title: "From a borrowed laptop to a soil-testing startup", content: "AgriNext Labs started on a borrowed laptop during my final year. Today our soil kits reach more than 4,500 coffee growers in Kodagu and Hassan.\n\nI owe my curiosity to the science exhibitions we ran in 2010.", image_url: photo("workspace"), tags: "startup,agriculture", created_by: 4, created_at: iso(-9), is_active: true },
+      { id: 2, title: "From a borrowed laptop to a soil-testing startup", content: "AgriNext Labs started on a borrowed laptop during my final year. Today our soil kits reach more than 4,500 coffee growers in Kodagu and Hassan.\n\nI owe my curiosity to the science exhibitions we ran in 2010.", image_url: photo("workspace"), tags: "startup,career,agriculture", created_by: 4, created_at: iso(-9), is_active: true },
       { id: 3, title: "What the library taught me", content: "The school library was the first place I read a newspaper end to end. Twenty years later, I'm glad our batch could give back 1,200 books to it.", image_url: photo("library"), tags: "library,giving-back", created_by: 3, created_at: iso(-20), is_active: true },
+      { id: 4, title: "Three attempts at the civil services, and what finally worked", content: "I cleared the exam on my third attempt. The first two taught me that a timetable matters less than a weekly mock test and an honest review of it.\n\nIf you're preparing, write to me. I'm happy to share my notes and answer-writing practice sheets.", image_url: photo("library"), tags: "career,exams", created_by: 2, created_at: iso(-12), is_active: true },
     ],
     news: [
       { id: 1, title: "Reunion registrations close on Dec 10", summary: "Register before Dec 10 so the committee can plan meals and dormitory beds.", content: "Registrations for the annual winter reunion close on December 10. Outstation alumni who need a dormitory bed should mention it in their registration. Families are welcome.", image_url: photo("campus"), category: "announcement", severity: "critical", is_published: true, created_by: 1, created_at: iso(-1), updated_at: null },
@@ -101,8 +102,8 @@ function seed(): DB {
       ["workspace", "Where AgriNext Labs started", 4, -45],
     ] as const).map(([img, caption, by, days], i) => ({ id: i + 1, photo_url: photo(img), caption, uploaded_by: by, created_at: iso(days) })),
     jobs: [
-      { id: 1, title: "Senior Full-Stack Engineer", company: "AgriNext Labs", description: "Lead our sensor telemetry platform. Strong TypeScript, Next.js and Postgres experience needed. Alumni referrals get a priority interview.", location: "Bengaluru (Hybrid)", job_type: "full-time", salary_range: "₹25–35 LPA", requirements: "5+ years full-stack, TypeScript, Postgres", tags: "typescript,nextjs,postgres", contact_email: "careers@agrinext.example", deadline: day(20), created_by: 4, created_at: iso(-2), is_active: true },
-      { id: 2, title: "Pediatric Clinical Fellow", company: "Apollo Hospitals", description: "Opening for junior clinical fellows in the Department of Pediatrics, working with senior consultants on outpatient and neonatal care.", location: "Mysuru", job_type: "full-time", salary_range: null, requirements: "MD Pediatrics", tags: "medicine,pediatrics", contact_email: "ananya@example.com", deadline: day(30), created_by: 2, created_at: iso(-6), is_active: true },
+      { id: 1, title: "Senior Full-Stack Engineer", company: "AgriNext Labs", description: "Lead our sensor telemetry platform. Strong TypeScript, Next.js and Postgres experience needed. Alumni referrals get a priority interview.", location: "Bengaluru (Hybrid)", job_type: "full-time", salary_range: "₹25–35 LPA", requirements: "5+ years full-stack, TypeScript, Postgres", tags: "referral,typescript,nextjs,postgres", contact_email: "careers@agrinext.example", deadline: day(20), created_by: 4, created_at: iso(-2), is_active: true },
+      { id: 2, title: "Pediatric Clinical Fellow", company: "Apollo Hospitals", description: "Opening for junior clinical fellows in the Department of Pediatrics, working with senior consultants on outpatient and neonatal care.", location: "Mysuru", job_type: "full-time", salary_range: null, requirements: "MD Pediatrics", tags: "referral,medicine,pediatrics", contact_email: "ananya@example.com", deadline: day(30), created_by: 2, created_at: iso(-6), is_active: true },
       { id: 3, title: "Cloud Infrastructure Consultant", company: "Fascinateit", description: "Short engagement to move our deployment pipelines to Kubernetes.", location: "Remote", job_type: "contract", salary_range: "₹1.5 L / month", requirements: "Kubernetes, Terraform", tags: "devops,kubernetes", contact_email: "hiring@fascinateit.example", deadline: null, created_by: 1, created_at: iso(-10), is_active: true },
     ],
     marketplace: [
@@ -115,13 +116,13 @@ function seed(): DB {
     ],
     likes: ["event:1:2", "event:1:4", "story:2:1", "story:2:3", "timeline:3:3"],
     slides: [
-      { id: 1, image: photo("workspace"), sponsor: "AgriNext Labs", headline: "Hiring 2026 graduates", description: "Engineering and field roles in Bengaluru. Alumni referrals get a priority interview.", cta: "See the job", ctaLink: "/jobs", badge: "Sponsored", accentFrom: "#9a3412", accentTo: "#ea580c" },
+      { id: 1, image: photo("workspace"), sponsor: "AgriNext Labs", headline: "Hiring 2026 graduates", description: "Engineering and field roles in Bengaluru. Alumni referrals get a priority interview.", cta: "See the job", ctaLink: "/career?id=1", badge: "Sponsored", accentFrom: "#9a3412", accentTo: "#ea580c" },
       { id: 2, image: photo("reunion"), sponsor: "Alumni Association", headline: "Annual reunion registrations are open", description: "Register before Dec 10 so we can plan meals and beds.", cta: "View event", ctaLink: "/events/1", badge: "Community", accentFrom: "#14532d", accentTo: "#15803d" },
     ],
     invites: [],
     notifications: [
       { id: 1, title: "New News: Reunion registrations close on Dec 10", body: "Register before Dec 10 so the committee can plan meals and dormitory beds.", url: "/news/1", type: "news", created_at: iso(-1) },
-      { id: 2, title: "New Job: Senior Full-Stack Engineer", body: "AgriNext Labs", url: "/jobs?id=1", type: "job", created_at: iso(-2) },
+      { id: 2, title: "New Job: Senior Full-Stack Engineer", body: "AgriNext Labs", url: "/career?id=1", type: "job", created_at: iso(-2) },
       { id: 3, title: "New Event: Bengaluru Chapter Breakfast", body: "Cubbon Park, Bengaluru", url: "/events/2", type: "event", created_at: iso(-5) },
     ],
     subscriptions: [],
@@ -693,7 +694,7 @@ const routes: Array<[Method, RegExp, Handler]> = [
     oneOf(body.job_type, ["full-time", "part-time", "contract", "freelance"], "job_type");
     const row: Row = { ...pick(body, JOB_FIELDS), id: nextId(), created_by: u.id, created_at: nowIso(), is_active: true };
     load().jobs.push(row);
-    notify("job", `New Job: ${row.title}`, row.company, `/jobs?id=${row.id}`);
+    notify("job", `New Job: ${row.title}`, row.company, `/career?id=${row.id}`);
     return hydrate.poster(row);
   }],
   ["PUT", /^\/api\/jobs\/(\d+)$/, ({ me, params, body }) => {

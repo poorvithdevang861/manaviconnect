@@ -1,7 +1,7 @@
 import Link from "next/link";
-import { AlertTriangle, ArrowRight, Calendar, MapPin, Users } from "lucide-react";
+import { AlertTriangle, ArrowRight, BookOpen, Calendar, MapPin, Newspaper, Users } from "lucide-react";
 import { api, type EventItem, type NewsArticle, type Story } from "@/lib/api";
-import { formatDate, formatDateTime, isPast, titleCase } from "@/lib/format";
+import { formatDate, formatDateTime, isPast, splitTags, titleCase } from "@/lib/format";
 import { imageOr } from "@/lib/placeholder";
 import { Avatar } from "@/components/ui/Avatar";
 import { Badge, Tags } from "@/components/ui/Badge";
@@ -59,6 +59,69 @@ export function StoryCard({ story }: { story: Story }) {
               </span>
             </span>
             <LikeButton liked={story.is_liked} count={story.like_count} onToggle={() => api.stories.like(story.id)} />
+          </div>
+        </div>
+      </Card>
+    </Link>
+  );
+}
+
+export type FeedEntry = { kind: "news"; item: NewsArticle } | { kind: "story"; item: Story };
+
+/** One row in the combined news + stories feed; the kind tag keeps the two apart at a glance. */
+export function FeedCard({ entry }: { entry: FeedEntry }) {
+  const isNews = entry.kind === "news";
+  const { item } = entry;
+  const href = isNews ? `/news/${item.id}` : `/stories/${item.id}`;
+  const excerpt = isNews ? entry.item.summary || entry.item.content : entry.item.content;
+  const image = item.image_url;
+  const tags = isNews ? [titleCase(entry.item.category)] : splitTags(entry.item.tags).slice(0, 2);
+
+  return (
+    <Link href={href} className="block group">
+      <Card hoverable className="overflow-hidden sm:flex">
+        <Cover src={image} seed={`${isNews ? "news" : "story"}-${item.id}`} className="aspect-[16/9] sm:aspect-auto sm:w-52 md:w-60 shrink-0" />
+        <div className="p-4 sm:p-5 flex-1 min-w-0 flex flex-col gap-2">
+          <div className="flex flex-wrap items-center gap-1.5 text-xs">
+            <span
+              className={`inline-flex items-center gap-1 pl-1.5 pr-2 py-0.5 rounded-full text-[11px] font-semibold ${
+                isNews ? "bg-orange-100 text-orange-800" : "bg-amber-50 text-amber-800 ring-1 ring-inset ring-amber-200/70"
+              }`}
+            >
+              {isNews ? <Newspaper size={11} /> : <BookOpen size={11} />}
+              {isNews ? "News" : "Story"}
+            </span>
+            {isNews && entry.item.severity === "critical" && (
+              <Badge variant="danger" size="sm">
+                <AlertTriangle size={11} />
+                Important
+              </Badge>
+            )}
+            {tags.map((t) => (
+              <span key={t} className="px-2 py-0.5 rounded-full bg-zinc-100 text-zinc-600 text-[11px]">
+                {isNews ? t : `#${t}`}
+              </span>
+            ))}
+            <span className="text-zinc-400 font-mono text-[11px] ml-auto">{formatDate(item.created_at)}</span>
+          </div>
+          <h3 className="text-base font-semibold text-zinc-900 group-hover:text-orange-600 transition-colors leading-snug">{item.title}</h3>
+          {excerpt && <p className="text-sm text-zinc-600 line-clamp-2 leading-relaxed whitespace-pre-line">{excerpt}</p>}
+          <div className="mt-auto pt-3 border-t border-zinc-100 flex items-center justify-between gap-3 text-xs text-zinc-500">
+            <span className="flex items-center gap-2 min-w-0">
+              <Avatar name={item.author.name} src={item.author.avatar_url} size="xs" />
+              <span className="truncate">
+                <strong className="font-semibold text-zinc-900">{item.author.name}</strong>
+                {item.author.batch && <span className="font-mono"> &apos;{item.author.batch.slice(-2)}</span>}
+              </span>
+            </span>
+            {entry.kind === "story" ? (
+              <LikeButton liked={entry.item.is_liked} count={entry.item.like_count} onToggle={() => api.stories.like(entry.item.id)} />
+            ) : (
+              <span className="inline-flex items-center gap-1 font-medium text-orange-600 shrink-0">
+                Read
+                <ArrowRight size={13} className="transition-transform group-hover:translate-x-0.5" />
+              </span>
+            )}
           </div>
         </div>
       </Card>

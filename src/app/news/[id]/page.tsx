@@ -25,7 +25,7 @@ export default function NewsArticlePage({ params }: { params: Promise<{ id: stri
   return (
     <div className={pageCls}>
       <div className="flex items-center justify-between gap-3">
-        <Link href="/news" className={btnSecondary}>
+        <Link href="/updates?type=news" className={btnSecondary}>
           <ArrowLeft size={14} />
           All news
         </Link>
@@ -35,7 +35,7 @@ export default function NewsArticlePage({ params }: { params: Promise<{ id: stri
             editHref={`/news/new?id=${article.id}`}
             onDelete={async () => {
               await api.news.remove(article.id);
-              router.push("/news");
+              router.push("/updates?type=news");
             }}
           />
         )}

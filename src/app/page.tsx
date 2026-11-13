@@ -66,7 +66,7 @@ export default function HomePage() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
         <div className="lg:col-span-8 space-y-8">
           <section className="space-y-3.5">
-            <SectionHeading title="Latest news" href="/news" />
+            <SectionHeading title="Latest news" href="/updates?type=news" />
             {news.loading ? (
               <Loading />
             ) : news.error ? (
@@ -85,7 +85,7 @@ export default function HomePage() {
           </section>
 
           <section className="space-y-3.5">
-            <SectionHeading title="Recent stories" href="/stories" />
+            <SectionHeading title="Recent stories" href="/updates?type=stories" />
             {stories.loading ? (
               <Loading />
             ) : stories.error ? (
@@ -114,7 +114,7 @@ export default function HomePage() {
               </Link>
             </h3>
             {events.loading ? (
-              <Loading />
+              <Loading variant="lines" />
             ) : events.error ? (
               <ErrorBox error={events.error} onRetry={events.reload} />
             ) : events.data!.events.length === 0 ? (
@@ -145,12 +145,12 @@ export default function HomePage() {
                 <Briefcase size={14} className="text-orange-600" />
                 New jobs
               </span>
-              <Link href="/jobs" className="text-xs text-orange-600 hover:underline font-medium">
+              <Link href="/career" className="text-xs text-orange-600 hover:underline font-medium">
                 View all
               </Link>
             </h3>
             {jobs.loading ? (
-              <Loading />
+              <Loading variant="lines" />
             ) : jobs.error ? (
               <ErrorBox error={jobs.error} onRetry={jobs.reload} />
             ) : jobs.data!.listings.length === 0 ? (
@@ -160,7 +160,7 @@ export default function HomePage() {
                 {jobs.data!.listings.map((job) => (
                   <li key={job.id} className="py-3 first:pt-0 last:pb-0">
                     <div className="flex items-start justify-between gap-2">
-                      <Link href={`/jobs?id=${job.id}`} className="text-sm font-medium text-zinc-900 hover:text-orange-600 leading-snug">
+                      <Link href={`/career?id=${job.id}`} className="text-sm font-medium text-zinc-900 hover:text-orange-600 leading-snug">
                         {job.title}
                       </Link>
                       <JobTypeBadge type={job.job_type} />
@@ -173,7 +173,7 @@ export default function HomePage() {
                 ))}
               </ul>
             )}
-            <Link href="/jobs/new" className={`${btnSecondary} w-full py-2`}>
+            <Link href="/career/new" className={`${btnSecondary} w-full py-2`}>
               Post a job
             </Link>
           </Card>

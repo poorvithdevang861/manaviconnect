@@ -1,5 +1,4 @@
 import {
-  BookOpen,
   Briefcase,
   Calendar,
   Car,
@@ -15,14 +14,15 @@ export interface NavItem {
   label: string;
   href: string;
   icon: LucideIcon;
+  /** Other path prefixes that belong to this section (detail and editor pages). */
+  match?: string[];
 }
 
 export const PRIMARY_NAV: NavItem[] = [
   { label: "Home", href: "/", icon: Home },
-  { label: "News", href: "/news", icon: Newspaper },
+  { label: "Updates", href: "/updates", icon: Newspaper, match: ["/news", "/stories"] },
   { label: "Events", href: "/events", icon: Calendar },
-  { label: "Stories", href: "/stories", icon: BookOpen },
-  { label: "Jobs", href: "/jobs", icon: Briefcase },
+  { label: "Career", href: "/career", icon: Briefcase, match: ["/jobs"] },
 ];
 
 export const MORE_NAV: NavItem[] = [
@@ -34,5 +34,7 @@ export const MORE_NAV: NavItem[] = [
 
 export const AUTH_ROUTES = ["/sign-in", "/join", "/forgot-password", "/reset-password"];
 
-export const isActive = (pathname: string, href: string) =>
-  pathname === href || (href !== "/" && pathname.startsWith(href));
+const under = (pathname: string, prefix: string) => pathname === prefix || pathname.startsWith(`${prefix}/`);
+
+export const isActive = (pathname: string, item: Pick<NavItem, "href" | "match">) =>
+  item.href === "/" ? pathname === "/" : [item.href, ...(item.match ?? [])].some((p) => under(pathname, p));

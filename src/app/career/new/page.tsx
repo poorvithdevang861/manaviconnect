@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { BookOpen, Code2, Handshake, Sprout } from "lucide-react";
+import { BookOpen, Code2, Handshake, Laptop, Sprout } from "lucide-react";
 import { api, JOB_TYPES, type Job, type JobType } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
 import { editId, errorText } from "@/lib/useApi";
@@ -18,10 +18,12 @@ import { Notice } from "@/components/ui/States";
 import { flashToast } from "@/components/ui/Toast";
 
 export default function JobEditorPage() {
-  const id = editId(useSearchParams().get("id"));
+  const params = useSearchParams();
+  const id = editId(params.get("id"));
+  const template = params.get("template");
   return (
     <RequireAuth reason="Sign in to post a job.">
-      {() => <EditLoader id={id} load={api.jobs.get}>{(initial) => <JobForm initial={initial} />}</EditLoader>}
+      {() => <EditLoader id={id} load={api.jobs.get}>{(initial) => <JobForm initial={initial} templateId={initial ? null : template} />}</EditLoader>}
     </RequireAuth>
   );
 }
@@ -40,6 +42,19 @@ type JobValues = {
 };
 
 const TEMPLATES: Template<JobValues>[] = [
+  {
+    id: "referral",
+    title: "Referral at my company",
+    description: "You'll pass on CVs from alumni",
+    icon: Handshake,
+    values: {
+      title: "",
+      job_type: "full-time",
+      description: "I can refer Navodaya alumni for this role at my company.\n\nSend me your CV and a few lines on why it's a fit. Mention MANAVI and your batch in the subject.",
+      requirements: "",
+      tags: "referral",
+    },
+  },
   {
     id: "engineer",
     title: "Software engineer",
@@ -86,7 +101,7 @@ const TEMPLATES: Template<JobValues>[] = [
     id: "freelance",
     title: "Freelance project",
     description: "Fixed scope, flexible hours",
-    icon: Handshake,
+    icon: Laptop,
     tone: "sand",
     values: {
       title: "Freelance ",
@@ -100,10 +115,16 @@ const TEMPLATES: Template<JobValues>[] = [
 
 const TAGS = ["referral", "remote", "engineering", "design", "sales", "teaching", "internship", "government", "startup"] as const;
 
-function JobForm({ initial }: { initial: Job | null }) {
+function resolve(t: Template<JobValues> | undefined): Partial<JobValues> {
+  if (!t) return {};
+  return typeof t.values === "function" ? t.values() : t.values;
+}
+
+function JobForm({ initial, templateId }: { initial: Job | null; templateId: string | null }) {
   const router = useRouter();
   const { user } = useAuth();
-  const [start] = useState<JobValues>({
+  const preset = TEMPLATES.find((t) => t.id === templateId);
+  const [start] = useState<JobValues>(() => ({
     title: initial?.title ?? "",
     company: initial?.company ?? user?.company ?? "",
     location: initial?.location ?? user?.city ?? "",
@@ -114,9 +135,10 @@ function JobForm({ initial }: { initial: Job | null }) {
     requirements: initial?.requirements ?? "",
     tags: initial?.tags ?? "",
     contact_email: initial?.contact_email ?? user?.email ?? "",
-  });
+    ...resolve(preset),
+  }));
   const [form, setForm] = useState(start);
-  const draft = useDraft(initial ? null : "job", form, setForm, start);
+  const draft = useDraft(initial ? null : preset ? `job-${preset.id}` : "job", form, setForm, start);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [formError, setFormError] = useState("");
   const [busy, setBusy] = useState(false);
@@ -140,27 +162,28 @@ function JobForm({ initial }: { initial: Job | null }) {
       const saved = initial ? await api.jobs.update(initial.id, body) : await api.jobs.create(body);
       draft.clear();
       flashToast(initial ? "Job updated" : "Job posted");
-      router.push(`/jobs?id=${saved.id}`);
+      router.push(`/career?id=${saved.id}`);
     } catch (err) {
       setFormError(errorText(err));
       setBusy(false);
     }
   };
 
-  const back = initial ? `/jobs?id=${initial.id}` : "/jobs";
+  const back = initial ? `/career?id=${initial.id}` : preset?.id === "referral" ? "/career?tab=references" : "/career";
   const city = user?.city;
 
   return (
     <FormLayout
-      tag="Jobs"
-      title={initial ? "Edit job" : "Post a job"}
-      description="Share an opening at your workplace with fellow alumni."
+      tag="Career"
+      title={initial ? "Edit job" : preset?.id === "referral" ? "Offer a referral" : "Post a job"}
+      description={preset?.id === "referral" ? "Tell alumni which role you can refer them for at your company." : "Share an opening at your workplace with fellow alumni."}
       backHref={back}
       prefill={
         initial ? undefined : (
           <TemplatePicker
             subtitle="Your company, city and email are already filled in from your profile."
             templates={TEMPLATES}
+            defaultPicked={preset?.id}
             onPick={(v) => setForm({ ...form, ...v })}
           />
         )

@@ -125,7 +125,7 @@ function NewsForm({ initial }: { initial: NewsArticle | null }) {
       tag="News"
       title={initial ? "Edit article" : "Write an article"}
       description="Published articles appear on the news page and send a push notification."
-      backHref={initial ? `/news/${initial.id}` : "/news"}
+      backHref={initial ? `/news/${initial.id}` : "/updates?type=news"}
       prefill={initial ? undefined : <TemplatePicker templates={TEMPLATES} onPick={(v) => setForm({ ...form, ...v })} />}
       aside={
         <AsideNote title="Severity">
@@ -187,7 +187,7 @@ function NewsForm({ initial }: { initial: NewsArticle | null }) {
           <ImagePicker file={image} onChange={setImage} currentUrl={initial?.image_url} />
         </div>
         <FormActions
-          cancelHref={initial ? `/news/${initial.id}` : "/news"}
+          cancelHref={initial ? `/news/${initial.id}` : "/updates?type=news"}
           busy={busy}
           label={initial ? "Save changes" : form.is_published ? "Publish" : "Save draft"}
           draftSavedAt={draft.savedAt}

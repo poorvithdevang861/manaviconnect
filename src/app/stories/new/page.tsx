@@ -117,7 +117,7 @@ function StoryForm({ initial }: { initial: Story | null }) {
     }
   };
 
-  const back = initial ? `/stories/${initial.id}` : "/stories";
+  const back = initial ? `/stories/${initial.id}` : "/updates?type=stories";
   const words = form.content.trim() ? form.content.trim().split(/\s+/).length : 0;
 
   return (

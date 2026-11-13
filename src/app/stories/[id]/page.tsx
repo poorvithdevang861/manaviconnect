@@ -26,7 +26,7 @@ export default function StoryPage({ params }: { params: Promise<{ id: string }> 
   return (
     <div className={pageCls}>
       <div className="flex items-center justify-between gap-3">
-        <Link href="/stories" className={btnSecondary}>
+        <Link href="/updates?type=stories" className={btnSecondary}>
           <ArrowLeft size={14} />
           All stories
         </Link>
@@ -36,7 +36,7 @@ export default function StoryPage({ params }: { params: Promise<{ id: string }> 
             editHref={`/stories/new?id=${story.id}`}
             onDelete={async () => {
               await api.stories.remove(story.id);
-              router.push("/stories");
+              router.push("/updates?type=stories");
             }}
           />
         )}

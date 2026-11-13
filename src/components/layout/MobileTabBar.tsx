@@ -2,16 +2,10 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Briefcase, Calendar, Home, Newspaper, User } from "lucide-react";
-import { AUTH_ROUTES, isActive } from "./nav";
+import { User } from "lucide-react";
+import { AUTH_ROUTES, PRIMARY_NAV, isActive, type NavItem } from "./nav";
 
-const TABS = [
-  { label: "Home", href: "/", icon: Home },
-  { label: "News", href: "/news", icon: Newspaper },
-  { label: "Events", href: "/events", icon: Calendar },
-  { label: "Jobs", href: "/jobs", icon: Briefcase },
-  { label: "Me", href: "/me", icon: User },
-];
+const TABS: NavItem[] = [...PRIMARY_NAV, { label: "Me", href: "/me", icon: User }];
 
 export function MobileTabBar() {
   const pathname = usePathname();
@@ -21,7 +15,7 @@ export function MobileTabBar() {
     <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-zinc-200/80 px-2 pt-1.5 pb-[calc(0.375rem+env(safe-area-inset-bottom))] flex items-center justify-around" aria-label="Tabs">
       {TABS.map((tab) => {
         const Icon = tab.icon;
-        const active = isActive(pathname, tab.href);
+        const active = isActive(pathname, tab);
         return (
           <Link
             key={tab.href}
