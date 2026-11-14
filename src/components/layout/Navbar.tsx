@@ -3,7 +3,16 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { Bell, ChevronDown, LogOut, Menu, Settings, Shield, User as UserIcon, X } from "lucide-react";
+import { 
+  IconBell, 
+  IconChevronDown, 
+  IconLogout, 
+  IconMenu2, 
+  IconSettings, 
+  IconShield, 
+  IconUser, 
+  IconX 
+} from "@tabler/icons-react";
 import { useAuth } from "@/lib/auth";
 import { Avatar } from "@/components/ui/Avatar";
 import { IconTile } from "@/components/ui/IconTile";
@@ -70,7 +79,7 @@ export function Navbar() {
               aria-label="Toggle navigation menu"
               aria-expanded={mobileOpen}
             >
-              {mobileOpen ? <X size={20} /> : <Menu size={20} />}
+              {mobileOpen ? <IconX size={20} stroke={1.6} /> : <IconMenu2 size={20} stroke={1.6} />}
             </button>
           </div>
 
@@ -85,7 +94,7 @@ export function Navbar() {
               className={`${user ? "inline-flex" : "hidden sm:inline-flex"} p-1.5 rounded-lg ${pathname === "/notifications" ? "text-orange-700 bg-orange-50" : "text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100"}`}
               aria-label="Notifications"
             >
-              <Bell size={16} />
+              <IconBell size={18} stroke={1.6} />
             </Link>
 
             {loading ? (
@@ -102,7 +111,7 @@ export function Navbar() {
                 >
                   <Avatar name={user.name} src={user.avatar_url} size="xs" />
                   <span className="font-medium hidden md:inline text-zinc-800 max-w-[140px] truncate">{user.name}</span>
-                  <ChevronDown size={12} className="text-zinc-400 hidden sm:block" />
+                  <IconChevronDown size={14} stroke={1.6} className="text-zinc-400 hidden sm:block" />
                 </button>
                 {userOpen && (
                   <div role="menu" className="absolute right-0 mt-2 w-56 origin-top-right bg-white border border-zinc-200/70 rounded-2xl shadow-dropdown p-1.5 animate-pop-in text-xs">
@@ -111,21 +120,21 @@ export function Navbar() {
                       <div className="text-zinc-500 truncate">{user.email}</div>
                     </div>
                     <Link href="/me" role="menuitem" className="flex items-center gap-2 px-2.5 py-2 rounded-lg text-zinc-700 hover:bg-zinc-50">
-                      <UserIcon size={14} className="text-zinc-400" />
+                      <IconUser size={15} stroke={1.6} className="text-zinc-400" />
                       My profile
                     </Link>
                     <Link href="/me#invite" role="menuitem" className="flex items-center gap-2 px-2.5 py-2 rounded-lg text-zinc-700 hover:bg-zinc-50">
-                      <Settings size={14} className="text-zinc-400" />
+                      <IconSettings size={15} stroke={1.6} className="text-zinc-400" />
                       Invite a friend
                     </Link>
                     {user.is_admin && (
                       <Link href="/admin" role="menuitem" className="flex items-center gap-2 px-2.5 py-2 rounded-lg text-zinc-700 hover:bg-zinc-50">
-                        <Shield size={14} className="text-zinc-400" />
+                        <IconShield size={15} stroke={1.6} className="text-zinc-400" />
                         Admin
                       </Link>
                     )}
                     <button type="button" role="menuitem" onClick={signOut} className="w-full flex items-center gap-2 px-2.5 py-2 rounded-lg text-red-600 hover:bg-red-50">
-                      <LogOut size={14} />
+                      <IconLogout size={15} stroke={1.6} />
                       Sign out
                     </button>
                   </div>
@@ -148,7 +157,7 @@ export function Navbar() {
             const active = isActive(pathname, item);
             return (
               <Link key={item.href} href={item.href} aria-current={active ? "page" : undefined} className={linkCls(active)}>
-                <Icon size={13} className="shrink-0 opacity-80" />
+                <Icon size={15} stroke={1.6} className="shrink-0 opacity-80" />
                 {item.label}
               </Link>
             );
@@ -162,7 +171,7 @@ export function Navbar() {
               className={linkCls(moreActive)}
             >
               More
-              <ChevronDown size={13} className={`transition-transform ${moreOpen ? "rotate-180" : ""}`} />
+              <IconChevronDown size={14} stroke={1.6} className={`transition-transform ${moreOpen ? "rotate-180" : ""}`} />
             </button>
             {moreOpen && (
               <div role="menu" className="absolute right-0 mt-2 w-52 origin-top-right bg-white border border-zinc-200/70 rounded-2xl shadow-dropdown p-1.5 animate-pop-in">
@@ -209,7 +218,7 @@ export function Navbar() {
           })}
           {user?.is_admin && (
             <Link href="/admin" className="flex items-center gap-2.5 p-2 rounded-xl text-sm font-medium text-zinc-700 hover:bg-zinc-100">
-              <IconTile icon={Shield} size="sm" tone="sand" />
+              <IconTile icon={IconShield} size="sm" tone="sand" />
               Admin
             </Link>
           )}

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { MailCheck } from "lucide-react";
+import { IconMailCheck } from "@tabler/icons-react";
 import { GoogleButton } from "@/components/auth/GoogleButton";
 import { AuthShell } from "@/components/layout/AuthShell";
 import { Field, TextInput } from "@/components/ui/Field";
@@ -75,7 +75,7 @@ export default function JoinPage() {
     >
       {invite?.valid && (
         <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-lg text-xs text-emerald-900 flex items-start gap-2">
-          <MailCheck size={14} className="shrink-0 mt-px" />
+          <IconMailCheck size={16} stroke={1.6} className="shrink-0 mt-px" />
           <span>You were invited as {invite.email}. Finish signing up to join.</span>
         </div>
       )}

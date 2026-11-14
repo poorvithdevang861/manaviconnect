@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { GraduationCap, MapPin, PartyPopper, Video } from "lucide-react";
+import { IconConfetti, IconMapPin, IconSchool, IconVideo } from "@tabler/icons-react";
 import { api, type EventItem } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
 import { editId, errorText } from "@/lib/useApi";
@@ -36,7 +36,7 @@ function templates(batch: string, city: string): Template<EventFormValues>[] {
       id: "reunion",
       title: "Batch reunion",
       description: "A day on campus with your batch",
-      icon: PartyPopper,
+      icon: IconConfetti,
       values: () => ({
         title: batch ? `${batch} batch reunion` : "Batch reunion",
         location: "School campus",
@@ -50,7 +50,7 @@ function templates(batch: string, city: string): Template<EventFormValues>[] {
       id: "chapter",
       title: "City chapter meetup",
       description: "Evening catch-up with alumni nearby",
-      icon: MapPin,
+      icon: IconMapPin,
       tone: "amber",
       values: () => ({
         title: city ? `${city} chapter meetup` : "City chapter meetup",
@@ -64,7 +64,7 @@ function templates(batch: string, city: string): Template<EventFormValues>[] {
       id: "career",
       title: "Career talk on campus",
       description: "Guide current students on what comes next",
-      icon: GraduationCap,
+      icon: IconSchool,
       tone: "peach",
       values: () => ({
         title: "Career talk for Class 11 and 12",
@@ -78,7 +78,7 @@ function templates(batch: string, city: string): Template<EventFormValues>[] {
       id: "online",
       title: "Online session",
       description: "AMA or workshop over a video call",
-      icon: Video,
+      icon: IconVideo,
       tone: "sand",
       values: () => ({
         title: "Online AMA: ",

@@ -1,4 +1,4 @@
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
 import { btnSecondary } from "./styles";
 
 export function Pagination({
@@ -21,12 +21,12 @@ export function Pagination({
       </span>
       <div className="flex items-center gap-2">
         <button type="button" className={btnSecondary} disabled={page <= 1} onClick={() => onChange(page - 1)}>
-          <ChevronLeft size={13} />
+          <IconChevronLeft size={14} stroke={1.6} />
           Previous
         </button>
         <button type="button" className={btnSecondary} disabled={page >= pages} onClick={() => onChange(page + 1)}>
           Next
-          <ChevronRight size={13} />
+          <IconChevronRight size={14} stroke={1.6} />
         </button>
       </div>
     </nav>

@@ -1,15 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { Check, ChevronRight, RotateCcw, Sparkles, type LucideIcon } from "lucide-react";
-import { IconTile, type TileTone } from "@/components/ui/IconTile";
+import { IconCheck, IconChevronRight, IconRotate2, IconSparkles } from "@tabler/icons-react";
+import { IconTile, type TileTone, type IconComponent } from "@/components/ui/IconTile";
 import { listCls } from "@/components/ui/styles";
 
 export interface Template<T> {
   id: string;
   title: string;
   description: string;
-  icon: LucideIcon;
+  icon: IconComponent;
   tone?: TileTone;
   values: Partial<T> | (() => Partial<T>);
 }
@@ -36,7 +36,7 @@ export function TemplatePicker<T>({
   return (
     <section aria-label={title} className="space-y-2.5">
       <div className="flex items-start gap-2.5 px-1">
-        <Sparkles size={15} className="text-orange-500 mt-0.5 shrink-0" />
+        <IconSparkles size={16} stroke={1.6} className="text-orange-500 mt-0.5 shrink-0" />
         <div className="min-w-0">
           <h2 className="text-sm font-semibold text-zinc-900">{title}</h2>
           <p className="text-xs text-zinc-500">{subtitle}</p>
@@ -63,10 +63,10 @@ export function TemplatePicker<T>({
                 </span>
                 {active ? (
                   <span className="w-6 h-6 rounded-full bg-orange-500 text-white inline-flex items-center justify-center animate-pop shrink-0">
-                    <Check size={13} strokeWidth={3} />
+                    <IconCheck size={14} stroke={2.2} />
                   </span>
                 ) : (
-                  <ChevronRight size={16} className="text-zinc-300 group-hover:text-zinc-500 group-hover:translate-x-0.5 transition-transform shrink-0" />
+                  <IconChevronRight size={16} stroke={1.6} className="text-zinc-300 group-hover:text-zinc-500 group-hover:translate-x-0.5 transition-transform shrink-0" />
                 )}
               </button>
             </li>
@@ -111,7 +111,7 @@ export function Suggestions({
                 : "bg-zinc-50 border-zinc-200/80 text-zinc-600 hover:bg-white hover:text-zinc-900 hover:border-zinc-300"
             }`}
           >
-            {active && <Check size={11} strokeWidth={3} className="animate-pop" />}
+            {active && <IconCheck size={12} stroke={2} className="animate-pop" />}
             {o.label}
           </button>
         );
@@ -146,7 +146,7 @@ export function TagSuggestions({ tags, value, onChange }: { tags: readonly strin
                 : "bg-zinc-50 border-zinc-200/80 text-zinc-600 hover:bg-white hover:text-zinc-900 hover:border-zinc-300"
             }`}
           >
-            {active ? <Check size={11} strokeWidth={3} className="animate-pop" /> : <span className="text-zinc-400">+</span>}
+            {active ? <IconCheck size={12} stroke={2} className="animate-pop" /> : <span className="text-zinc-400">+</span>}
             {t}
           </button>
         );
@@ -162,7 +162,7 @@ export function Segmented<T extends string>({
   onChange,
   label,
 }: {
-  options: ReadonlyArray<{ id: T; label: string; icon?: LucideIcon }>;
+  options: ReadonlyArray<{ id: T; label: string; icon?: IconComponent }>;
   value: T;
   onChange: (value: T) => void;
   label: string;
@@ -183,7 +183,7 @@ export function Segmented<T extends string>({
               active ? "bg-white text-zinc-900 shadow-[0_1px_2px_rgba(24,24,27,0.08),0_0_0_1px_rgba(24,24,27,0.04)]" : "text-zinc-500 hover:text-zinc-800"
             }`}
           >
-            {Icon && <Icon size={13} className={active ? "text-orange-600" : ""} />}
+            {Icon && <Icon size={14} stroke={1.6} className={active ? "text-orange-600" : ""} />}
             {o.label}
           </button>
         );
@@ -221,7 +221,7 @@ export function DraftBanner({ savedAt, onDiscard }: { savedAt: number; onDiscard
   const when = mins === 0 ? "just now" : mins < 60 ? `${mins} min ago` : mins < 1440 ? `${Math.round(mins / 60)} h ago` : `${Math.round(mins / 1440)} d ago`;
   return (
     <div className="flex items-center gap-3 p-2.5 pl-3 rounded-xl bg-amber-50/70 border border-amber-200/70 text-xs text-amber-900 animate-fade-in" role="status">
-      <RotateCcw size={14} className="shrink-0 text-amber-600" />
+      <IconRotate2 size={15} stroke={1.6} className="shrink-0 text-amber-600" />
       <span className="flex-1 min-w-0">
         Picked up where you left off, draft saved {when}.
       </span>

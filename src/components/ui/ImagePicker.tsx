@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { ImagePlus, X } from "lucide-react";
+import { IconPhotoPlus, IconX } from "@tabler/icons-react";
 import { mediaUrl } from "@/lib/api";
 
 const ACCEPT = "image/jpeg,image/png,image/webp";
@@ -52,7 +52,7 @@ export function ImagePicker({
           <img src={shown} alt="" className="w-24 h-16 rounded-lg object-cover border border-zinc-200" />
         ) : (
           <div className="w-24 h-16 rounded-lg border border-dashed border-zinc-300 bg-zinc-50 flex items-center justify-center text-zinc-400">
-            <ImagePlus size={18} />
+            <IconPhotoPlus size={20} stroke={1.6} />
           </div>
         )}
         <div className="flex items-center gap-2">
@@ -65,7 +65,7 @@ export function ImagePicker({
           </button>
           {file && (
             <button type="button" onClick={() => onChange(null)} className="p-1.5 text-zinc-400 hover:text-zinc-700" aria-label="Remove selected image">
-              <X size={14} />
+              <IconX size={15} stroke={1.6} />
             </button>
           )}
         </div>

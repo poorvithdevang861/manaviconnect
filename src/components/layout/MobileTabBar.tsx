@@ -2,10 +2,10 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { User } from "lucide-react";
+import { IconUser } from "@tabler/icons-react";
 import { AUTH_ROUTES, PRIMARY_NAV, isActive, type NavItem } from "./nav";
 
-const TABS: NavItem[] = [...PRIMARY_NAV, { label: "Me", href: "/me", icon: User }];
+const TABS: NavItem[] = [...PRIMARY_NAV, { label: "Me", href: "/me", icon: IconUser }];
 
 export function MobileTabBar() {
   const pathname = usePathname();
@@ -26,7 +26,7 @@ export function MobileTabBar() {
             }`}
           >
             <span className={`relative inline-flex items-center justify-center w-12 h-7 rounded-full ${active ? "bg-gradient-to-b from-orange-100 to-orange-50 animate-pop-in" : ""}`}>
-              <Icon size={18} strokeWidth={active ? 2.2 : 1.6} />
+              <Icon size={19} stroke={active ? 2 : 1.6} />
             </span>
             <span>{tab.label}</span>
           </Link>

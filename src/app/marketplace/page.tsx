@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { MapPin, Plus } from "lucide-react";
+import { IconMapPin, IconPlus } from "@tabler/icons-react";
 import { api, MARKET_CATEGORIES, type MarketCategory } from "@/lib/api";
 import { imageOr } from "@/lib/placeholder";
 import { useApi } from "@/lib/useApi";
@@ -34,7 +34,7 @@ export default function MarketplacePage() {
         description="Buy from and sell to fellow alumni: farm produce, goods and services."
         action={
           <Link href="/marketplace/new" className={btnPrimary}>
-            <Plus size={14} />
+            <IconPlus size={15} stroke={1.6} />
             List something
           </Link>
         }
@@ -71,7 +71,7 @@ export default function MarketplacePage() {
                         <span className="inline-flex items-center gap-1 min-w-0">
                           {item.location && (
                             <>
-                              <MapPin size={11} className="shrink-0" />
+                              <IconMapPin size={13} stroke={1.6} className="shrink-0" />
                               <span className="truncate">{item.location}</span>
                             </>
                           )}

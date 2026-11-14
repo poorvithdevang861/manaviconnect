@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, Check, Loader2 } from "lucide-react";
+import { IconArrowLeft, IconCheck, IconLoader2 } from "@tabler/icons-react";
 import { Card } from "@/components/ui/Card";
 import { ErrorBox, Loading } from "@/components/ui/States";
 import { btnPrimary, btnSecondary, pageCls } from "@/components/ui/styles";
@@ -37,7 +36,7 @@ export function FormLayout({
         description={description}
         action={
           <Link href={backHref} className={btnSecondary}>
-            <ArrowLeft size={14} className="text-zinc-500" />
+            <IconArrowLeft size={15} stroke={1.6} className="text-zinc-500" />
             {backLabel}
           </Link>
         }
@@ -99,30 +98,21 @@ export function FormActions({
   label: string;
   draftSavedAt?: number | null;
 }) {
-  const [mod, setMod] = useState("Ctrl");
-  useEffect(() => {
-    if (/Mac|iPhone|iPad/.test(navigator.platform)) setMod("⌘");
-  }, []);
   return (
     <div className="pt-4 border-t border-zinc-100 flex flex-wrap items-center justify-end gap-x-3 gap-y-2">
       <span className="mr-auto flex items-center gap-3 text-[11px] text-zinc-400 min-w-0">
         {draftSavedAt ? (
           <span key={draftSavedAt} className="inline-flex items-center gap-1 text-zinc-500 animate-fade-in">
-            <Check size={12} className="text-emerald-500" />
+            <IconCheck size={13} stroke={1.6} className="text-emerald-500" />
             Draft saved
           </span>
         ) : null}
-        <span className="hidden md:inline-flex items-center gap-1">
-          <kbd className="px-1.5 py-0.5 rounded-md border border-zinc-200 bg-zinc-50 font-mono text-[10px] text-zinc-500">{mod}</kbd>
-          <kbd className="px-1.5 py-0.5 rounded-md border border-zinc-200 bg-zinc-50 font-mono text-[10px] text-zinc-500">Enter</kbd>
-          to save
-        </span>
       </span>
       <Link href={cancelHref} className="btn-press px-4 py-2 text-xs font-medium text-zinc-600 hover:text-zinc-900 rounded-lg hover:bg-zinc-100">
         Cancel
       </Link>
       <button type="submit" disabled={busy} className={btnPrimary}>
-        {busy && <Loader2 size={13} className="animate-spin" />}
+        {busy && <IconLoader2 size={14} stroke={1.6} className="animate-spin" />}
         {busy ? "Saving…" : label}
       </button>
     </div>

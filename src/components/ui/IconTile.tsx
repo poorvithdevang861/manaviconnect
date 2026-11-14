@@ -1,4 +1,5 @@
-import type { LucideIcon } from "lucide-react";
+import React from "react";
+import type { Icon as TablerIcon } from "@tabler/icons-react";
 
 const TONES = {
   orange: "from-orange-100 to-orange-200/90 text-orange-600",
@@ -8,18 +9,20 @@ const TONES = {
 } as const;
 
 const SIZES = { sm: "w-8 h-8 rounded-[10px]", md: "w-10 h-10 rounded-xl", lg: "w-12 h-12 rounded-[14px]" } as const;
-const ICON = { sm: 15, md: 18, lg: 22 } as const;
+const ICON = { sm: 16, md: 19, lg: 22 } as const;
 
 export type TileTone = keyof typeof TONES;
 
-/** Glossy app-icon style tile, kept within the warm brand palette. */
-export function IconTile({ icon: Icon, tone = "orange", size = "md" }: { icon: LucideIcon; tone?: TileTone; size?: keyof typeof SIZES }) {
+export type IconComponent = TablerIcon | React.ComponentType<{ size?: number | string; stroke?: number | string; strokeWidth?: number | string; className?: string }>;
+
+/** Smooth modern app-icon style tile with subtle brand gradient. */
+export function IconTile({ icon: Icon, tone = "orange", size = "md" }: { icon: IconComponent; tone?: TileTone; size?: keyof typeof SIZES }) {
   return (
     <span
       aria-hidden
       className={`${SIZES[size]} shrink-0 inline-flex items-center justify-center bg-gradient-to-br shadow-tile ring-1 ring-inset ring-white/60 ${TONES[tone]}`}
     >
-      <Icon size={ICON[size]} strokeWidth={2} />
+      <Icon size={ICON[size]} stroke={1.6} />
     </span>
   );
 }

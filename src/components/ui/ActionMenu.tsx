@@ -2,15 +2,15 @@
 
 import Link from "next/link";
 import { useEffect, useId, useRef, useState } from "react";
-import { ChevronDown, Lock, Plus, type LucideIcon } from "lucide-react";
-import { IconTile, type TileTone } from "./IconTile";
+import { IconChevronDown, IconLock, IconPlus } from "@tabler/icons-react";
+import { IconTile, type TileTone, type IconComponent } from "./IconTile";
 import { btnPrimary } from "./styles";
 
 export interface ActionMenuItem {
   label: string;
   description: string;
   href: string;
-  icon: LucideIcon;
+  icon: IconComponent;
   tone?: TileTone;
   /** Short type tag shown next to the label, e.g. "Story" or "News". */
   tag: string;
@@ -53,24 +53,38 @@ export function ActionMenu({ label, shortLabel, items }: { label: string; shortL
       document.removeEventListener("mousedown", onDown);
       document.removeEventListener("touchstart", onDown);
     };
-  }, [open, enabled[0]]);
+  }, [open, enabled]);
 
   const onMenuKey = (e: React.KeyboardEvent) => {
     if (e.key === "Escape") {
       e.preventDefault();
-      return hide();
+      hide(true);
+      return;
     }
-    if (e.key === "Tab") return setOpen(false);
-    const step = e.key === "ArrowDown" ? 1 : e.key === "ArrowUp" ? -1 : 0;
-    if (!step || enabled.length === 0) return;
-    e.preventDefault();
-    const at = enabled.indexOf(itemRefs.current.findIndex((el) => el === document.activeElement));
-    const next = enabled[(at + step + enabled.length) % enabled.length];
-    itemRefs.current[next]?.focus();
+    const idx = itemRefs.current.findIndex((el) => el === document.activeElement);
+    if (idx < 0) return;
+    const pos = enabled.indexOf(idx);
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      const next = enabled[(pos + 1) % enabled.length];
+      if (next !== undefined) itemRefs.current[next]?.focus();
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      const prev = enabled[(pos - 1 + enabled.length) % enabled.length];
+      if (prev !== undefined) itemRefs.current[prev]?.focus();
+    } else if (e.key === "Home") {
+      e.preventDefault();
+      const first = enabled[0];
+      if (first !== undefined) itemRefs.current[first]?.focus();
+    } else if (e.key === "End") {
+      e.preventDefault();
+      const last = enabled[enabled.length - 1];
+      if (last !== undefined) itemRefs.current[last]?.focus();
+    }
   };
 
   return (
-    <div ref={rootRef} className="relative shrink-0">
+    <div ref={rootRef} className="relative inline-block">
       <button
         ref={buttonRef}
         type="button"
@@ -86,7 +100,7 @@ export function ActionMenu({ label, shortLabel, items }: { label: string; shortL
         }}
         className={`${btnPrimary} !py-2.5 !px-4`}
       >
-        <Plus size={15} />
+        <IconPlus size={16} stroke={1.6} />
         {shortLabel ? (
           <>
             <span className="sm:hidden">{shortLabel}</span>
@@ -95,7 +109,7 @@ export function ActionMenu({ label, shortLabel, items }: { label: string; shortL
         ) : (
           label
         )}
-        <ChevronDown size={14} className={`-mr-1 opacity-80 transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
+        <IconChevronDown size={15} stroke={1.6} className={`-mr-1 opacity-80 transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
       </button>
 
       {open && (
@@ -131,7 +145,7 @@ export function ActionMenu({ label, shortLabel, items }: { label: string; shortL
                 className="flex items-start gap-3 p-2.5 rounded-xl opacity-70 cursor-not-allowed"
               >
                 {body}
-                <Lock size={13} className="mt-1 shrink-0 text-zinc-400" />
+                <IconLock size={14} stroke={1.6} className="mt-1 shrink-0 text-zinc-400" />
               </div>
             ) : (
               <Link
@@ -141,8 +155,8 @@ export function ActionMenu({ label, shortLabel, items }: { label: string; shortL
                 }}
                 href={it.href}
                 role="menuitem"
-                onClick={() => setOpen(false)}
-                className="flex items-start gap-3 p-2.5 rounded-xl outline-none hover:bg-orange-50/70 focus-visible:bg-orange-50/70 transition-colors"
+                onClick={() => hide(false)}
+                className="flex items-start gap-3 p-2.5 rounded-xl hover:bg-zinc-50 transition-colors group"
               >
                 {body}
               </Link>

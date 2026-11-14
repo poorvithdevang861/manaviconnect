@@ -7,6 +7,9 @@ export const pageNarrowCls = `max-w-[52rem] ${pageBase}`;
 export const inputCls =
   "w-full min-w-0 px-3.5 py-2.5 text-base sm:text-sm bg-white border border-zinc-200 rounded-lg text-zinc-900 placeholder:text-zinc-400 shadow-xs transition-[border-color,box-shadow] duration-150 hover:border-zinc-300 focus:outline-none focus:border-orange-400 focus:shadow-focus disabled:bg-zinc-50 disabled:text-zinc-500";
 
+export const selectCls =
+  "w-full min-w-0 px-3.5 py-2.5 text-base sm:text-sm bg-white border border-zinc-200 rounded-lg text-zinc-900 shadow-xs transition-[border-color,box-shadow] duration-150 hover:border-zinc-300 focus:outline-none focus:border-orange-400 focus:shadow-focus disabled:bg-zinc-50 disabled:text-zinc-500 appearance-none cursor-pointer pr-9 bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%2371717a%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] bg-[length:16px_16px] bg-[right_10px_center] bg-no-repeat";
+
 export const labelCls = "block text-xs font-medium text-zinc-700 mb-1.5";
 
 export const btnPrimary =

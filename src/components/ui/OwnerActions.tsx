@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { Loader2, Pencil, Trash2 } from "lucide-react";
+import { IconLoader2, IconPencil, IconTrash } from "@tabler/icons-react";
 import { errorText } from "@/lib/useApi";
 import { titleCase } from "@/lib/format";
 import { btnDanger, btnSecondary } from "./styles";
@@ -49,23 +49,27 @@ export function OwnerActions({
           <button type="button" onClick={() => setConfirming(false)} disabled={busy} className={btnSecondary} autoFocus>
             Keep
           </button>
-          <button type="button" onClick={handleDelete} disabled={busy} className={`${btnDanger} !bg-red-600 !text-white !border-red-600 hover:!bg-red-700`}>
-            {busy ? <Loader2 size={12} className="animate-spin" /> : <Trash2 size={12} />}
-            {busy ? "Deleting…" : "Yes, delete"}
+          <button type="button" onClick={handleDelete} disabled={busy} className={btnDanger}>
+            {busy ? <IconLoader2 size={14} stroke={1.6} className="animate-spin" /> : <IconTrash size={14} stroke={1.6} />}
+            Delete
           </button>
         </div>
       ) : (
         <>
           {editHref && (
             <Link href={editHref} className={btnSecondary}>
-              <Pencil size={12} />
+              <IconPencil size={14} stroke={1.6} />
               Edit
             </Link>
           )}
           {onDelete && (
-            <button type="button" onClick={() => setConfirming(true)} className={btnDanger}>
-              <Trash2 size={12} />
-              Delete
+            <button
+              type="button"
+              onClick={() => setConfirming(true)}
+              className="p-1.5 rounded-lg text-zinc-400 hover:text-red-600 hover:bg-red-50 transition-colors"
+              aria-label={`Delete ${noun}`}
+            >
+              <IconTrash size={16} stroke={1.6} />
             </button>
           )}
         </>

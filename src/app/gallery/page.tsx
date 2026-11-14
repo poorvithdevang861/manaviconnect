@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { Trash2, Upload, X } from "lucide-react";
+import { IconTrash, IconUpload, IconX } from "@tabler/icons-react";
 import { api, mediaUrl, type GalleryPhoto } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
 import { errorText, useApi } from "@/lib/useApi";
@@ -55,7 +55,7 @@ export default function GalleryPage() {
         action={
           user ? (
             <button type="button" onClick={() => setShowUpload((s) => !s)} className={btnPrimary}>
-              <Upload size={14} />
+              <IconUpload size={15} stroke={1.6} />
               Upload a photo
             </button>
           ) : (
@@ -122,12 +122,12 @@ export default function GalleryPage() {
               <span className="flex items-center gap-2">
                 {user && (user.id === viewing.uploaded_by || user.is_admin) && (
                   <button type="button" onClick={() => remove(viewing)} className="btn-press inline-flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg bg-white/10 hover:bg-red-600 text-white">
-                    <Trash2 size={12} />
+                    <IconTrash size={14} stroke={1.6} />
                     Delete
                   </button>
                 )}
                 <button type="button" onClick={() => setViewing(null)} autoFocus className="p-1.5 rounded-lg bg-white/10 hover:bg-white/20" aria-label="Close">
-                  <X size={16} />
+                  <IconX size={17} stroke={1.6} />
                 </button>
               </span>
             </figcaption>

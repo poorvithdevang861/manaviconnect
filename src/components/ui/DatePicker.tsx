@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useId, useRef, useState } from "react";
-import { CalendarDays, ChevronDown, ChevronLeft, ChevronRight, X } from "lucide-react";
+import { IconCalendar, IconChevronDown, IconChevronLeft, IconChevronRight, IconX } from "@tabler/icons-react";
 import { btnPrimary } from "./styles";
 
 const pad = (n: number) => String(n).padStart(2, "0");
@@ -201,9 +201,9 @@ export function DatePicker({
           open ? "border-orange-400 shadow-focus" : "border-zinc-200"
         }`}
       >
-        <CalendarDays size={16} className={`shrink-0 ${selected ? "text-orange-600" : "text-zinc-400"}`} />
+        <IconCalendar size={17} stroke={1.6} className={`shrink-0 ${selected ? "text-orange-600" : "text-zinc-400"}`} />
         <span className={`flex-1 min-w-0 truncate ${selected ? "text-zinc-900" : "text-zinc-400"}`}>{display || placeholder}</span>
-        {!(clearable && selected && !open) && <ChevronDown size={15} className={`shrink-0 text-zinc-400 transition-transform ${open ? "rotate-180" : ""}`} />}
+        {!(clearable && selected && !open) && <IconChevronDown size={15} stroke={1.6} className={`shrink-0 text-zinc-400 transition-transform ${open ? "rotate-180" : ""}`} />}
       </button>
 
       {clearable && selected && !open && (
@@ -213,7 +213,7 @@ export function DatePicker({
           aria-label="Clear date"
           className="absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 inline-flex items-center justify-center rounded-full text-zinc-400 hover:text-zinc-700 hover:bg-zinc-100"
         >
-          <X size={13} />
+          <IconX size={14} stroke={1.6} />
         </button>
       )}
 
@@ -238,7 +238,7 @@ export function DatePicker({
                   aria-label={view === "days" ? "Previous month" : "Previous year"}
                   className="w-8 h-8 inline-flex items-center justify-center rounded-full text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900 disabled:opacity-30 disabled:pointer-events-none"
                 >
-                  <ChevronLeft size={16} />
+                  <IconChevronLeft size={16} stroke={1.6} />
                 </button>
                 <button
                   type="button"
@@ -247,7 +247,7 @@ export function DatePicker({
                   className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-sm font-semibold text-zinc-900 hover:bg-zinc-100"
                 >
                   {view === "days" ? monthTitle.format(month) : month.getFullYear()}
-                  <ChevronDown size={14} className={`text-zinc-400 transition-transform ${view === "months" ? "rotate-180" : ""}`} />
+                  <IconChevronDown size={14} stroke={1.6} className={`text-zinc-400 transition-transform ${view === "months" ? "rotate-180" : ""}`} />
                 </button>
                 <button
                   type="button"
@@ -256,7 +256,7 @@ export function DatePicker({
                   aria-label={view === "days" ? "Next month" : "Next year"}
                   className="w-8 h-8 inline-flex items-center justify-center rounded-full text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900 disabled:opacity-30 disabled:pointer-events-none"
                 >
-                  <ChevronRight size={16} />
+                  <IconChevronRight size={16} stroke={1.6} />
                 </button>
               </div>
 

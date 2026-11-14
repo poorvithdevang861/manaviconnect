@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { BookOpen, Code2, Handshake, Laptop, Sprout } from "lucide-react";
+import { IconBook, IconCode, IconDeviceLaptop, IconHeartHandshake, IconPlant } from "@tabler/icons-react";
 import { api, JOB_TYPES, type Job, type JobType } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
 import { editId, errorText } from "@/lib/useApi";
@@ -47,7 +47,7 @@ const TEMPLATES: Template<JobValues>[] = [
     id: "referral",
     title: "Referral at my company",
     description: "You'll pass on CVs from alumni",
-    icon: Handshake,
+    icon: IconHeartHandshake,
     values: {
       title: "",
       job_type: "full-time",
@@ -60,7 +60,7 @@ const TEMPLATES: Template<JobValues>[] = [
     id: "engineer",
     title: "Software engineer",
     description: "Full-time role with a referral",
-    icon: Code2,
+    icon: IconCode,
     values: {
       title: "Software Engineer",
       job_type: "full-time",
@@ -73,7 +73,7 @@ const TEMPLATES: Template<JobValues>[] = [
     id: "intern",
     title: "Internship",
     description: "Short paid stint for students",
-    icon: Sprout,
+    icon: IconPlant,
     tone: "amber",
     values: {
       title: "Summer Intern",
@@ -88,7 +88,7 @@ const TEMPLATES: Template<JobValues>[] = [
     id: "teaching",
     title: "Teaching or academic role",
     description: "Schools, coaching, research",
-    icon: BookOpen,
+    icon: IconBook,
     tone: "peach",
     values: {
       title: "Teacher",
@@ -102,7 +102,7 @@ const TEMPLATES: Template<JobValues>[] = [
     id: "freelance",
     title: "Freelance project",
     description: "Fixed scope, flexible hours",
-    icon: Laptop,
+    icon: IconDeviceLaptop,
     tone: "sand",
     values: {
       title: "Freelance ",

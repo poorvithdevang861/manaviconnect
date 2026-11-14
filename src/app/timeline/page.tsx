@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRef, useState } from "react";
-import { FileText, MessageCircle, Paperclip, Plus } from "lucide-react";
+import { IconFileText, IconMessageCircle, IconPaperclip, IconPlus } from "@tabler/icons-react";
 import { api, mediaUrl, type TimelineEntry } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
 import { errorText, useApi } from "@/lib/useApi";
@@ -41,7 +41,7 @@ export default function TimelinePage() {
         description="Milestones from the school's founding to today. Add photos or documents you have."
         action={
           <Link href="/timeline/new" className={btnPrimary}>
-            <Plus size={14} />
+            <IconPlus size={15} stroke={1.6} />
             Add a milestone
           </Link>
         }
@@ -128,7 +128,7 @@ function TimelineItem({ entry, onChange, onDeleted }: { entry: TimelineEntry; on
               const url = mediaUrl(p)!;
               return isPdf(url) ? (
                 <a key={i} href={url} target="_blank" rel="noopener noreferrer" className="aspect-square rounded-lg border border-zinc-200 bg-zinc-50 flex flex-col items-center justify-center gap-1 text-[11px] text-zinc-600 hover:border-orange-300">
-                  <FileText size={20} className="text-zinc-400" />
+                  <IconFileText size={20} stroke={1.6} className="text-zinc-400" />
                   PDF
                 </a>
               ) : (
@@ -144,13 +144,13 @@ function TimelineItem({ entry, onChange, onDeleted }: { entry: TimelineEntry; on
         <div className="flex flex-wrap items-center gap-2 pt-1">
           <LikeButton liked={entry.is_liked} count={entry.like_count} onToggle={() => api.timeline.like(entry.id)} />
           <button type="button" onClick={() => setShowComments((s) => !s)} aria-expanded={showComments} className={btnSecondary}>
-            <MessageCircle size={12} />
+            <IconMessageCircle size={14} stroke={1.6} />
             {commentCount} {commentCount === 1 ? "comment" : "comments"}
           </button>
           {user && (
             <>
               <button type="button" onClick={() => fileRef.current?.click()} disabled={uploading} className={btnSecondary}>
-                <Paperclip size={12} />
+                <IconPaperclip size={14} stroke={1.6} />
                 {uploading ? "Uploading…" : "Add photos or PDFs"}
               </button>
               <input

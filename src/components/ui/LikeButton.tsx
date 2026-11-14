@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { Heart } from "lucide-react";
+import { IconHeart } from "@tabler/icons-react";
 import type { LikeResult } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
 
@@ -58,11 +58,12 @@ export function LikeButton({
           : "bg-white border-zinc-200 text-zinc-600 hover:text-zinc-900 hover:bg-zinc-50"
       }`}
     >
-      <Heart
+      <IconHeart
         key={state.liked ? "on" : "off"}
-        size={size === "md" ? 14 : 12}
+        size={size === "md" ? 15 : 13}
+        stroke={1.6}
         fill={state.liked ? "currentColor" : "none"}
-        className={state.liked ? "animate-pop" : ""}
+        className={state.liked ? "animate-pop text-orange-600" : "text-zinc-400"}
       />
       <span className="font-mono tabular-nums">{state.count}</span>
     </button>

@@ -2,18 +2,27 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { Bell, BellOff, BookOpen, Briefcase, Calendar, Newspaper, Store } from "lucide-react";
+import {
+  IconBell,
+  IconBellOff,
+  IconBook,
+  IconBriefcase,
+  IconBuildingStore,
+  IconCalendar,
+  IconNews,
+} from "@tabler/icons-react";
 import { api } from "@/lib/api";
 import { errorText, useApi } from "@/lib/useApi";
 import { timeAgo } from "@/lib/format";
 import { currentSubscription, disablePush, enablePush, pushSupported } from "@/lib/push";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Card } from "@/components/ui/Card";
+import { IconComponent } from "@/components/ui/IconTile";
 import { Pagination } from "@/components/ui/Pagination";
 import { Empty, ErrorBox, Loading, Notice } from "@/components/ui/States";
 import { btnPrimary, btnSecondary, pageNarrowCls } from "@/components/ui/styles";
 
-const ICONS: Record<string, typeof Bell> = { event: Calendar, story: BookOpen, news: Newspaper, job: Briefcase, marketplace: Store };
+const ICONS: Record<string, IconComponent> = { event: IconCalendar, story: IconBook, news: IconNews, job: IconBriefcase, marketplace: IconBuildingStore };
 
 export default function NotificationsPage() {
   const [page, setPage] = useState(1);
@@ -36,11 +45,11 @@ export default function NotificationsPage() {
           <>
             <Card className="divide-y divide-zinc-100">
               {data!.notifications.map((n) => {
-                const Icon = ICONS[n.type] ?? Bell;
+                const Icon = ICONS[n.type] ?? IconBell;
                 const body = (
                   <div className="flex items-start gap-3 p-4">
                     <span className="w-8 h-8 rounded-lg bg-orange-50 border border-orange-200/70 text-orange-700 flex items-center justify-center shrink-0">
-                      <Icon size={14} />
+                      <Icon size={16} stroke={1.6} />
                     </span>
                     <div className="min-w-0 flex-1">
                       <p className="text-sm font-medium text-zinc-900">{n.title}</p>
@@ -106,7 +115,7 @@ function PushToggle() {
           <p className="text-xs text-zinc-500">Get an alert on this device when something new is posted.</p>
         </div>
         <button type="button" onClick={toggle} disabled={busy} className={state === "on" ? btnSecondary : btnPrimary}>
-          {state === "on" ? <BellOff size={13} /> : <Bell size={13} />}
+          {state === "on" ? <IconBellOff size={15} stroke={1.6} /> : <IconBell size={15} stroke={1.6} />}
           {busy ? "Working…" : state === "on" ? "Turn off" : "Turn on"}
         </button>
       </div>

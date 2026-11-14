@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Flag, Landmark, Trophy, Users, X } from "lucide-react";
+import { IconBuildingBank, IconFlag, IconTrophy, IconUsers, IconX } from "@tabler/icons-react";
 import { api, type TimelineEntry } from "@/lib/api";
 import { editId, errorText } from "@/lib/useApi";
 import { useDraft } from "@/lib/useDraft";
@@ -34,14 +34,14 @@ const TEMPLATES: Template<TimelineValues>[] = [
     id: "results",
     title: "Board exam results",
     description: "Pass rates, toppers, records broken",
-    icon: Trophy,
+    icon: IconTrophy,
     values: { title: "Class 12 board results", content: "Pass percentage:\n\nToppers:\n\nWhat made this year special:" },
   },
   {
     id: "visit",
     title: "Visit or ceremony",
     description: "A guest, an inauguration, a function",
-    icon: Landmark,
+    icon: IconBuildingBank,
     tone: "amber",
     values: { title: "Visit by ", content: "Who visited and why:\n\nWhat happened on the day:" },
   },
@@ -49,7 +49,7 @@ const TEMPLATES: Template<TimelineValues>[] = [
     id: "first",
     title: "A first for the school",
     description: "New building, first batch, first award",
-    icon: Flag,
+    icon: IconFlag,
     tone: "peach",
     values: { title: "First ", content: "What happened:\n\nWho made it possible:" },
   },
@@ -57,7 +57,7 @@ const TEMPLATES: Template<TimelineValues>[] = [
     id: "batch",
     title: "Batch event",
     description: "Farewells, reunions, alumni drives",
-    icon: Users,
+    icon: IconUsers,
     tone: "sand",
     values: { title: " batch ", content: "The occasion:\n\nWho attended:\n\nA moment worth remembering:" },
   },
@@ -168,7 +168,7 @@ function TimelineForm({ initial }: { initial: TimelineEntry | null }) {
                     data-tip="Remove"
                     data-tip-side="left"
                   >
-                    <X size={13} />
+                    <IconX size={14} stroke={1.6} />
                   </button>
                 </li>
               ))}

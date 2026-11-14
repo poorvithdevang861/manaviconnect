@@ -1,5 +1,5 @@
 import React from "react";
-import { AlertCircle, CheckCircle2, Inbox } from "lucide-react";
+import { IconAlertCircle, IconCircleCheck, IconInbox } from "@tabler/icons-react";
 import { errorText } from "@/lib/useApi";
 import { IconTile } from "./IconTile";
 import { btnSecondary } from "./styles";
@@ -74,7 +74,7 @@ export function ErrorBox({ error, onRetry }: { error: unknown; onRetry?: () => v
   return (
     <div className="p-4 bg-red-50/60 border border-red-200 rounded-xl text-xs text-red-800 flex items-start justify-between gap-3" role="alert">
       <div className="flex items-start gap-2">
-        <AlertCircle size={15} className="shrink-0 mt-px" />
+        <IconAlertCircle size={16} stroke={1.6} className="shrink-0 mt-px" />
         <span>{errorText(error)}</span>
       </div>
       {onRetry && (
@@ -90,7 +90,7 @@ export function Empty({ title, children, action }: { title: string; children?: R
   return (
     <div className="bg-white border border-zinc-200/70 rounded-xl shadow-card px-6 py-12 text-center space-y-2 animate-fade-in">
       <div className="flex justify-center pb-2">
-        <IconTile icon={Inbox} tone="sand" size="lg" />
+        <IconTile icon={IconInbox} tone="sand" size="lg" />
       </div>
       <p className="text-sm font-semibold text-zinc-900">{title}</p>
       {children && <p className="text-xs text-zinc-500 max-w-sm mx-auto leading-relaxed">{children}</p>}
@@ -105,10 +105,10 @@ export function Notice({ tone = "success", children }: { tone?: "success" | "err
     error: "bg-red-50/60 border-red-200 text-red-800",
     info: "bg-zinc-50 border-zinc-200 text-zinc-700",
   }[tone];
-  const Icon = tone === "error" ? AlertCircle : CheckCircle2;
+  const Icon = tone === "error" ? IconAlertCircle : IconCircleCheck;
   return (
     <div className={`p-3 border rounded-lg text-xs flex items-start gap-2 animate-fade-in ${styles}`} role={tone === "error" ? "alert" : "status"}>
-      <Icon size={14} className="shrink-0 mt-px" />
+      <Icon size={15} stroke={1.6} className="shrink-0 mt-px" />
       <span>{children}</span>
     </div>
   );

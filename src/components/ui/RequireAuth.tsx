@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import { Lock } from "lucide-react";
+import { IconLock } from "@tabler/icons-react";
 import { useAuth } from "@/lib/auth";
 import type { User } from "@/lib/api";
 import { Loading } from "./States";
@@ -34,7 +34,7 @@ export function RequireAuth({
     return (
       <div className="max-w-md mx-auto my-16 bg-white border border-zinc-200/80 rounded-xl p-8 text-center space-y-3 shadow-xs">
         <div className="w-10 h-10 rounded-full bg-orange-50 text-orange-600 border border-orange-200 flex items-center justify-center mx-auto">
-          <Lock size={17} />
+          <IconLock size={18} stroke={1.6} />
         </div>
         <h1 className="text-base font-semibold text-zinc-900">Members only</h1>
         <p className="text-xs text-zinc-600">{reason}</p>

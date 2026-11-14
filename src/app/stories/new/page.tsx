@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { BedDouble, Briefcase, HeartHandshake, Trophy } from "lucide-react";
+import { IconBed, IconBriefcase, IconHeartHandshake, IconTrophy } from "@tabler/icons-react";
 import { api, type Story } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
 import { editId, errorText } from "@/lib/useApi";
@@ -36,7 +36,7 @@ function templates(batch: string): Template<StoryValues>[] {
       id: "hostel",
       title: "A hostel memory",
       description: "Late nights, mess food, dorm friendships",
-      icon: BedDouble,
+      icon: IconBed,
       values: {
         title: "That night in the hostel when…",
         content: `Where and when it happened${from}:\n\nWho was there:\n\nWhat happened:\n\nWhy I still think about it:`,
@@ -47,7 +47,7 @@ function templates(batch: string): Template<StoryValues>[] {
       id: "career",
       title: "My career journey",
       description: "From the school gate to where you are now",
-      icon: Briefcase,
+      icon: IconBriefcase,
       tone: "amber",
       values: {
         title: "From Navodaya to ",
@@ -59,7 +59,7 @@ function templates(batch: string): Template<StoryValues>[] {
       id: "teacher",
       title: "A teacher who shaped me",
       description: "Say thank you, publicly",
-      icon: HeartHandshake,
+      icon: IconHeartHandshake,
       tone: "peach",
       values: {
         title: "Thank you, ",
@@ -71,7 +71,7 @@ function templates(batch: string): Template<StoryValues>[] {
       id: "milestone",
       title: "Celebrating a milestone",
       description: "A launch, an award, a new chapter",
-      icon: Trophy,
+      icon: IconTrophy,
       tone: "sand",
       values: {
         title: "",

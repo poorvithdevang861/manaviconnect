@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { use } from "react";
 import { useRouter } from "next/navigation";
-import { AlertTriangle, ArrowLeft } from "lucide-react";
+import { IconAlertTriangle, IconArrowLeft } from "@tabler/icons-react";
 import { api } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
 import { imageOr } from "@/lib/placeholder";
@@ -26,7 +26,7 @@ export default function NewsArticlePage({ params }: { params: Promise<{ id: stri
     <div className={pageNarrowCls}>
       <div className="flex items-center justify-between gap-3">
         <Link href="/updates?type=news" className={btnSecondary}>
-          <ArrowLeft size={14} />
+          <IconArrowLeft size={15} stroke={1.6} />
           All news
         </Link>
         {article && user?.is_admin && (
@@ -54,7 +54,7 @@ export default function NewsArticlePage({ params }: { params: Promise<{ id: stri
               <div className="flex flex-wrap items-center gap-2">
                 {article.severity === "critical" && (
                   <Badge variant="danger" size="sm">
-                    <AlertTriangle size={11} />
+                    <IconAlertTriangle size={13} stroke={1.6} />
                     Important
                   </Badge>
                 )}

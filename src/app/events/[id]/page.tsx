@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { use } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Calendar, Clock, MapPin, Users } from "lucide-react";
+import { IconArrowLeft, IconCalendar, IconClock, IconMapPin, IconUsers } from "@tabler/icons-react";
 import { api } from "@/lib/api";
 import { canManage, useAuth } from "@/lib/auth";
 import { imageOr } from "@/lib/placeholder";
@@ -12,6 +12,7 @@ import { formatDate, formatTime, isPast } from "@/lib/format";
 import { Avatar } from "@/components/ui/Avatar";
 import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
+import { IconComponent } from "@/components/ui/IconTile";
 import { LikeButton } from "@/components/ui/LikeButton";
 import { OwnerActions } from "@/components/ui/OwnerActions";
 import { ErrorBox, Loading } from "@/components/ui/States";
@@ -27,7 +28,7 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
     <div className={pageCls}>
       <div className="flex items-center justify-between gap-3">
         <Link href="/events" className={btnSecondary}>
-          <ArrowLeft size={14} />
+          <IconArrowLeft size={15} stroke={1.6} />
           All events
         </Link>
         {event && canManage(user, event.created_by) && (
@@ -73,10 +74,10 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
 
             <Card className="lg:col-span-4 p-5 space-y-4 text-xs">
               <h2 className="text-sm font-semibold text-zinc-900">Details</h2>
-              <Detail icon={Calendar} label="Date" value={formatDate(event.datetime)} />
-              <Detail icon={Clock} label="Time" value={formatTime(event.datetime)} />
-              <Detail icon={MapPin} label="Venue" value={event.location} />
-              {event.max_participants && <Detail icon={Users} label="Capacity" value={`Up to ${event.max_participants} people`} />}
+              <Detail icon={IconCalendar} label="Date" value={formatDate(event.datetime)} />
+              <Detail icon={IconClock} label="Time" value={formatTime(event.datetime)} />
+              <Detail icon={IconMapPin} label="Venue" value={event.location} />
+              {event.max_participants && <Detail icon={IconUsers} label="Capacity" value={`Up to ${event.max_participants} people`} />}
             </Card>
           </div>
         )
@@ -85,10 +86,10 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
   );
 }
 
-function Detail({ icon: Icon, label, value }: { icon: typeof Calendar; label: string; value: string }) {
+function Detail({ icon: Icon, label, value }: { icon: IconComponent; label: string; value: string }) {
   return (
     <div className="flex items-start gap-2.5 pt-3 border-t border-zinc-100 first-of-type:border-0 first-of-type:pt-0">
-      <Icon size={15} className="text-zinc-400 shrink-0 mt-0.5" />
+      <Icon size={16} stroke={1.6} className="text-zinc-400 shrink-0 mt-0.5" />
       <div>
         <span className="text-zinc-400 font-mono uppercase text-[10px] block">{label}</span>
         <span className="font-semibold text-zinc-900">{value}</span>

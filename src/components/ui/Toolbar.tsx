@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
-import { History, Search, X } from "lucide-react";
+import { IconHistory, IconSearch, IconX } from "@tabler/icons-react";
 import { chipCls } from "./styles";
 
 const RECENT_LIMIT = 6;
@@ -120,7 +120,7 @@ export function SearchInput({
 
   return (
     <div className={`relative min-w-0 shrink-0 ${className}`}>
-      <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400 pointer-events-none" />
+      <IconSearch size={16} stroke={1.6} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400 pointer-events-none" />
       <input
         ref={inputRef}
         data-search
@@ -149,7 +149,7 @@ export function SearchInput({
         className="w-full pl-10 pr-11 py-2.5 text-base sm:text-sm bg-zinc-100/80 hover:bg-zinc-100 focus:bg-white border border-transparent focus:border-orange-300 focus:shadow-focus rounded-xl outline-none transition-[background-color,border-color,box-shadow] duration-150 placeholder:text-zinc-400 [&::-webkit-search-cancel-button]:appearance-none"
       />
       <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center">
-        {text ? (
+        {text && (
           <button
             type="button"
             onMouseDown={(e) => e.preventDefault()}
@@ -158,12 +158,8 @@ export function SearchInput({
             aria-label="Clear search"
             className="animate-pop-in w-6 h-6 inline-flex items-center justify-center rounded-full bg-zinc-300/80 hover:bg-zinc-400/80 text-white transition-colors"
           >
-            <X size={13} strokeWidth={2.75} />
+            <IconX size={14} stroke={2} />
           </button>
-        ) : (
-          <kbd className="hidden sm:inline-flex items-center justify-center min-w-[22px] h-[22px] px-1.5 rounded-md border border-zinc-200 bg-white text-[11px] font-mono text-zinc-400 pointer-events-none" aria-hidden>
-            /
-          </kbd>
         )}
       </div>
 
@@ -190,7 +186,7 @@ export function SearchInput({
                 onMouseEnter={() => setCursor(i)}
               >
                 <span className="w-7 h-7 shrink-0 inline-flex items-center justify-center rounded-lg bg-zinc-100 text-zinc-400 group-hover:text-orange-600 transition-colors">
-                  <History size={14} />
+                  <IconHistory size={15} stroke={1.6} />
                 </span>
                 <span className="flex-1 min-w-0 truncate text-sm text-zinc-700">{q}</span>
                 <button
@@ -203,7 +199,7 @@ export function SearchInput({
                   }}
                   className="w-7 h-7 shrink-0 inline-flex items-center justify-center rounded-full text-zinc-400 hover:text-zinc-700 hover:bg-zinc-200/70 transition-colors"
                 >
-                  <X size={14} />
+                  <IconX size={14} stroke={1.6} />
                 </button>
               </li>
             ))}

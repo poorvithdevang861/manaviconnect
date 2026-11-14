@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { ArrowRight } from "lucide-react";
+import { IconArrowRight } from "@tabler/icons-react";
 import { mediaUrl, type SpotlightSlide } from "@/lib/api";
 
 export function Spotlight({ slides }: { slides: SpotlightSlide[] }) {
@@ -48,7 +48,7 @@ export function Spotlight({ slides }: { slides: SpotlightSlide[] }) {
               className="btn-press inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold rounded-lg bg-white text-zinc-900 hover:bg-zinc-100"
             >
               {slide.cta}
-              <ArrowRight size={13} />
+              <IconArrowRight size={14} stroke={1.6} />
             </Link>
           </div>
         )}

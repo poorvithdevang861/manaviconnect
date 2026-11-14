@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { ArrowRight, Clock, Phone, Plus, Users } from "lucide-react";
+import { IconArrowRight, IconClock, IconPhone, IconPlus, IconUsers } from "@tabler/icons-react";
 import { api, TRANSIT_TYPES, type TransitType } from "@/lib/api";
 import { canManage, useAuth } from "@/lib/auth";
 import { useApi } from "@/lib/useApi";
@@ -36,7 +36,7 @@ export default function TransitPage() {
         description="Share a ride to work, to a reunion or back to campus."
         action={
           <Link href="/transit/new" className={btnPrimary}>
-            <Plus size={14} />
+            <IconPlus size={15} stroke={1.6} />
             Offer a ride
           </Link>
         }
@@ -80,7 +80,7 @@ export default function TransitPage() {
 
                 <div className="flex items-center gap-2 text-sm font-medium text-zinc-900">
                   <span>{t.from_location}</span>
-                  <ArrowRight size={14} className="text-orange-600 shrink-0" />
+                  <IconArrowRight size={15} stroke={1.6} className="text-orange-600 shrink-0" />
                   <span>{t.to_location}</span>
                 </div>
 
@@ -89,19 +89,19 @@ export default function TransitPage() {
                 <div className="pt-3 border-t border-zinc-100 flex flex-wrap items-center gap-x-5 gap-y-1.5 text-xs text-zinc-600">
                   {t.schedule && (
                     <span className="inline-flex items-center gap-1.5">
-                      <Clock size={13} className="text-zinc-400" />
+                      <IconClock size={14} stroke={1.6} className="text-zinc-400" />
                       {t.schedule}
                     </span>
                   )}
                   {t.available_seats !== null && (
                     <span className="inline-flex items-center gap-1.5">
-                      <Users size={13} className="text-zinc-400" />
+                      <IconUsers size={14} stroke={1.6} className="text-zinc-400" />
                       {t.available_seats} {t.available_seats === 1 ? "seat" : "seats"} free
                     </span>
                   )}
                   {(t.contact_name || t.contact_info) && (
                     <span className="inline-flex items-center gap-1.5 font-medium text-zinc-900">
-                      <Phone size={13} className="text-orange-600" />
+                      <IconPhone size={14} stroke={1.6} className="text-orange-600" />
                       {[t.contact_name, t.contact_info].filter(Boolean).join(" · ")}
                     </span>
                   )}

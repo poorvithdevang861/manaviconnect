@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
-import { Send, Trash2 } from "lucide-react";
+import { IconSend, IconTrash } from "@tabler/icons-react";
 import { api, type TimelineComment } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
 import { errorText, useApi } from "@/lib/useApi";
@@ -95,7 +95,7 @@ export function Comments({ entryId, onCountChange }: { entryId: number; onCountC
                       data-tip="Delete"
                       data-tip-side="left"
                     >
-                      <Trash2 size={12} />
+                      <IconTrash size={13} stroke={1.6} />
                     </button>
                   )}
                 </div>
@@ -117,7 +117,7 @@ export function Comments({ entryId, onCountChange }: { entryId: number; onCountC
             className={inputCls}
           />
           <button type="submit" disabled={busy || !text.trim()} className="btn-press px-3 py-2 text-xs font-medium text-white bg-orange-600 hover:bg-orange-700 rounded-lg disabled:opacity-50 shrink-0" aria-label="Post comment">
-            <Send size={13} />
+            <IconSend size={14} stroke={1.6} />
           </button>
         </form>
       ) : (

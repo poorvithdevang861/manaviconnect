@@ -3,7 +3,13 @@
 import Link from "next/link";
 import { useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Calendar, Camera, LogOut, Mail, Save } from "lucide-react";
+import {
+  IconCalendar,
+  IconCamera,
+  IconDeviceFloppy,
+  IconLogout,
+  IconMail,
+} from "@tabler/icons-react";
 import { api, type User, type UserUpdate } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
 import { errorText, useApi } from "@/lib/useApi";
@@ -107,7 +113,7 @@ function Profile({ user }: { user: User }) {
             }}
             className={btnDanger}
           >
-            <LogOut size={13} />
+            <IconLogout size={14} stroke={1.6} />
             Sign out
           </button>
         }
@@ -163,7 +169,7 @@ function Profile({ user }: { user: User }) {
             {saved && <span className="text-xs text-emerald-700">Profile saved.</span>}
             {error && <span className="text-xs text-red-600">{error}</span>}
             <button type="submit" disabled={busy} className={btnPrimary}>
-              <Save size={13} />
+              <IconDeviceFloppy size={15} stroke={1.6} />
               {busy ? "Saving…" : "Save profile"}
             </button>
           </div>
@@ -209,7 +215,7 @@ function AvatarCard({ user, onUpdated }: { user: User; onUpdated: (u: User) => v
             className="absolute -bottom-1 -right-1 p-1.5 rounded-full bg-white border border-zinc-200 shadow-xs text-zinc-600 hover:text-orange-600"
             aria-label="Change photo"
           >
-            <Camera size={12} />
+            <IconCamera size={14} stroke={1.6} />
           </button>
           <input
             ref={inputRef}
@@ -262,7 +268,7 @@ function InviteCard() {
   return (
     <Card id="invite" className="p-5 space-y-3 scroll-mt-20 lg:scroll-mt-36">
       <h3 className="text-sm font-semibold text-zinc-900 flex items-center gap-1.5">
-        <Mail size={14} className="text-orange-600" />
+        <IconMail size={15} stroke={1.6} className="text-orange-600" />
         Invite a batchmate
       </h3>
       <p className="text-xs text-zinc-600">We&apos;ll email them a sign-up link that lasts 7 days.</p>
@@ -298,7 +304,7 @@ function MyContent() {
                 <Link href={`/events/${ev.id}`} className="block text-xs hover:text-orange-600">
                   <span className="font-medium text-zinc-900">{ev.title}</span>
                   <span className="block text-zinc-400 font-mono text-[11px] flex items-center gap-1">
-                    <Calendar size={10} />
+                    <IconCalendar size={13} stroke={1.6} />
                     {formatDateTime(ev.datetime)}
                   </span>
                 </Link>

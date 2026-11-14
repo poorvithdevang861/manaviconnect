@@ -2,7 +2,16 @@
 
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ArrowLeftRight, Briefcase, Bus, Car, Home, Plane, School, Users } from "lucide-react";
+import {
+  IconArrowsLeftRight,
+  IconBriefcase,
+  IconBus,
+  IconCar,
+  IconHome,
+  IconPlane,
+  IconSchool,
+  IconUsers,
+} from "@tabler/icons-react";
 import { api, TRANSIT_TYPES, type TransitListing, type TransitType } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
 import { editId, errorText } from "@/lib/useApi";
@@ -38,21 +47,21 @@ type TransitValues = {
   contact_info: string;
 };
 
-const TYPE_ICONS = { carpool: Car, rideshare: Users, bus: Bus, other: ArrowLeftRight } as const;
+const TYPE_ICONS = { carpool: IconCar, rideshare: IconUsers, bus: IconBus, other: IconArrowsLeftRight } as const;
 
 const TEMPLATES: Template<TransitValues>[] = [
   {
     id: "office",
     title: "Daily office carpool",
     description: "Same route every weekday",
-    icon: Briefcase,
+    icon: IconBriefcase,
     values: { transit_type: "carpool", schedule: "Mon–Fri, 8:30 AM", available_seats: "3", description: "Fuel cost shared equally. Happy to pick up along the way." },
   },
   {
     id: "home",
     title: "Weekend trip home",
     description: "Heading to your hometown",
-    icon: Home,
+    icon: IconHome,
     tone: "amber",
     values: { transit_type: "rideshare", schedule: "Friday evening, back Sunday", available_seats: "2", description: "Leaving after work. One bag per person please." },
   },
@@ -60,7 +69,7 @@ const TEMPLATES: Template<TransitValues>[] = [
     id: "campus",
     title: "Ride to the reunion",
     description: "Pool a car to the school campus",
-    icon: School,
+    icon: IconSchool,
     tone: "peach",
     values: { transit_type: "carpool", to_location: "School campus", schedule: "One-time, morning", available_seats: "3", description: "Let's travel together to the reunion and split the cost." },
   },
@@ -68,7 +77,7 @@ const TEMPLATES: Template<TransitValues>[] = [
     id: "airport",
     title: "Airport or station drop",
     description: "One-time drop with room to spare",
-    icon: Plane,
+    icon: IconPlane,
     tone: "sand",
     values: { transit_type: "rideshare", to_location: "Airport", schedule: "One-time", available_seats: "2", description: "Space for two medium bags." },
   },
@@ -164,7 +173,7 @@ function TransitForm({ initial }: { initial: TransitListing | null }) {
             aria-label="Swap from and to"
             data-tip="Swap"
           >
-            <ArrowLeftRight size={14} />
+            <IconArrowsLeftRight size={15} stroke={1.6} />
           </button>
           <Field label="To" required error={errors.to_location} suggestions={<Suggestions options={["School campus", "Airport", "Railway station", "Bus stand"]} current={form.to_location} onPick={put("to_location")} />}>
             <TextInput value={form.to_location} onChange={set("to_location")} placeholder="Destination" />

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { use } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, MapPin, Phone } from "lucide-react";
+import { IconArrowLeft, IconMapPin, IconPhone } from "@tabler/icons-react";
 import { api } from "@/lib/api";
 import { canManage, useAuth } from "@/lib/auth";
 import { imageOr } from "@/lib/placeholder";
@@ -26,7 +26,7 @@ export default function MarketListingPage({ params }: { params: Promise<{ id: st
     <div className={pageCls}>
       <div className="flex items-center justify-between gap-3">
         <Link href="/marketplace" className={btnSecondary}>
-          <ArrowLeft size={14} />
+          <IconArrowLeft size={15} stroke={1.6} />
           Marketplace
         </Link>
         {item && canManage(user, item.created_by) && (
@@ -65,7 +65,7 @@ export default function MarketListingPage({ params }: { params: Promise<{ id: st
               </div>
               {item.location && (
                 <p className="text-xs text-zinc-600 flex items-center gap-1.5">
-                  <MapPin size={13} className="text-zinc-400" />
+                  <IconMapPin size={14} stroke={1.6} className="text-zinc-400" />
                   {item.location}
                 </p>
               )}
@@ -82,7 +82,7 @@ export default function MarketListingPage({ params }: { params: Promise<{ id: st
                 </div>
                 {item.contact_info && (
                   <p className="text-sm font-medium text-zinc-900 flex items-center gap-2">
-                    <Phone size={14} className="text-orange-600" />
+                    <IconPhone size={15} stroke={1.6} className="text-orange-600" />
                     {item.contact_info}
                   </p>
                 )}

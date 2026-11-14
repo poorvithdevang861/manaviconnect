@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { AlertTriangle, Award, CalendarCheck, Megaphone, Siren } from "lucide-react";
+import { IconAlertOctagon, IconAlertTriangle, IconAward, IconCalendarCheck, IconSpeakerphone } from "@tabler/icons-react";
 import { api, NEWS_CATEGORIES, type NewsArticle, type NewsCategory, type NewsSeverity } from "@/lib/api";
 import { editId, errorText } from "@/lib/useApi";
 import { useDraft } from "@/lib/useDraft";
@@ -32,7 +32,7 @@ const TEMPLATES: Template<NewsValues>[] = [
     id: "urgent",
     title: "Urgent notice",
     description: "Red banner on the home page",
-    icon: Siren,
+    icon: IconAlertOctagon,
     values: {
       title: "Action needed: ",
       category: "announcement",
@@ -45,7 +45,7 @@ const TEMPLATES: Template<NewsValues>[] = [
     id: "recap",
     title: "Event recap",
     description: "Highlights and thank-yous after an event",
-    icon: CalendarCheck,
+    icon: IconCalendarCheck,
     tone: "amber",
     values: {
       title: " recap: ",
@@ -58,7 +58,7 @@ const TEMPLATES: Template<NewsValues>[] = [
     id: "update",
     title: "Community update",
     description: "Admissions, scholarships, school news",
-    icon: Megaphone,
+    icon: IconSpeakerphone,
     tone: "peach",
     values: { title: "", category: "update", severity: "normal", content: "The update:\n\nWhy it matters:\n\nWhat happens next:" },
   },
@@ -66,7 +66,7 @@ const TEMPLATES: Template<NewsValues>[] = [
     id: "achievement",
     title: "Alumni achievement",
     description: "Celebrate someone from the community",
-    icon: Award,
+    icon: IconAward,
     tone: "sand",
     values: { title: "Congratulations to ", category: "general", severity: "normal", content: "Who and which batch:\n\nThe achievement:\n\nIn their words:" },
   },
@@ -169,7 +169,7 @@ function NewsForm({ initial }: { initial: NewsArticle | null }) {
               label="Severity"
               options={[
                 { id: "normal" as const, label: "Normal" },
-                { id: "critical" as const, label: "Critical", icon: AlertTriangle },
+                { id: "critical" as const, label: "Critical", icon: IconAlertTriangle },
               ]}
               value={form.severity}
               onChange={(severity) => setForm({ ...form, severity })}

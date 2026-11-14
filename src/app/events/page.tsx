@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { Plus } from "lucide-react";
+import { IconPlus } from "@tabler/icons-react";
 import { api } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
 import { useApi } from "@/lib/useApi";
@@ -37,7 +37,7 @@ export default function EventsPage() {
         description="Reunions, chapter meetups and campus days."
         action={
           <Link href="/events/new" className={btnPrimary}>
-            <Plus size={14} />
+            <IconPlus size={15} stroke={1.6} />
             Host an event
           </Link>
         }

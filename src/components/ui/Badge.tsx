@@ -1,5 +1,11 @@
 import React from "react";
-import { Briefcase, Clock, FileCheck, Laptop, Tag } from "lucide-react";
+import { 
+  IconBriefcase, 
+  IconClock, 
+  IconFileCheck, 
+  IconDeviceLaptop, 
+  IconTag 
+} from "@tabler/icons-react";
 import { splitTags, titleCase } from "@/lib/format";
 
 interface BadgeProps {
@@ -30,18 +36,18 @@ export function Badge({ children, variant = "neutral", size = "md", className = 
   );
 }
 
-const JOB_TYPE_ICONS: Record<string, React.ComponentType<{ size?: number; className?: string }>> = {
-  "full-time": Briefcase,
-  "part-time": Clock,
-  contract: FileCheck,
-  freelance: Laptop,
+const JOB_TYPE_ICONS: Record<string, React.ComponentType<{ size?: number | string; stroke?: number | string; className?: string }>> = {
+  "full-time": IconBriefcase,
+  "part-time": IconClock,
+  contract: IconFileCheck,
+  freelance: IconDeviceLaptop,
 };
 
 export function JobTypeBadge({ type, size = "sm" }: { type: string; size?: "sm" | "md" }) {
-  const Icon = JOB_TYPE_ICONS[type] ?? Briefcase;
+  const Icon = JOB_TYPE_ICONS[type] ?? IconBriefcase;
   return (
     <Badge variant={type === "full-time" ? "brand" : "neutral"} size={size}>
-      <Icon size={size === "sm" ? 11 : 13} className="shrink-0" />
+      <Icon size={size === "sm" ? 13 : 15} stroke={1.6} className="shrink-0" />
       {titleCase(type)}
     </Badge>
   );
@@ -54,7 +60,7 @@ export function Tags({ tags }: { tags: string | null | undefined }) {
     <div className="flex flex-wrap items-center gap-1">
       {list.map((t) => (
         <Badge key={t} size="sm">
-          <Tag size={10} className="shrink-0 text-zinc-400" />
+          <IconTag size={12} stroke={1.6} className="shrink-0 text-zinc-400" />
           {t}
         </Badge>
       ))}

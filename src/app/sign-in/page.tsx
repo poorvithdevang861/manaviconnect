@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ArrowRight } from "lucide-react";
+import { IconArrowRight } from "@tabler/icons-react";
 import { GoogleButton } from "@/components/auth/GoogleButton";
 import { AuthShell } from "@/components/layout/AuthShell";
 import { Avatar } from "@/components/ui/Avatar";
@@ -97,7 +97,7 @@ export default function SignInPage() {
         </div>
         <button type="submit" disabled={busy !== null} className={`${btnPrimary} w-full py-2.5`}>
           {busy === "form" ? "Signing in…" : "Sign in"}
-          {busy !== "form" && <ArrowRight size={13} />}
+          {busy !== "form" && <IconArrowRight size={15} stroke={1.6} />}
         </button>
       </form>
 
@@ -129,7 +129,7 @@ export default function SignInPage() {
                   <span className="block text-[11px] text-zinc-500 leading-snug mt-0.5">{account.detail}</span>
                 </span>
                 <span className="text-xs font-medium text-orange-600 shrink-0">
-                  {busy === account.email ? "…" : <ArrowRight size={14} />}
+                  {busy === account.email ? "…" : <IconArrowRight size={15} stroke={1.6} />}
                 </span>
               </button>
             ))}

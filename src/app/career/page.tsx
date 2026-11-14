@@ -4,58 +4,38 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
-  BookMarked,
-  BookOpen,
-  Briefcase,
-  CalendarClock,
-  ChevronRight,
-  ExternalLink,
-  GraduationCap,
-  Handshake,
-  Landmark,
-  Laptop,
-  Mail,
-  MapPin,
-  Search,
-  Wallet,
-  type LucideIcon,
-} from "lucide-react";
+  IconBookmark,
+  IconBook,
+  IconBriefcase,
+  IconBuildingBank,
+  IconCalendarTime,
+  IconChevronRight,
+  IconDeviceLaptop,
+  IconExternalLink,
+  IconHeartHandshake,
+  IconMail,
+  IconMapPin,
+  IconPlus,
+  IconSchool,
+  IconSearch,
+  IconWallet,
+} from "@tabler/icons-react";
 import { api, JOB_TYPES, type Job, type JobType } from "@/lib/api";
 import { canManage, useAuth } from "@/lib/auth";
 import { editId, useApi } from "@/lib/useApi";
 import { formatDate, isPast, splitTags, timeAgo, titleCase } from "@/lib/format";
-import { PageHeader } from "@/components/layout/PageHeader";
 import { Avatar } from "@/components/ui/Avatar";
 import { Badge, JobTypeBadge, Tags } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
-import { IconTile, type TileTone } from "@/components/ui/IconTile";
+import { IconTile, type IconComponent, type TileTone } from "@/components/ui/IconTile";
 import { OwnerActions } from "@/components/ui/OwnerActions";
 import { Pagination } from "@/components/ui/Pagination";
 import { Empty, ErrorBox, Loading } from "@/components/ui/States";
 import { Tabs } from "@/components/ui/Tabs";
 import { FilterChips, SearchInput } from "@/components/ui/Toolbar";
-import { ActionMenu, type ActionMenuItem } from "@/components/ui/ActionMenu";
 import { btnPrimary, btnSecondary, chipCls, listCls, pageCls } from "@/components/ui/styles";
 
 type CareerTab = "jobs" | "references";
-
-const SHARE_ITEMS: ActionMenuItem[] = [
-  {
-    label: "Post a job",
-    tag: "Job",
-    description: "An opening at your company, or one you know of",
-    href: "/career/new",
-    icon: Briefcase,
-  },
-  {
-    label: "Offer a referral",
-    tag: "Referral",
-    description: "Pass alumni CVs to your hiring team",
-    href: "/career/new?template=referral",
-    icon: Handshake,
-    tone: "amber",
-  },
-];
 
 const TYPE_OPTIONS = [{ id: "all", label: "All types" }, ...JOB_TYPES.map((t) => ({ id: t, label: titleCase(t) }))] as const;
 
@@ -73,32 +53,37 @@ export default function CareerPage() {
 
   return (
     <div className={pageCls}>
-      <PageHeader
-        align="center"
-        tag="Career"
-        title="Career"
-        description="Openings and referrals shared by alumni, plus references to help you plan what comes next."
-      />
-
-      <div className="flex flex-wrap items-center justify-center gap-2.5">
+      <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
         <Tabs
           idBase="career"
           label="Career sections"
           value={tab}
           onChange={(t) => router.replace(t === "jobs" ? "/career" : "/career?tab=references", { scroll: false })}
           tabs={[
-            { id: "jobs", label: "Jobs", icon: Briefcase, count: totals.data?.jobs },
-            { id: "references", label: "References", icon: BookMarked },
+            { id: "jobs", label: "Jobs", icon: IconBriefcase, count: totals.data?.jobs },
+            { id: "references", label: "References", icon: IconBookmark },
           ]}
         />
-        <div className="order-last sm:order-none w-full sm:w-56 lg:w-72 p-1 bg-white border border-zinc-200/70 rounded-2xl shadow-card">
-          <SearchInput className="w-full" value={search} onChange={onSearch} placeholder="Search jobs" />
+        <div className="flex items-center gap-2.5 ml-auto w-full sm:w-auto">
+          <div className="w-full sm:w-56 lg:w-72 p-1 bg-white border border-zinc-200/70 rounded-2xl shadow-card">
+            <SearchInput className="w-full" value={search} onChange={onSearch} placeholder="Search jobs" />
+          </div>
+          <Link
+            href={tab === "references" ? "/career/new?template=referral" : "/career/new"}
+            className={`${btnPrimary} shrink-0`}
+          >
+            <IconPlus size={15} stroke={1.6} />
+            Share an opportunity
+          </Link>
         </div>
-        <ActionMenu label="Share an opportunity" shortLabel="Share" items={SHARE_ITEMS} />
       </div>
 
       <div id="career-panel" role="tabpanel" aria-labelledby={`career-tab-${tab}`} className="space-y-6">
-        {tab === "jobs" ? <JobsPanel search={search} onSearch={setSearch} /> : <ReferencesPanel />}
+        {tab === "jobs" ? (
+          <JobsPanel search={search} onSearch={setSearch} />
+        ) : (
+          <ReferencesPanel />
+        )}
       </div>
     </div>
   );
@@ -147,7 +132,7 @@ function JobsPanel({ search, onSearch }: { search: string; onSearch: (v: string)
             aria-pressed={referralsOnly}
             className={chipCls(referralsOnly)}
           >
-            <Handshake size={13} />
+            <IconHeartHandshake size={14} stroke={1.6} />
             Referrals
           </button>
           <span className="shrink-0 w-px h-5 bg-zinc-200 mx-1" aria-hidden />
@@ -171,6 +156,7 @@ function JobsPanel({ search, onSearch }: { search: string; onSearch: (v: string)
                   </button>
                 ) : (
                   <Link href="/career/new" className={btnPrimary}>
+                    <IconPlus size={15} stroke={1.6} />
                     Post one
                   </Link>
                 )
@@ -209,7 +195,7 @@ function JobsPanel({ search, onSearch }: { search: string; onSearch: (v: string)
                         Shared by {job.poster.name}
                         {referral && (
                           <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-orange-100 text-orange-800 font-sans font-semibold">
-                            <Handshake size={11} />
+                            <IconHeartHandshake size={13} stroke={1.6} />
                             Can refer
                           </span>
                         )}
@@ -258,19 +244,19 @@ function JobDetail({ job, onDeleted }: { job: Job; onDeleted: () => void }) {
         <ul className="text-xs text-zinc-600 space-y-1.5 pt-1">
           {job.location && (
             <li className="flex items-center gap-2">
-              <MapPin size={13} className="text-zinc-400" />
+              <IconMapPin size={14} stroke={1.6} className="text-zinc-400" />
               {job.location}
             </li>
           )}
           {job.salary_range && (
             <li className="flex items-center gap-2">
-              <Wallet size={13} className="text-zinc-400" />
+              <IconWallet size={14} stroke={1.6} className="text-zinc-400" />
               {job.salary_range}
             </li>
           )}
           {job.deadline && (
             <li className="flex items-center gap-2">
-              <CalendarClock size={13} className="text-zinc-400" />
+              <IconCalendarTime size={14} stroke={1.6} className="text-zinc-400" />
               Apply by {formatDate(job.deadline)}
               {closed && <Badge variant="danger" size="sm">Closed</Badge>}
             </li>
@@ -280,7 +266,7 @@ function JobDetail({ job, onDeleted }: { job: Job; onDeleted: () => void }) {
 
       {referral && (
         <div className="flex items-start gap-3 p-3 rounded-xl bg-orange-50/70 border border-orange-200/60 text-xs text-orange-900">
-          <Handshake size={15} className="shrink-0 mt-px text-orange-600" />
+          <IconHeartHandshake size={16} stroke={1.6} className="shrink-0 mt-px text-orange-600" />
           <span>{job.poster.name.split(" ")[0]} can refer alumni for this role. Mention MANAVI and your batch when you write in.</span>
         </div>
       )}
@@ -313,7 +299,7 @@ function JobDetail({ job, onDeleted }: { job: Job; onDeleted: () => void }) {
             href={`mailto:${job.contact_email}?subject=${encodeURIComponent(`${referral ? "Referral request" : "Application"}: ${job.title}`)}`}
             className={btnPrimary}
           >
-            <Mail size={13} />
+            <IconMail size={14} stroke={1.6} />
             {referral ? "Ask for a referral" : "Apply by email"}
           </a>
         ) : (
@@ -338,7 +324,7 @@ interface Resource {
   title: string;
   description: string;
   url: string;
-  icon: LucideIcon;
+  icon: IconComponent;
   tone?: TileTone;
 }
 
@@ -346,26 +332,26 @@ const RESOURCES: { group: string; items: Resource[] }[] = [
   {
     group: "Find jobs and internships",
     items: [
-      { title: "National Career Service", description: "Government job portal with listings, counselling and job fairs", url: "https://www.ncs.gov.in", icon: Briefcase },
-      { title: "Internshala", description: "Internships and fresher jobs across India", url: "https://internshala.com", icon: Search, tone: "amber" },
-      { title: "LinkedIn Jobs", description: "Openings and alumni at the companies you follow", url: "https://www.linkedin.com/jobs", icon: Handshake, tone: "peach" },
+      { title: "National Career Service", description: "Government job portal with listings, counselling and job fairs", url: "https://www.ncs.gov.in", icon: IconBriefcase },
+      { title: "Internshala", description: "Internships and fresher jobs across India", url: "https://internshala.com", icon: IconSearch, tone: "amber" },
+      { title: "LinkedIn Jobs", description: "Openings and alumni at the companies you follow", url: "https://www.linkedin.com/jobs", icon: IconHeartHandshake, tone: "peach" },
     ],
   },
   {
     group: "Exams and scholarships",
     items: [
-      { title: "National Scholarship Portal", description: "Central and state scholarships in one application", url: "https://scholarships.gov.in", icon: GraduationCap },
-      { title: "National Testing Agency", description: "JEE Main, NEET, CUET and UGC-NET", url: "https://nta.ac.in", icon: BookOpen, tone: "amber" },
-      { title: "UPSC", description: "Civil services and other central recruitment exams", url: "https://upsc.gov.in", icon: Landmark, tone: "peach" },
-      { title: "Staff Selection Commission", description: "CGL, CHSL and other central government posts", url: "https://ssc.gov.in", icon: Landmark, tone: "sand" },
+      { title: "National Scholarship Portal", description: "Central and state scholarships in one application", url: "https://scholarships.gov.in", icon: IconSchool },
+      { title: "National Testing Agency", description: "JEE Main, NEET, CUET and UGC-NET", url: "https://nta.ac.in", icon: IconBook, tone: "amber" },
+      { title: "UPSC", description: "Civil services and other central recruitment exams", url: "https://upsc.gov.in", icon: IconBuildingBank, tone: "peach" },
+      { title: "Staff Selection Commission", description: "CGL, CHSL and other central government posts", url: "https://ssc.gov.in", icon: IconBuildingBank, tone: "sand" },
     ],
   },
   {
     group: "Learn new skills",
     items: [
-      { title: "SWAYAM", description: "Free courses from Indian universities, with certificates", url: "https://swayam.gov.in", icon: Laptop },
-      { title: "NPTEL", description: "Engineering and science courses from the IITs and IISc", url: "https://nptel.ac.in", icon: BookMarked, tone: "amber" },
-      { title: "Skill India Digital", description: "Vocational and industry skill programmes", url: "https://www.skillindiadigital.gov.in", icon: GraduationCap, tone: "peach" },
+      { title: "SWAYAM", description: "Free courses from Indian universities, with certificates", url: "https://swayam.gov.in", icon: IconDeviceLaptop },
+      { title: "NPTEL", description: "Engineering and science courses from the IITs and IISc", url: "https://nptel.ac.in", icon: IconBookmark, tone: "amber" },
+      { title: "Skill India Digital", description: "Vocational and industry skill programmes", url: "https://www.skillindiadigital.gov.in", icon: IconSchool, tone: "peach" },
     ],
   },
 ];
@@ -387,7 +373,7 @@ function ReferencesPanel() {
             subtitle="Roles where the person who posted can pass your CV to their hiring team."
             action={
               <Link href="/career/new?template=referral" className={btnSecondary}>
-                <Handshake size={13} />
+                <IconHeartHandshake size={14} stroke={1.6} />
                 Offer a referral
               </Link>
             }
@@ -405,7 +391,7 @@ function ReferencesPanel() {
               {referrals.data!.listings.map((job) => (
                 <li key={job.id}>
                   <Link href={`/career?id=${job.id}`} className="group flex items-center gap-3 px-4 py-3 hover:bg-zinc-50 transition-colors">
-                    <IconTile icon={Handshake} />
+                    <IconTile icon={IconHeartHandshake} />
                     <span className="flex-1 min-w-0">
                       <span className="block text-sm font-medium text-zinc-900 truncate group-hover:text-orange-600">{job.title}</span>
                       <span className="block text-xs text-zinc-500 truncate">
@@ -417,7 +403,7 @@ function ReferencesPanel() {
                       <Avatar name={job.poster.name} src={job.poster.avatar_url} size="xs" />
                       <span className="truncate">{job.poster.name.split(" ")[0]}</span>
                     </span>
-                    <ChevronRight size={16} className="text-zinc-300 group-hover:text-zinc-500 group-hover:translate-x-0.5 transition-transform shrink-0" />
+                    <IconChevronRight size={16} stroke={1.6} className="text-zinc-300 group-hover:text-zinc-500 group-hover:translate-x-0.5 transition-transform shrink-0" />
                   </Link>
                 </li>
               ))}
@@ -433,7 +419,7 @@ function ReferencesPanel() {
             action={
               <Link href="/updates?tag=career" className="text-xs font-medium text-orange-600 hover:text-orange-700 inline-flex items-center gap-1">
                 See all
-                <ChevronRight size={13} />
+                <IconChevronRight size={14} stroke={1.6} />
               </Link>
             }
           />
@@ -450,7 +436,7 @@ function ReferencesPanel() {
               {careerStories.map((s) => (
                 <li key={s.id}>
                   <Link href={`/stories/${s.id}`} className="group flex items-center gap-3 px-4 py-3 hover:bg-zinc-50 transition-colors">
-                    <IconTile icon={BookOpen} tone="amber" />
+                    <IconTile icon={IconBook} tone="amber" />
                     <span className="flex-1 min-w-0">
                       <span className="block text-sm font-medium text-zinc-900 line-clamp-2 sm:truncate group-hover:text-orange-600">{s.title}</span>
                       <span className="block text-xs text-zinc-500 truncate">
@@ -458,7 +444,7 @@ function ReferencesPanel() {
                         {s.author.batch && ` · Batch of ${s.author.batch}`}
                       </span>
                     </span>
-                    <ChevronRight size={16} className="text-zinc-300 group-hover:text-zinc-500 group-hover:translate-x-0.5 transition-transform shrink-0" />
+                    <IconChevronRight size={16} stroke={1.6} className="text-zinc-300 group-hover:text-zinc-500 group-hover:translate-x-0.5 transition-transform shrink-0" />
                   </Link>
                 </li>
               ))}
@@ -488,7 +474,7 @@ function ReferencesPanel() {
                       <span className="block text-xs text-zinc-500 line-clamp-2">{r.description}</span>
                       <span className="block text-[11px] font-mono text-zinc-400 truncate mt-0.5">{host(r.url)}</span>
                     </span>
-                    <ExternalLink size={14} className="text-zinc-300 group-hover:text-zinc-500 shrink-0" />
+                    <IconExternalLink size={15} stroke={1.6} className="text-zinc-300 group-hover:text-zinc-500 shrink-0" />
                   </a>
                 </li>
               ))}

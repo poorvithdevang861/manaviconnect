@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { use } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
+import { IconArrowLeft } from "@tabler/icons-react";
 import { api } from "@/lib/api";
 import { canManage, useAuth } from "@/lib/auth";
 import { imageOr } from "@/lib/placeholder";
@@ -27,7 +27,7 @@ export default function StoryPage({ params }: { params: Promise<{ id: string }> 
     <div className={pageNarrowCls}>
       <div className="flex items-center justify-between gap-3">
         <Link href="/updates?type=stories" className={btnSecondary}>
-          <ArrowLeft size={14} />
+          <IconArrowLeft size={15} stroke={1.6} />
           All stories
         </Link>
         {story && canManage(user, story.created_by) && (

@@ -2,7 +2,15 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { ArrowDown, ArrowUp, Download, FileSpreadsheet, ImagePlus, Plus, Trash2 } from "lucide-react";
+import {
+  IconArrowDown,
+  IconArrowUp,
+  IconDownload,
+  IconFileSpreadsheet,
+  IconPhotoPlus,
+  IconPlus,
+  IconTrash,
+} from "@tabler/icons-react";
 import { api, mediaUrl, type BulkUploadResult, type SpotlightSlide } from "@/lib/api";
 import { errorText, useApi } from "@/lib/useApi";
 import { formatDate } from "@/lib/format";
@@ -76,7 +84,7 @@ function SpotlightEditor() {
         </div>
         <div className="flex flex-wrap gap-2">
           <button type="button" className={btnSecondary} onClick={() => setSlides((s) => [...s, blankSlide(Math.max(0, ...s.map((x) => x.id)) + 1)])}>
-            <Plus size={13} />
+            <IconPlus size={14} stroke={1.6} />
             Add slide
           </button>
           <button type="button" className={btnPrimary} onClick={save} disabled={busy || loading}>
@@ -100,13 +108,13 @@ function SpotlightEditor() {
                 <span className="text-xs font-mono text-zinc-500">Slide {i + 1}</span>
                 <div className="flex gap-1.5">
                   <button type="button" className={btnSecondary} disabled={i === 0} onClick={() => move(i, -1)} aria-label="Move up">
-                    <ArrowUp size={12} />
+                    <IconArrowUp size={13} stroke={1.6} />
                   </button>
                   <button type="button" className={btnSecondary} disabled={i === slides.length - 1} onClick={() => move(i, 1)} aria-label="Move down">
-                    <ArrowDown size={12} />
+                    <IconArrowDown size={13} stroke={1.6} />
                   </button>
                   <button type="button" className={btnDanger} onClick={() => setSlides((s) => s.filter((_, j) => j !== i))} aria-label="Remove slide">
-                    <Trash2 size={12} />
+                    <IconTrash size={13} stroke={1.6} />
                   </button>
                 </div>
               </div>
@@ -173,7 +181,7 @@ function SlideImage({ slide, onUploaded, onClear }: { slide: SpotlightSlide; onU
         <img src={mediaUrl(slide.image)!} alt="" className="w-20 h-12 rounded-md object-cover border border-zinc-200" />
       )}
       <button type="button" className={btnSecondary} disabled={busy} onClick={() => ref.current?.click()}>
-        <ImagePlus size={13} />
+        <IconPhotoPlus size={14} stroke={1.6} />
         {busy ? "Uploading…" : slide.image ? "Replace background image" : "Add background image"}
       </button>
       {slide.image && (
@@ -248,11 +256,11 @@ function BulkImport() {
       <Card className="p-5 space-y-4">
         <div className="flex flex-wrap gap-2">
           <button type="button" className={btnSecondary} onClick={download} disabled={busy !== null}>
-            <Download size={13} />
+            <IconDownload size={14} stroke={1.6} />
             {busy === "template" ? "Downloading…" : "Download template"}
           </button>
           <button type="button" className={btnPrimary} onClick={() => ref.current?.click()} disabled={busy !== null}>
-            <FileSpreadsheet size={13} />
+            <IconFileSpreadsheet size={14} stroke={1.6} />
             {busy === "upload" ? "Importing…" : "Upload filled template"}
           </button>
           <input
@@ -322,7 +330,7 @@ function Drafts() {
           <p className="text-xs text-zinc-500">Unpublished articles. Only admins can see these.</p>
         </div>
         <Link href="/news/new" className={btnSecondary}>
-          <Plus size={13} />
+          <IconPlus size={14} stroke={1.6} />
           New article
         </Link>
       </div>

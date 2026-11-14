@@ -2,7 +2,7 @@
 
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
-import { AlertCircle, CheckCircle2, Info, X } from "lucide-react";
+import { IconAlertCircle, IconCircleCheck, IconInfoCircle, IconX } from "@tabler/icons-react";
 
 type Tone = "success" | "error" | "info";
 
@@ -71,14 +71,14 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
         className="fixed z-[70] inset-x-0 bottom-[calc(4.75rem+env(safe-area-inset-bottom))] md:bottom-6 flex flex-col items-center gap-2 px-4 pointer-events-none"
       >
         {items.map((t) => {
-          const Icon = t.tone === "error" ? AlertCircle : t.tone === "info" ? Info : CheckCircle2;
+          const Icon = t.tone === "error" ? IconAlertCircle : t.tone === "info" ? IconInfoCircle : IconCircleCheck;
           return (
             <div
               key={t.id}
               role={t.tone === "error" ? "alert" : "status"}
               className="pointer-events-auto animate-toast-in flex items-center gap-2.5 max-w-[calc(100vw-2rem)] sm:max-w-md pl-3 pr-1.5 py-1.5 rounded-full bg-zinc-900 text-white text-xs shadow-dropdown"
             >
-              <Icon size={15} className={`shrink-0 ${t.tone === "error" ? "text-red-400" : t.tone === "info" ? "text-zinc-300" : "text-emerald-400"}`} />
+              <Icon size={16} stroke={1.6} className={`shrink-0 ${t.tone === "error" ? "text-red-400" : t.tone === "info" ? "text-zinc-300" : "text-emerald-400"}`} />
               <span className="min-w-0 truncate font-medium">{t.message}</span>
               {t.action && (
                 <button
@@ -93,7 +93,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
                 </button>
               )}
               <button type="button" onClick={() => dismiss(t.id)} aria-label="Dismiss" className="shrink-0 p-1.5 rounded-full text-zinc-400 hover:text-white hover:bg-white/10">
-                <X size={13} />
+                <IconX size={14} stroke={1.6} />
               </button>
             </div>
           );

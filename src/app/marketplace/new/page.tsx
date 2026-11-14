@@ -2,7 +2,17 @@
 
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Briefcase, CookingPot, GraduationCap, Package, Sprout, Tag, Wheat, Wrench, type LucideIcon } from "lucide-react";
+import {
+  IconBriefcase,
+  IconGrain,
+  IconPackage,
+  IconPlant,
+  IconSchool,
+  IconTag,
+  IconTool,
+  IconToolsKitchen2,
+} from "@tabler/icons-react";
+import type { IconComponent } from "@/components/ui/IconTile";
 import { api, MARKET_CATEGORIES, type MarketCategory, type MarketListing } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
 import { editId, errorText } from "@/lib/useApi";
@@ -37,13 +47,13 @@ type MarketValues = {
   tags: string;
 };
 
-const CATEGORY_ICONS: Record<MarketCategory, LucideIcon> = {
-  crops: Wheat,
-  produce: Sprout,
-  business: Briefcase,
-  services: Wrench,
-  goods: Package,
-  other: Tag,
+const CATEGORY_ICONS: Record<MarketCategory, IconComponent> = {
+  crops: IconGrain,
+  produce: IconPlant,
+  business: IconBriefcase,
+  services: IconTool,
+  goods: IconPackage,
+  other: IconTag,
 };
 
 const TEMPLATES: Template<MarketValues>[] = [
@@ -51,7 +61,7 @@ const TEMPLATES: Template<MarketValues>[] = [
     id: "produce",
     title: "Farm produce",
     description: "Fresh from your fields, by the kilo",
-    icon: Sprout,
+    icon: IconPlant,
     values: {
       title: "Organic , 10 kg",
       category: "produce",
@@ -63,7 +73,7 @@ const TEMPLATES: Template<MarketValues>[] = [
     id: "homemade",
     title: "Home-made food",
     description: "Pickles, sweets, spice mixes",
-    icon: CookingPot,
+    icon: IconToolsKitchen2,
     tone: "amber",
     values: {
       title: "Home-made ",
@@ -76,7 +86,7 @@ const TEMPLATES: Template<MarketValues>[] = [
     id: "tutoring",
     title: "Tutoring or coaching",
     description: "Offer lessons to students",
-    icon: GraduationCap,
+    icon: IconSchool,
     tone: "peach",
     values: {
       title: " tuition for Class 10–12",
@@ -89,7 +99,7 @@ const TEMPLATES: Template<MarketValues>[] = [
     id: "preowned",
     title: "Pre-owned item",
     description: "Books, electronics, furniture",
-    icon: Package,
+    icon: IconPackage,
     tone: "sand",
     values: {
       title: "",

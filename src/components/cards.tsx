@@ -1,5 +1,13 @@
 import Link from "next/link";
-import { AlertTriangle, ArrowRight, BookOpen, Calendar, MapPin, Newspaper, Users } from "lucide-react";
+import { 
+  IconAlertTriangle, 
+  IconArrowRight, 
+  IconBook, 
+  IconCalendar, 
+  IconMapPin, 
+  IconNews, 
+  IconUsers 
+} from "@tabler/icons-react";
 import { api, type EventItem, type NewsArticle, type Story } from "@/lib/api";
 import { formatDate, formatDateTime, isPast, splitTags, titleCase } from "@/lib/format";
 import { imageOr } from "@/lib/placeholder";
@@ -22,7 +30,7 @@ export function NewsCard({ article }: { article: NewsArticle }) {
           <div className="flex flex-wrap items-center gap-2 text-xs">
             {article.severity === "critical" && (
               <Badge variant="danger" size="sm">
-                <AlertTriangle size={11} />
+                <IconAlertTriangle size={13} stroke={1.6} />
                 Important
               </Badge>
             )}
@@ -89,26 +97,28 @@ export function FeedCard({ entry, showKind = true }: { entry: FeedEntry; showKin
                   isNews ? "bg-orange-100 text-orange-800" : "bg-amber-50 text-amber-800 ring-1 ring-inset ring-amber-200/70"
                 }`}
               >
-                {isNews ? <Newspaper size={11} /> : <BookOpen size={11} />}
+                {isNews ? <IconNews size={13} stroke={1.6} /> : <IconBook size={13} stroke={1.6} />}
                 {isNews ? "News" : "Story"}
               </span>
             )}
             {isNews && entry.item.severity === "critical" && (
               <Badge variant="danger" size="sm">
-                <AlertTriangle size={11} />
+                <IconAlertTriangle size={13} stroke={1.6} />
                 Important
               </Badge>
             )}
+            <span className="font-mono text-zinc-400 text-[11px]">{formatDate(item.created_at)}</span>
             {tags.map((t) => (
-              <span key={t} className="px-2 py-0.5 rounded-full bg-zinc-100 text-zinc-600 text-[11px]">
-                {isNews ? t : `#${t}`}
+              <span key={t} className="text-zinc-500 font-mono text-[11px] bg-zinc-100 px-1.5 py-0.5 rounded">
+                #{t}
               </span>
             ))}
-            <span className="text-zinc-400 font-mono text-[11px] ml-auto">{formatDate(item.created_at)}</span>
           </div>
+
           <h3 className="text-base font-semibold text-zinc-900 group-hover:text-orange-600 transition-colors leading-snug">{item.title}</h3>
-          {excerpt && <p className="text-sm text-zinc-600 line-clamp-2 leading-relaxed whitespace-pre-line">{excerpt}</p>}
-          <div className="mt-auto pt-3 border-t border-zinc-100 flex items-center justify-between gap-3 text-xs text-zinc-500">
+          {excerpt && <p className="text-xs sm:text-sm text-zinc-600 line-clamp-2 leading-relaxed">{excerpt}</p>}
+
+          <div className="mt-auto pt-2 flex items-center justify-between gap-3 text-xs text-zinc-500">
             <span className="flex items-center gap-2 min-w-0">
               <Avatar name={item.author.name} src={item.author.avatar_url} size="xs" />
               <span className="truncate">
@@ -121,7 +131,7 @@ export function FeedCard({ entry, showKind = true }: { entry: FeedEntry; showKin
             ) : (
               <span className="inline-flex items-center gap-1 font-medium text-orange-600 shrink-0">
                 Read
-                <ArrowRight size={13} className="transition-transform group-hover:translate-x-0.5" />
+                <IconArrowRight size={13} stroke={1.6} className="transition-transform group-hover:translate-x-0.5" />
               </span>
             )}
           </div>
@@ -140,7 +150,7 @@ export function EventCard({ event }: { event: EventItem }) {
         <div className="p-5 space-y-2 flex-1 min-w-0">
           <div className="flex flex-wrap items-center gap-2 text-xs">
             <span className="font-mono font-medium text-orange-700 bg-orange-50 px-2.5 py-0.5 rounded-md border border-orange-200/60 inline-flex items-center gap-1">
-              <Calendar size={11} />
+              <IconCalendar size={13} stroke={1.6} />
               {formatDateTime(event.datetime)}
             </span>
             {past && <Badge size="sm">Past</Badge>}
@@ -148,12 +158,12 @@ export function EventCard({ event }: { event: EventItem }) {
           <h3 className="text-lg font-semibold text-zinc-900 group-hover:text-orange-600 transition-colors leading-snug">{event.title}</h3>
           <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-zinc-500">
             <span className="inline-flex items-center gap-1">
-              <MapPin size={13} className="text-zinc-400" />
+              <IconMapPin size={14} stroke={1.6} className="text-zinc-400" />
               {event.location}
             </span>
             {event.max_participants && (
               <span className="inline-flex items-center gap-1">
-                <Users size={13} className="text-zinc-400" />
+                <IconUsers size={14} stroke={1.6} className="text-zinc-400" />
                 Up to {event.max_participants}
               </span>
             )}
@@ -173,12 +183,12 @@ export function EventCard({ event }: { event: EventItem }) {
 
 export function SectionHeading({ title, href, linkLabel }: { title: string; href?: string; linkLabel?: string }) {
   return (
-    <div className="flex items-center justify-between">
+    <div className="flex items-center justify-between gap-3">
       <h2 className="text-base font-semibold text-zinc-900">{title}</h2>
       {href && (
         <Link href={href} className="text-xs font-medium text-orange-600 hover:text-orange-700 inline-flex items-center gap-1 group">
-          {linkLabel ?? "See all"}
-          <ArrowRight size={13} className="transition-transform group-hover:translate-x-0.5" />
+          {linkLabel ?? "View all"}
+          <IconArrowRight size={13} stroke={1.6} className="transition-transform group-hover:translate-x-0.5" />
         </Link>
       )}
     </div>

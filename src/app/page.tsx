@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useMemo } from "react";
-import { AlertTriangle, ArrowRight, ChevronRight, Handshake, Plus } from "lucide-react";
+import { IconAlertTriangle, IconArrowRight, IconChevronRight, IconHeartHandshake, IconPlus } from "@tabler/icons-react";
 import { api } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
 import { useApi } from "@/lib/useApi";
@@ -44,7 +44,7 @@ export default function HomePage() {
         description="What's new across the community this week."
         action={
           <Link href="/stories/new" className={btnPrimary}>
-            <Plus size={14} />
+            <IconPlus size={15} stroke={1.6} />
             Share a story
           </Link>
         }
@@ -55,12 +55,12 @@ export default function HomePage() {
           href={`/news/${pinned.id}`}
           className="flex items-center gap-3 px-4 py-3 bg-red-50/70 border border-red-200 rounded-xl text-sm text-red-900 hover:bg-red-50 transition-colors group animate-fade-in"
         >
-          <AlertTriangle size={16} className="shrink-0 text-red-600" />
+          <IconAlertTriangle size={17} stroke={1.6} className="shrink-0 text-red-600" />
           <span className="min-w-0 flex-1 truncate">
             <strong className="font-semibold">{pinned.title}</strong>
             {pinned.summary && <span className="hidden sm:inline text-red-800/80"> · {pinned.summary}</span>}
           </span>
-          <ArrowRight size={14} className="shrink-0 text-red-600 transition-transform group-hover:translate-x-0.5" />
+          <IconArrowRight size={15} stroke={1.6} className="shrink-0 text-red-600 transition-transform group-hover:translate-x-0.5" />
         </Link>
       )}
 
@@ -98,7 +98,7 @@ export default function HomePage() {
                           {formatTime(ev.datetime)} · {ev.location}
                         </span>
                       </span>
-                      <ChevronRight size={15} className="shrink-0 text-zinc-300 transition-transform group-hover:translate-x-0.5 group-hover:text-orange-500" />
+                      <IconChevronRight size={16} stroke={1.6} className="shrink-0 text-zinc-300 transition-transform group-hover:translate-x-0.5 group-hover:text-orange-500" />
                     </Link>
                   </li>
                 );
@@ -162,7 +162,7 @@ export default function HomePage() {
                         </span>
                         {referral && (
                           <span className="shrink-0 inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-orange-100 text-orange-800 text-[11px] font-semibold">
-                            <Handshake size={11} />
+                            <IconHeartHandshake size={13} stroke={1.6} />
                             Can refer
                           </span>
                         )}
