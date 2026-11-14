@@ -17,9 +17,18 @@ export function AuthShell({
   return (
     <div className="min-h-screen flex flex-col justify-center items-center px-4 py-12 bg-[#f4f4f5] animate-fade-in">
       <div className="text-center mb-8">
-        <Link href="/" className="inline-block" aria-label="MANAVI home">
+        <Link href="/" className="inline-flex flex-col items-center group" aria-label="MANAVI home">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/brand/manavi-wordmark.png" alt="MANAVI" width={787} height={180} className="h-10 sm:h-12 w-auto" />
+          <img
+            src="/brand/manavi-wordmark.png"
+            alt="MANAVI"
+            width={856}
+            height={223}
+            className="h-8 sm:h-9 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
+          />
+          <span className="font-['Caveat',cursive] text-base sm:text-lg text-zinc-500 group-hover:text-orange-600 transition-colors select-none leading-none -mt-0.5 font-semibold tracking-wide">
+            our tribe
+          </span>
         </Link>
         <p className="text-xs text-zinc-500 mt-2 font-mono">Navodaya Alumni Community</p>
       </div>

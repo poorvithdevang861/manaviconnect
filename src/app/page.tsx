@@ -40,12 +40,12 @@ export default function HomePage() {
   return (
     <div className={pageCls}>
       <PageHeader
-        title={user ? `Welcome back, ${user.name.split(" ")[0]}` : "MANAVI Alumni Community"}
-        description="What's new across the community this week."
+        title={user ? "Community feed" : "MANAVI alumni community"}
+        description="Stories, campus news, and community milestones"
         action={
-          <Link href="/stories/new" className={btnPrimary}>
+          <Link href="/updates/new" className={btnPrimary}>
             <IconPlus size={15} stroke={1.6} />
-            Share a story
+            Share an update
           </Link>
         }
       />
@@ -117,8 +117,8 @@ export default function HomePage() {
             <Empty
               title="Nothing posted yet"
               action={
-                <Link href="/stories/new" className={btnPrimary}>
-                  Write the first story
+                <Link href="/updates/new" className={btnPrimary}>
+                  Share the first update
                 </Link>
               }
             />

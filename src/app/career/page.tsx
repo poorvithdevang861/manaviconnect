@@ -65,9 +65,7 @@ export default function CareerPage() {
           ]}
         />
         <div className="flex items-center gap-2.5 ml-auto w-full sm:w-auto">
-          <div className="w-full sm:w-56 lg:w-72 p-1 bg-white border border-zinc-200/70 rounded-2xl shadow-card">
-            <SearchInput className="w-full" value={search} onChange={onSearch} placeholder="Search jobs" />
-          </div>
+          <SearchInput className="w-full sm:w-56 lg:w-64" value={search} onChange={onSearch} placeholder="Search jobs" />
           <Link
             href={tab === "references" ? "/career/new?template=referral" : "/career/new"}
             className={`${btnPrimary} shrink-0`}

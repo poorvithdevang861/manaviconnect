@@ -32,7 +32,7 @@ export function SearchInput({
   value,
   onChange,
   placeholder,
-  className = "w-full sm:w-72",
+  className = "w-full sm:w-60",
 }: {
   value: string;
   onChange: (value: string) => void;
@@ -120,7 +120,7 @@ export function SearchInput({
 
   return (
     <div className={`relative min-w-0 shrink-0 ${className}`}>
-      <IconSearch size={16} stroke={1.6} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400 pointer-events-none" />
+      <IconSearch size={15} stroke={1.6} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-zinc-400 pointer-events-none" />
       <input
         ref={inputRef}
         data-search
@@ -146,7 +146,7 @@ export function SearchInput({
           setCursor(-1);
         }}
         onKeyDown={onKeyDown}
-        className="w-full pl-10 pr-11 py-2.5 text-base sm:text-sm bg-zinc-100/80 hover:bg-zinc-100 focus:bg-white border border-transparent focus:border-orange-300 focus:shadow-focus rounded-xl outline-none transition-[background-color,border-color,box-shadow] duration-150 placeholder:text-zinc-400 [&::-webkit-search-cancel-button]:appearance-none"
+        className="w-full h-[34px] pl-8 pr-8 py-1.5 text-xs bg-zinc-50 hover:bg-zinc-100/70 focus:bg-white border border-zinc-200 focus:border-orange-400 focus:shadow-focus rounded-lg outline-none transition-[background-color,border-color,box-shadow] duration-150 placeholder:text-zinc-400 [&::-webkit-search-cancel-button]:appearance-none"
       />
       <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center">
         {text && (
@@ -156,9 +156,9 @@ export function SearchInput({
             onClick={clear}
             data-tip="Clear"
             aria-label="Clear search"
-            className="animate-pop-in w-6 h-6 inline-flex items-center justify-center rounded-full bg-zinc-300/80 hover:bg-zinc-400/80 text-white transition-colors"
+            className="animate-pop-in w-4.5 h-4.5 inline-flex items-center justify-center rounded-full bg-zinc-300 hover:bg-zinc-400 text-white transition-colors"
           >
-            <IconX size={14} stroke={2} />
+            <IconX size={11} stroke={2} />
           </button>
         )}
       </div>
@@ -166,7 +166,7 @@ export function SearchInput({
       {showRecent && (
         <div
           onMouseDown={(e) => e.preventDefault()}
-          className="absolute z-30 left-0 right-0 mt-2 origin-top bg-white border border-zinc-200/70 rounded-2xl shadow-dropdown p-2 animate-pop-in"
+          className="absolute z-30 left-0 right-0 mt-1.5 origin-top bg-white border border-zinc-200/70 rounded-xl shadow-dropdown p-2 animate-pop-in"
         >
           <div className="flex items-center justify-between px-2 pt-1 pb-2">
             <span className="text-xs font-semibold text-zinc-900">Recent</span>

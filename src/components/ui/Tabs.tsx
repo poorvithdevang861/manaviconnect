@@ -57,7 +57,7 @@ export function Tabs<T extends string>({
               onKeyDown={(e) => onKeyDown(e, i)}
               className={`chip-press inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-medium whitespace-nowrap transition-colors ${
                 active
-                  ? "bg-gradient-to-r from-orange-100 to-amber-50 text-orange-800 font-semibold border border-orange-200/70 shadow-xs"
+                  ? "bg-orange-50 text-orange-800 font-semibold border border-orange-200/80 shadow-xs"
                   : "text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100/70"
               }`}
             >

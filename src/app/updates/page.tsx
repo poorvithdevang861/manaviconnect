@@ -187,9 +187,16 @@ export default function UpdatesPage() {
           ]}
         />
         <div className="flex items-center gap-2.5 ml-auto w-full sm:w-auto">
-          <div className="w-full sm:w-56 lg:w-72 p-1 bg-white border border-zinc-200/70 rounded-2xl shadow-card">
-            <SearchInput key={section} className="w-full" value={search} onChange={(v) => { setSearch(v); setCount(STEP); }} placeholder={copy.search} />
-          </div>
+          <SearchInput
+            key={section}
+            className="w-full sm:w-56 lg:w-64"
+            value={search}
+            onChange={(v) => {
+              setSearch(v);
+              setCount(STEP);
+            }}
+            placeholder={copy.search}
+          />
           <Link
             href={section === "news" ? "/updates/new?type=news" : "/updates/new"}
             className={`${btnPrimary} shrink-0`}

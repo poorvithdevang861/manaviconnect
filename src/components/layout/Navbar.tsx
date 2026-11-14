@@ -20,9 +20,9 @@ import { IconTile } from "@/components/ui/IconTile";
 import { AUTH_ROUTES, MORE_NAV, PRIMARY_NAV, isActive } from "./nav";
 
 const linkCls = (active: boolean) =>
-  `inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium transition-all duration-500 ease-out active:scale-95 ${
+  `inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium transition-colors duration-200 active:scale-95 ${
     active
-      ? "text-orange-800 bg-gradient-to-r from-orange-100 to-amber-50 font-semibold border border-orange-200/70 shadow-xs"
+      ? "text-orange-800 bg-orange-50 font-semibold border border-orange-200/80 shadow-xs"
       : "text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100 border border-transparent"
   }`;
 
@@ -84,9 +84,18 @@ export function Navbar() {
             </button>
           </div>
 
-          <Link href="/" className="block" aria-label="MANAVI home">
+          <Link href="/" className="flex flex-col items-center justify-center group py-0.5" aria-label="MANAVI home">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/brand/manavi-wordmark.png" alt="MANAVI" width={787} height={180} className="h-6 sm:h-8 lg:h-10 w-auto" />
+            <img
+              src="/brand/manavi-wordmark.png"
+              alt="MANAVI"
+              width={856}
+              height={223}
+              className="h-5 sm:h-6 lg:h-7 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
+            />
+            <span className="font-['Caveat',cursive] text-sm sm:text-base text-zinc-500 group-hover:text-orange-600 transition-colors select-none leading-none -mt-1 font-semibold tracking-wide">
+              our tribe
+            </span>
           </Link>
 
           <div className="flex items-center justify-end gap-2 min-w-0">
