@@ -11,7 +11,7 @@ import { EventCard } from "@/components/cards";
 import { Pagination } from "@/components/ui/Pagination";
 import { Empty, ErrorBox, Loading } from "@/components/ui/States";
 import { FilterChips, SearchInput, Toolbar } from "@/components/ui/Toolbar";
-import { btnPrimary, pageCls } from "@/components/ui/styles";
+import { btnPrimary, pageMediumCls } from "@/components/ui/styles";
 
 const WHEN = [
   { id: "upcoming", label: "Upcoming" },
@@ -30,7 +30,7 @@ export default function EventsPage() {
   );
 
   return (
-    <div className={pageCls}>
+    <div className={pageMediumCls}>
       <PageHeader
         tag="Events"
         title="Events"
@@ -48,7 +48,7 @@ export default function EventsPage() {
         <SearchInput value={search} onChange={(v) => { setSearch(v); setPage(1); }} placeholder="Search events by title" />
       </Toolbar>
 
-      <div className="max-w-4xl space-y-3.5 stagger">
+      <div className="space-y-3.5 stagger">
         {loading ? (
           <Loading />
         ) : error ? (

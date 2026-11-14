@@ -61,7 +61,7 @@ export function Tabs<T extends string>({
                   : "text-zinc-500 hover:text-zinc-900 hover:bg-zinc-50"
               }`}
             >
-              {Icon && <Icon size={15} className={active ? "text-orange-600" : "text-zinc-400"} />}
+              {Icon && <Icon size={15} className={`hidden sm:block ${active ? "text-orange-600" : "text-zinc-400"}`} />}
               {t.label}
               {t.count !== undefined && (
                 <span

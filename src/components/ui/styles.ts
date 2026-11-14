@@ -1,4 +1,8 @@
-export const pageCls = "max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6 animate-fade-in";
+const pageBase = "mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6 animate-fade-in";
+export const pageCls = `max-w-[1440px] ${pageBase}`;
+/** Single-column pages (lists, articles): header and content share one centred column. */
+export const pageMediumCls = `max-w-5xl ${pageBase}`;
+export const pageNarrowCls = `max-w-[52rem] ${pageBase}`;
 
 export const inputCls =
   "w-full min-w-0 px-3.5 py-2.5 text-base sm:text-sm bg-white border border-zinc-200 rounded-lg text-zinc-900 placeholder:text-zinc-400 shadow-xs transition-[border-color,box-shadow] duration-150 hover:border-zinc-300 focus:outline-none focus:border-orange-400 focus:shadow-focus disabled:bg-zinc-50 disabled:text-zinc-500";

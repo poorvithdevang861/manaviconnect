@@ -11,7 +11,7 @@ import { PageHeader } from "@/components/layout/PageHeader";
 import { Card } from "@/components/ui/Card";
 import { Pagination } from "@/components/ui/Pagination";
 import { Empty, ErrorBox, Loading, Notice } from "@/components/ui/States";
-import { btnPrimary, btnSecondary, pageCls } from "@/components/ui/styles";
+import { btnPrimary, btnSecondary, pageNarrowCls } from "@/components/ui/styles";
 
 const ICONS: Record<string, typeof Bell> = { event: Calendar, story: BookOpen, news: Newspaper, job: Briefcase, marketplace: Store };
 
@@ -20,10 +20,10 @@ export default function NotificationsPage() {
   const { data, error, loading, reload } = useApi(() => api.notifications.list({ page, limit: 20 }), [page]);
 
   return (
-    <div className={pageCls}>
+    <div className={pageNarrowCls}>
       <PageHeader tag="Notifications" title="What's new" description="Every new event, story, news article, job and marketplace listing." />
 
-      <div className="max-w-3xl space-y-4">
+      <div className="space-y-4">
         <PushToggle />
 
         {loading ? (

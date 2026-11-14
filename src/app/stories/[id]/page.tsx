@@ -15,7 +15,7 @@ import { Card } from "@/components/ui/Card";
 import { LikeButton } from "@/components/ui/LikeButton";
 import { OwnerActions } from "@/components/ui/OwnerActions";
 import { ErrorBox, Loading } from "@/components/ui/States";
-import { btnSecondary, pageCls } from "@/components/ui/styles";
+import { btnSecondary, pageNarrowCls } from "@/components/ui/styles";
 
 export default function StoryPage({ params }: { params: Promise<{ id: string }> }) {
   const id = Number(use(params).id);
@@ -24,7 +24,7 @@ export default function StoryPage({ params }: { params: Promise<{ id: string }> 
   const { data: story, error, loading, reload } = useApi(() => api.stories.get(id), [id, user?.id]);
 
   return (
-    <div className={pageCls}>
+    <div className={pageNarrowCls}>
       <div className="flex items-center justify-between gap-3">
         <Link href="/updates?type=stories" className={btnSecondary}>
           <ArrowLeft size={14} />
@@ -48,7 +48,7 @@ export default function StoryPage({ params }: { params: Promise<{ id: string }> 
         <ErrorBox error={error} onRetry={reload} />
       ) : (
         story && (
-          <Card className="max-w-3xl overflow-hidden">
+          <Card className="overflow-hidden">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={imageOr(story.image_url, `story-${story.id}`)} alt="" className="block w-full aspect-[2/1] object-cover bg-zinc-100" />
             <article className="p-6 sm:p-8 space-y-5">

@@ -8,10 +8,11 @@ import { useAuth } from "@/lib/auth";
 import { editId, errorText } from "@/lib/useApi";
 import { useDraft } from "@/lib/useDraft";
 import { fromLocalInput, toLocalInput } from "@/lib/format";
-import { localInputAt, nextWeekday } from "@/lib/prefill";
+import { localInputAt, nextWeekday, today } from "@/lib/prefill";
 import { eventSchema, fieldErrors } from "@/lib/validations";
 import { AsideNote, EditLoader, FormActions, FormLayout } from "@/components/layout/FormLayout";
 import { DraftBanner, Suggestions, TemplatePicker, type Template } from "@/components/forms/Prefill";
+import { DatePicker } from "@/components/ui/DatePicker";
 import { Field, TextArea, TextInput, focusFirstError } from "@/components/ui/Field";
 import { ImagePicker } from "@/components/ui/ImagePicker";
 import { RequireAuth } from "@/components/ui/RequireAuth";
@@ -172,8 +173,8 @@ function EventForm({ initial }: { initial: EventItem | null }) {
         <Field label="Title" required error={errors.title}>
           <TextInput value={form.title} onChange={set("title")} placeholder="e.g. 2012 batch decennial reunion" />
         </Field>
-        <Field label="Date and time" required error={errors.datetime} suggestions={<Suggestions options={datePicks} current={form.datetime} onPick={put("datetime")} />}>
-          <TextInput type="datetime-local" value={form.datetime} onChange={set("datetime")} className="font-mono text-xs sm:max-w-xs" />
+        <Field label="Date and time" required group error={errors.datetime} suggestions={<Suggestions options={datePicks} current={form.datetime} onPick={put("datetime")} />}>
+          <DatePicker withTime value={form.datetime} onChange={put("datetime")} min={initial ? undefined : today()} className="sm:max-w-sm" />
         </Field>
         <Field
           label="Location"

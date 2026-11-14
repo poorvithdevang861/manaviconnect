@@ -12,6 +12,7 @@ import { daysFromNow, toDateInput } from "@/lib/prefill";
 import { fieldErrors, jobSchema } from "@/lib/validations";
 import { AsideNote, EditLoader, FormActions, FormLayout } from "@/components/layout/FormLayout";
 import { DraftBanner, Segmented, Suggestions, TagSuggestions, TemplatePicker, type Template } from "@/components/forms/Prefill";
+import { DatePicker } from "@/components/ui/DatePicker";
 import { Field, TextArea, TextInput, focusFirstError } from "@/components/ui/Field";
 import { RequireAuth } from "@/components/ui/RequireAuth";
 import { Notice } from "@/components/ui/States";
@@ -225,6 +226,7 @@ function JobForm({ initial, templateId }: { initial: Job | null; templateId: str
           </Field>
           <Field
             label="Apply by"
+            group
             suggestions={
               <Suggestions
                 options={[
@@ -238,7 +240,7 @@ function JobForm({ initial, templateId }: { initial: Job | null; templateId: str
               />
             }
           >
-            <TextInput type="date" value={form.deadline} onChange={set("deadline")} className="font-mono text-xs" />
+            <DatePicker value={form.deadline} onChange={put("deadline")} min={initial ? undefined : toDateInput(new Date())} placeholder="No deadline" clearable />
           </Field>
         </div>
         <Field label="Description" required error={errors.description}>

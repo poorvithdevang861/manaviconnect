@@ -14,7 +14,7 @@ import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
 import { OwnerActions } from "@/components/ui/OwnerActions";
 import { ErrorBox, Loading } from "@/components/ui/States";
-import { btnSecondary, pageCls } from "@/components/ui/styles";
+import { btnSecondary, pageNarrowCls } from "@/components/ui/styles";
 
 export default function NewsArticlePage({ params }: { params: Promise<{ id: string }> }) {
   const id = Number(use(params).id);
@@ -23,7 +23,7 @@ export default function NewsArticlePage({ params }: { params: Promise<{ id: stri
   const { data: article, error, loading, reload } = useApi(() => api.news.get(id), [id, user?.id]);
 
   return (
-    <div className={pageCls}>
+    <div className={pageNarrowCls}>
       <div className="flex items-center justify-between gap-3">
         <Link href="/updates?type=news" className={btnSecondary}>
           <ArrowLeft size={14} />
@@ -47,7 +47,7 @@ export default function NewsArticlePage({ params }: { params: Promise<{ id: stri
         <ErrorBox error={error} onRetry={reload} />
       ) : (
         article && (
-          <Card className="max-w-3xl overflow-hidden">
+          <Card className="overflow-hidden">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={imageOr(article.image_url, `news-${article.id}`)} alt="" className="block w-full aspect-[2/1] object-cover bg-zinc-100" />
             <article className="p-6 sm:p-8 space-y-4">

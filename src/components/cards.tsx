@@ -69,7 +69,7 @@ export function StoryCard({ story }: { story: Story }) {
 export type FeedEntry = { kind: "news"; item: NewsArticle } | { kind: "story"; item: Story };
 
 /** One row in the combined news + stories feed; the kind tag keeps the two apart at a glance. */
-export function FeedCard({ entry }: { entry: FeedEntry }) {
+export function FeedCard({ entry, showKind = true }: { entry: FeedEntry; showKind?: boolean }) {
   const isNews = entry.kind === "news";
   const { item } = entry;
   const href = isNews ? `/news/${item.id}` : `/stories/${item.id}`;
@@ -83,14 +83,16 @@ export function FeedCard({ entry }: { entry: FeedEntry }) {
         <Cover src={image} seed={`${isNews ? "news" : "story"}-${item.id}`} className="aspect-[16/9] sm:aspect-auto sm:w-52 md:w-60 shrink-0" />
         <div className="p-4 sm:p-5 flex-1 min-w-0 flex flex-col gap-2">
           <div className="flex flex-wrap items-center gap-1.5 text-xs">
-            <span
-              className={`inline-flex items-center gap-1 pl-1.5 pr-2 py-0.5 rounded-full text-[11px] font-semibold ${
-                isNews ? "bg-orange-100 text-orange-800" : "bg-amber-50 text-amber-800 ring-1 ring-inset ring-amber-200/70"
-              }`}
-            >
-              {isNews ? <Newspaper size={11} /> : <BookOpen size={11} />}
-              {isNews ? "News" : "Story"}
-            </span>
+            {showKind && (
+              <span
+                className={`inline-flex items-center gap-1 pl-1.5 pr-2 py-0.5 rounded-full text-[11px] font-semibold ${
+                  isNews ? "bg-orange-100 text-orange-800" : "bg-amber-50 text-amber-800 ring-1 ring-inset ring-amber-200/70"
+                }`}
+              >
+                {isNews ? <Newspaper size={11} /> : <BookOpen size={11} />}
+                {isNews ? "News" : "Story"}
+              </span>
+            )}
             {isNews && entry.item.severity === "critical" && (
               <Badge variant="danger" size="sm">
                 <AlertTriangle size={11} />

@@ -14,7 +14,7 @@ import { LikeButton } from "@/components/ui/LikeButton";
 import { OwnerActions } from "@/components/ui/OwnerActions";
 import { Empty, ErrorBox, Loading } from "@/components/ui/States";
 import { useToast } from "@/components/ui/Toast";
-import { btnPrimary, btnSecondary, chipCls, pageCls } from "@/components/ui/styles";
+import { btnPrimary, btnSecondary, chipCls, pageNarrowCls } from "@/components/ui/styles";
 
 const isPdf = (url: string) => url.startsWith("data:application/pdf") || /\.pdf($|\?)/i.test(url);
 
@@ -34,7 +34,7 @@ export default function TimelinePage() {
   const remove = (id: number) => setData((prev) => prev && { total: prev.total - 1, entries: prev.entries.filter((e) => e.id !== id) });
 
   return (
-    <div className={pageCls}>
+    <div className={pageNarrowCls}>
       <PageHeader
         tag="Timeline"
         title="Our history"
@@ -60,7 +60,7 @@ export default function TimelinePage() {
         </div>
       )}
 
-      <div className="max-w-3xl">
+      <div>
         {loading && !data ? (
           <Loading />
         ) : error ? (

@@ -16,7 +16,6 @@ import {
   Laptop,
   Mail,
   MapPin,
-  Plus,
   Search,
   Wallet,
   type LucideIcon,
@@ -34,10 +33,29 @@ import { OwnerActions } from "@/components/ui/OwnerActions";
 import { Pagination } from "@/components/ui/Pagination";
 import { Empty, ErrorBox, Loading } from "@/components/ui/States";
 import { Tabs } from "@/components/ui/Tabs";
-import { FilterChips, SearchInput, Toolbar } from "@/components/ui/Toolbar";
+import { FilterChips, SearchInput } from "@/components/ui/Toolbar";
+import { ActionMenu, type ActionMenuItem } from "@/components/ui/ActionMenu";
 import { btnPrimary, btnSecondary, chipCls, listCls, pageCls } from "@/components/ui/styles";
 
 type CareerTab = "jobs" | "references";
+
+const SHARE_ITEMS: ActionMenuItem[] = [
+  {
+    label: "Post a job",
+    tag: "Job",
+    description: "An opening at your company, or one you know of",
+    href: "/career/new",
+    icon: Briefcase,
+  },
+  {
+    label: "Offer a referral",
+    tag: "Referral",
+    description: "Pass alumni CVs to your hiring team",
+    href: "/career/new?template=referral",
+    icon: Handshake,
+    tone: "amber",
+  },
+];
 
 const TYPE_OPTIONS = [{ id: "all", label: "All types" }, ...JOB_TYPES.map((t) => ({ id: t, label: titleCase(t) }))] as const;
 
@@ -46,47 +64,55 @@ export default function CareerPage() {
   const params = useSearchParams();
   const tab: CareerTab = params.get("tab") === "references" ? "references" : "jobs";
   const totals = useApi(() => api.jobs.list({ limit: 1 }).then((r) => ({ jobs: r.total })), []);
+  const [search, setSearch] = useState("");
+
+  const onSearch = (v: string) => {
+    setSearch(v);
+    if (v && tab !== "jobs") router.replace("/career", { scroll: false });
+  };
 
   return (
     <div className={pageCls}>
       <PageHeader
+        align="center"
         tag="Career"
         title="Career"
         description="Openings and referrals shared by alumni, plus references to help you plan what comes next."
-        action={
-          <Link href="/career/new" className={btnPrimary}>
-            <Plus size={14} />
-            Post a job
-          </Link>
-        }
       />
 
-      <Tabs
-        idBase="career"
-        label="Career sections"
-        value={tab}
-        onChange={(t) => router.replace(t === "jobs" ? "/career" : "/career?tab=references", { scroll: false })}
-        tabs={[
-          { id: "jobs", label: "Jobs", icon: Briefcase, count: totals.data?.jobs },
-          { id: "references", label: "References", icon: BookMarked },
-        ]}
-      />
+      <div className="flex flex-wrap items-center justify-center gap-2.5">
+        <Tabs
+          idBase="career"
+          label="Career sections"
+          value={tab}
+          onChange={(t) => router.replace(t === "jobs" ? "/career" : "/career?tab=references", { scroll: false })}
+          tabs={[
+            { id: "jobs", label: "Jobs", icon: Briefcase, count: totals.data?.jobs },
+            { id: "references", label: "References", icon: BookMarked },
+          ]}
+        />
+        <div className="order-last sm:order-none w-full sm:w-56 lg:w-72 p-1 bg-white border border-zinc-200/70 rounded-2xl shadow-card">
+          <SearchInput className="w-full" value={search} onChange={onSearch} placeholder="Search jobs" />
+        </div>
+        <ActionMenu label="Share an opportunity" shortLabel="Share" items={SHARE_ITEMS} />
+      </div>
 
       <div id="career-panel" role="tabpanel" aria-labelledby={`career-tab-${tab}`} className="space-y-6">
-        {tab === "jobs" ? <JobsPanel /> : <ReferencesPanel />}
+        {tab === "jobs" ? <JobsPanel search={search} onSearch={setSearch} /> : <ReferencesPanel />}
       </div>
     </div>
   );
 }
 
-function JobsPanel() {
+function JobsPanel({ search, onSearch }: { search: string; onSearch: (v: string) => void }) {
   const router = useRouter();
   const params = useSearchParams();
   const selectedId = editId(params.get("id"));
   const [jobType, setJobType] = useState<JobType | "all">("all");
   const [referralsOnly, setReferralsOnly] = useState(false);
-  const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
+
+  useEffect(() => setPage(1), [search]);
 
   const { data, error, loading, reload, setData } = useApi(
     () => api.jobs.list({ job_type: jobType === "all" ? undefined : jobType, tag: referralsOnly ? "referral" : undefined, search, page, limit: 10 }),
@@ -113,9 +139,8 @@ function JobsPanel() {
 
   return (
     <>
-      <Toolbar>
-        <SearchInput value={search} onChange={(v) => { setSearch(v); setPage(1); }} placeholder="Search title, company, location or tags" />
-        <div className="flex items-center gap-1.5 min-w-0 max-w-full">
+      <div className="overflow-x-auto no-scrollbar -mx-4 px-4 sm:-mx-6 sm:px-6 py-0.5">
+        <div className="flex items-center gap-1.5 w-max mx-auto">
           <button
             type="button"
             onClick={() => { setReferralsOnly((r) => !r); setPage(1); }}
@@ -125,10 +150,10 @@ function JobsPanel() {
             <Handshake size={13} />
             Referrals
           </button>
-          <span className="shrink-0 w-px h-5 bg-zinc-200" aria-hidden />
+          <span className="shrink-0 w-px h-5 bg-zinc-200 mx-1" aria-hidden />
           <FilterChips options={TYPE_OPTIONS} value={jobType} onChange={(v) => { setJobType(v); setPage(1); }} label="Job type" />
         </div>
-      </Toolbar>
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
         <div className="lg:col-span-7 space-y-3 stagger min-w-0">
@@ -141,7 +166,7 @@ function JobsPanel() {
               title={filtered ? "No jobs match these filters" : "No jobs yet"}
               action={
                 filtered ? (
-                  <button type="button" onClick={() => { setSearch(""); setJobType("all"); setReferralsOnly(false); setPage(1); }} className={btnSecondary}>
+                  <button type="button" onClick={() => { onSearch(""); setJobType("all"); setReferralsOnly(false); setPage(1); }} className={btnSecondary}>
                     Clear filters
                   </button>
                 ) : (

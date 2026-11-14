@@ -14,7 +14,7 @@ import { OwnerActions } from "@/components/ui/OwnerActions";
 import { Pagination } from "@/components/ui/Pagination";
 import { Empty, ErrorBox, Loading } from "@/components/ui/States";
 import { FilterChips, SearchInput, Toolbar } from "@/components/ui/Toolbar";
-import { btnPrimary, pageCls } from "@/components/ui/styles";
+import { btnPrimary, pageMediumCls } from "@/components/ui/styles";
 
 const TYPE_OPTIONS = [{ id: "all", label: "All" }, ...TRANSIT_TYPES.map((t) => ({ id: t, label: titleCase(t) }))] as const;
 
@@ -29,7 +29,7 @@ export default function TransitPage() {
   );
 
   return (
-    <div className={pageCls}>
+    <div className={pageMediumCls}>
       <PageHeader
         tag="Transit"
         title="Carpools & rides"
@@ -47,7 +47,7 @@ export default function TransitPage() {
         <FilterChips options={TYPE_OPTIONS} value={type} onChange={(v) => { setType(v); setPage(1); }} />
       </Toolbar>
 
-      <div className="max-w-4xl space-y-3 stagger">
+      <div className="space-y-3 stagger">
         {loading ? (
           <Loading />
         ) : error ? (

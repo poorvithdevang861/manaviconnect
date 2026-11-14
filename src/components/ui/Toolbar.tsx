@@ -32,10 +32,12 @@ export function SearchInput({
   value,
   onChange,
   placeholder,
+  className = "w-full sm:w-72",
 }: {
   value: string;
   onChange: (value: string) => void;
   placeholder: string;
+  className?: string;
 }) {
   const pathname = usePathname();
   const listId = useId();
@@ -117,7 +119,7 @@ export function SearchInput({
   };
 
   return (
-    <div className="relative flex-1 basis-full sm:basis-auto min-w-0 sm:min-w-[220px]">
+    <div className={`relative min-w-0 shrink-0 ${className}`}>
       <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-zinc-400 pointer-events-none" />
       <input
         ref={inputRef}
@@ -248,5 +250,5 @@ export function FilterChips<T extends string>({
 }
 
 export function Toolbar({ children }: { children: React.ReactNode }) {
-  return <div className="bg-white border border-zinc-200/70 rounded-2xl p-3 sm:p-4 shadow-card flex flex-wrap items-center gap-3">{children}</div>;
+  return <div className="bg-white border border-zinc-200/70 rounded-2xl p-3 sm:p-4 shadow-card flex flex-wrap items-center justify-center gap-3">{children}</div>;
 }

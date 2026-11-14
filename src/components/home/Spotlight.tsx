@@ -61,7 +61,7 @@ export function Spotlight({ slides }: { slides: SpotlightSlide[] }) {
               type="button"
               onClick={() => setIndex(i)}
               aria-label={`Show slide ${i + 1}`}
-              aria-current={i === index}
+              aria-current={i === index ? "true" : undefined}
               className={`h-1.5 rounded-full transition-all ${i === index ? "w-5 bg-white" : "w-1.5 bg-white/50 hover:bg-white/80"}`}
             />
           ))}

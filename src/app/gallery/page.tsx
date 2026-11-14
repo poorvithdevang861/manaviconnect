@@ -158,7 +158,7 @@ function UploadForm({ onDone, onCancel }: { onDone: (p: GalleryPhoto) => void; o
   };
 
   return (
-    <Card className="p-5 max-w-2xl">
+    <Card className="p-5 max-w-2xl mx-auto">
       <form onSubmit={submit} className="space-y-4">
         {error && <Notice tone="error">{error}</Notice>}
         <ImagePicker file={file} onChange={setFile} maxMb={10} label="Choose photo" />

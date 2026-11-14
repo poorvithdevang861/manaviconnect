@@ -10,6 +10,7 @@ import { today } from "@/lib/prefill";
 import { fieldErrors, timelineSchema } from "@/lib/validations";
 import { AsideNote, EditLoader, FormActions, FormLayout } from "@/components/layout/FormLayout";
 import { DraftBanner, Suggestions, TemplatePicker, type Template } from "@/components/forms/Prefill";
+import { DatePicker } from "@/components/ui/DatePicker";
 import { Field, TextArea, TextInput, focusFirstError } from "@/components/ui/Field";
 import { RequireAuth } from "@/components/ui/RequireAuth";
 import { Notice } from "@/components/ui/States";
@@ -127,10 +128,11 @@ function TimelineForm({ initial }: { initial: TimelineEntry | null }) {
           <Field
             label="Date"
             required
+            group
             error={errors.entry_date}
             suggestions={<Suggestions options={[{ label: "Today", value: today() }]} current={form.entry_date} onPick={(entry_date) => setForm({ ...form, entry_date })} />}
           >
-            <TextInput type="date" value={form.entry_date} onChange={(e) => setForm({ ...form, entry_date: e.target.value })} className="font-mono text-xs" />
+            <DatePicker value={form.entry_date} onChange={(entry_date) => setForm({ ...form, entry_date })} max={today()} />
           </Field>
         </div>
         <Field label="What happened" required error={errors.content}>

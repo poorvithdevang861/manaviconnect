@@ -9,6 +9,7 @@ export function Field({
   suggestions,
   children,
   className = "",
+  group = false,
 }: {
   label: string;
   error?: string;
@@ -18,19 +19,32 @@ export function Field({
   suggestions?: React.ReactNode;
   children: React.ReactNode;
   className?: string;
+  /** For composite controls (e.g. a popover picker): a <label> would re-click the control on every inner click. */
+  group?: boolean;
 }) {
+  const labelId = React.useId();
+  const caption = (
+    <span id={labelId} className={labelCls}>
+      {label}
+      {required && <span className="text-orange-600"> *</span>}
+    </span>
+  );
   return (
     <div
       data-error={error ? "" : undefined}
-      className={`${className} ${error ? "[&_input]:border-red-300 [&_textarea]:border-red-300 [&_select]:border-red-300" : ""}`}
+      className={`${className} ${error ? "[&_input]:border-red-300 [&_textarea]:border-red-300 [&_select]:border-red-300 [&_[data-field-control]]:border-red-300" : ""}`}
     >
-      <label className="block">
-        <span className={labelCls}>
-          {label}
-          {required && <span className="text-orange-600"> *</span>}
-        </span>
-        {children}
-      </label>
+      {group ? (
+        <div role="group" aria-labelledby={labelId}>
+          {caption}
+          {children}
+        </div>
+      ) : (
+        <label className="block">
+          {caption}
+          {children}
+        </label>
+      )}
       {suggestions && <div className="mt-2">{suggestions}</div>}
       {hint && !error && <span className="block text-[11px] text-zinc-500 mt-1.5">{hint}</span>}
       {error && (
@@ -45,7 +59,7 @@ export function Field({
 /** Scrolls to and focuses the first field showing an error. Call after setting errors. */
 export function focusFirstError() {
   setTimeout(() => {
-    const el = document.querySelector<HTMLElement>("[data-error] input, [data-error] textarea, [data-error] select");
+    const el = document.querySelector<HTMLElement>("[data-error] input, [data-error] textarea, [data-error] select, [data-error] [data-field-control]");
     if (!el) return;
     el.scrollIntoView({ behavior: "smooth", block: "center" });
     el.focus({ preventScroll: true });
