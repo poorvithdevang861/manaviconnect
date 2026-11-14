@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { 
   IconBell, 
+  IconBellFilled,
   IconChevronDown, 
   IconLogout, 
   IconMenu2, 
@@ -19,7 +20,7 @@ import { IconTile } from "@/components/ui/IconTile";
 import { AUTH_ROUTES, MORE_NAV, PRIMARY_NAV, isActive } from "./nav";
 
 const linkCls = (active: boolean) =>
-  `inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium transition-[background-color,color,transform] duration-150 active:scale-95 ${
+  `inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium transition-all duration-500 ease-out active:scale-95 ${
     active
       ? "text-orange-800 bg-gradient-to-r from-orange-100 to-amber-50 font-semibold border border-orange-200/70 shadow-xs"
       : "text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100 border border-transparent"
@@ -91,10 +92,26 @@ export function Navbar() {
           <div className="flex items-center justify-end gap-2 min-w-0">
             <Link
               href="/notifications"
-              className={`${user ? "inline-flex" : "hidden sm:inline-flex"} p-1.5 rounded-lg ${pathname === "/notifications" ? "text-orange-700 bg-orange-50" : "text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100"}`}
+              className={`group ${user ? "inline-flex" : "hidden sm:inline-flex"} p-1.5 rounded-lg transition-all duration-500 ease-out ${
+                pathname === "/notifications" ? "text-orange-700 bg-orange-50" : "text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100"
+              }`}
               aria-label="Notifications"
             >
-              <IconBell size={18} stroke={1.6} />
+              <span className="relative w-[18px] h-[18px] flex items-center justify-center shrink-0">
+                <IconBell
+                  size={18}
+                  stroke={1.6}
+                  className={`absolute transition-all duration-500 ease-out ${
+                    pathname === "/notifications" ? "opacity-0 scale-75" : "opacity-100 scale-100 group-active:opacity-0 group-active:scale-75"
+                  }`}
+                />
+                <IconBellFilled
+                  size={18}
+                  className={`absolute text-orange-600 transition-all duration-500 ease-out ${
+                    pathname === "/notifications" ? "opacity-100 scale-100" : "opacity-0 scale-75 group-active:opacity-100 group-active:scale-100"
+                  }`}
+                />
+              </span>
             </Link>
 
             {loading ? (
@@ -153,11 +170,31 @@ export function Navbar() {
 
         <nav className="hidden lg:flex items-center justify-center gap-1 h-12 border-t border-zinc-100" aria-label="Main">
           {PRIMARY_NAV.map((item) => {
-            const Icon = item.icon;
+            const IconOutline = item.icon;
+            const IconFilled = item.iconFilled;
             const active = isActive(pathname, item);
             return (
-              <Link key={item.href} href={item.href} aria-current={active ? "page" : undefined} className={linkCls(active)}>
-                <Icon size={15} stroke={1.6} className="shrink-0 opacity-80" />
+              <Link
+                key={item.href}
+                href={item.href}
+                aria-current={active ? "page" : undefined}
+                className={`${linkCls(active)} group`}
+              >
+                <span className="relative w-4 h-4 flex items-center justify-center shrink-0">
+                  <IconOutline
+                    size={15}
+                    stroke={1.6}
+                    className={`absolute transition-all duration-500 ease-out ${
+                      active ? "opacity-0 scale-75" : "opacity-85 scale-100 group-active:opacity-0 group-active:scale-75"
+                    }`}
+                  />
+                  <IconFilled
+                    size={15}
+                    className={`absolute text-orange-700 transition-all duration-500 ease-out ${
+                      active ? "opacity-100 scale-100" : "opacity-0 scale-75 group-active:opacity-100 group-active:scale-100"
+                    }`}
+                  />
+                </span>
                 {item.label}
               </Link>
             );
@@ -171,23 +208,40 @@ export function Navbar() {
               className={linkCls(moreActive)}
             >
               More
-              <IconChevronDown size={14} stroke={1.6} className={`transition-transform ${moreOpen ? "rotate-180" : ""}`} />
+              <IconChevronDown size={14} stroke={1.6} className={`transition-transform duration-300 ${moreOpen ? "rotate-180" : ""}`} />
             </button>
             {moreOpen && (
               <div role="menu" className="absolute right-0 mt-2 w-52 origin-top-right bg-white border border-zinc-200/70 rounded-2xl shadow-dropdown p-1.5 animate-pop-in">
                 {MORE_NAV.map((item) => {
-                  const Icon = item.icon;
+                  const IconOutline = item.icon;
+                  const IconFilled = item.iconFilled;
                   const active = isActive(pathname, item);
                   return (
                     <Link
                       key={item.href}
                       href={item.href}
                       role="menuitem"
-                      className={`flex items-center gap-2.5 p-1.5 rounded-xl text-xs font-medium ${
-                        active ? "bg-orange-50 text-orange-800" : "text-zinc-700 hover:bg-zinc-50"
+                      className={`group flex items-center gap-2.5 p-1.5 rounded-xl text-xs font-medium transition-all duration-500 ease-out ${
+                        active ? "bg-orange-50 text-orange-800 font-semibold" : "text-zinc-700 hover:bg-zinc-50"
                       }`}
                     >
-                      <IconTile icon={Icon} size="sm" tone={active ? "orange" : "sand"} />
+                      <span className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 relative transition-all duration-500 ease-out ${
+                        active ? "bg-orange-100 text-orange-700" : "bg-zinc-100 text-zinc-600 group-hover:bg-zinc-200/70"
+                      }`}>
+                        <IconOutline
+                          size={15}
+                          stroke={1.6}
+                          className={`absolute transition-all duration-500 ease-out ${
+                            active ? "opacity-0 scale-75" : "opacity-100 scale-100 group-active:opacity-0 group-active:scale-75"
+                          }`}
+                        />
+                        <IconFilled
+                          size={15}
+                          className={`absolute transition-all duration-500 ease-out ${
+                            active ? "opacity-100 scale-100" : "opacity-0 scale-75 group-active:opacity-100 group-active:scale-100"
+                          }`}
+                        />
+                      </span>
                       {item.label}
                     </Link>
                   );
@@ -201,17 +255,35 @@ export function Navbar() {
       {mobileOpen && (
         <nav className="lg:hidden max-h-[calc(100dvh-4rem)] border-t border-zinc-100 overflow-y-auto bg-white border-b border-zinc-200/80 px-4 sm:px-6 pt-3 pb-4 grid grid-cols-2 sm:grid-cols-3 gap-1.5 stagger" aria-label="Main">
           {[...PRIMARY_NAV, ...MORE_NAV].map((item) => {
+            const IconOutline = item.icon;
+            const IconFilled = item.iconFilled;
             const active = isActive(pathname, item);
             return (
               <Link
                 key={item.href}
                 href={item.href}
                 aria-current={active ? "page" : undefined}
-                className={`flex items-center gap-2.5 p-2 rounded-xl text-sm font-medium transition-colors ${
+                className={`group flex items-center gap-2.5 p-2 rounded-xl text-sm font-medium transition-all duration-500 ease-out ${
                   active ? "text-orange-800 font-semibold bg-orange-50" : "text-zinc-700 hover:bg-zinc-100 active:bg-zinc-100"
                 }`}
               >
-                <IconTile icon={item.icon} size="sm" tone={active ? "orange" : "sand"} />
+                <span className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 relative transition-all duration-500 ease-out ${
+                  active ? "bg-orange-100 text-orange-700" : "bg-zinc-100 text-zinc-600 group-hover:bg-zinc-200/70"
+                }`}>
+                  <IconOutline
+                    size={18}
+                    stroke={1.6}
+                    className={`absolute transition-all duration-500 ease-out ${
+                      active ? "opacity-0 scale-75" : "opacity-100 scale-100 group-active:opacity-0 group-active:scale-75"
+                    }`}
+                  />
+                  <IconFilled
+                    size={18}
+                    className={`absolute transition-all duration-500 ease-out ${
+                      active ? "opacity-100 scale-100" : "opacity-0 scale-75 group-active:opacity-100 group-active:scale-100"
+                    }`}
+                  />
+                </span>
                 {item.label}
               </Link>
             );
